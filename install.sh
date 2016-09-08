@@ -15,4 +15,5 @@ git clone https://github.com/zsh-users/zsh-autosuggestions.git "$ZSH_PLGUINS"
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_PLUGINS"
 
 echo "installing init scripts"
-cp --symbolic-link $DIR/zsh_init_scripts/* $ZSH/custom/
+cp --symbolic-link "$DIR"/zsh_init_scripts/* $ZSH/custom
+cp -rf "$DIR"/.zshrc ~/.zshrc
