@@ -29,6 +29,19 @@ function pyc {
     /usr/bin/env python3.5 -c "$modules""from sys import *; $code"
 }
 
+alias gco 1>/dev/null && unalias gco #if gco is aliased, the function will not be called
 function gco {
-    git status 1>/dev/null && git branch -a | cut -c 3- | sed 's|remotes/.*/||g' | pyc '*OrderedDict.fromkeys(stdin).keys(), sep="", end=""' collections | fzy --query=$1 | xargs git checkout
+    local allb
+    allb=$(git status 1>/dev/null && git branch -a | cut -c 3- | sed 's|remotes/.*/||g')
+
+    local recb
+    recb=$(git reflog --pretty='%gs' | grep "checkout:" | cut --fields=6 --delimiter=' ' | head)
+
+    local branches
+    branches=$({ echo "$recb"; echo "$allb"; } | pyc '*OrderedDict.fromkeys(stdin).keys(), sep="", end=""' collections | tail -n +2 | grep -vE 'develop|master|release')
+    if [[ -z $branches ]]; then
+        return 1
+    else
+        echo $branches | fzy --query=$1 | xargs -r git checkout
+    fi
 }
