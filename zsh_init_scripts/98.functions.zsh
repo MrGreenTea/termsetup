@@ -35,10 +35,10 @@ function gco {
     allb=$(git status 1>/dev/null && git branch -a | cut -c 3- | sed 's|remotes/.*/||g')
 
     local recb
-    recb=$(git reflog --pretty='%gs' | grep "checkout:" | cut --fields=6 --delimiter=' ' | head)
+    recb=$(git reflog --pretty='%gs' | grep "checkout:" | cut --fields=6 --delimiter=' ' | pyc -c  'print(*OrderedDict.fromkeys(stdin).keys(), sep="", end="")' collections)
 
     local branches
-    branches=$({ echo "$recb"; echo "$allb"; } | pyc '*OrderedDict.fromkeys(stdin).keys(), sep="", end=""' collections | tail -n +2 | grep -vE 'develop|master|release')
+    branches=$({ echo "$recb"; echo "$allb"; } | pyc -c  'stdin=list(stdin);print(*[k for k in OrderedDict.fromkeys(stdin).keys() if stdin.count(k) > 1], sep="", end="")' collections | tail -n +2 | grep -vE 'develop|master|release')
     if [[ -z $branches ]]; then
         return 1
     else
