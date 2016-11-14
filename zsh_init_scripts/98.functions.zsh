@@ -38,9 +38,12 @@ function gco {
     recb=$(git reflog --pretty='%gs' | grep "checkout:" | cut --fields=6 --delimiter=' ' | pyc -c  'print(*OrderedDict.fromkeys(stdin).keys(), sep="", end="")' collections)
 
     local branches
-    branches=$({ echo "$recb"; echo "$allb"; } | pyc -c  'stdin=list(stdin);print(*[k for k in OrderedDict.fromkeys(stdin).keys() if stdin.count(k) > 1], sep="", end="")' collections | tail -n +2 | grep -vE 'develop|master|release')
+    branches=$({ echo "$recb"; echo "$allb"; } | pyc -c  'stdin=list(stdin);print(*[k for k in OrderedDict.fromkeys(stdin).keys() if stdin.count(k) > 1], sep="", end="")' collections | tail -n +2 | grep -vE 'develop|master|release|'$(git rev-parse --abbrev-ref HEAD) )
     if [[ -z $branches ]]; then
         return 1
+    
+    elif [[ $(echo $branches | fzy --show-matches=$1 | wc -l) < 2 ]]; then
+        echo $branches | fzy --show-matches=$1 | xargs -r git checkout
     else
         echo $branches | fzy --query=$1 | xargs -r git checkout
     fi
