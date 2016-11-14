@@ -37,6 +37,8 @@ function gco {
     local recb
     recb=$(git reflog --pretty='%gs' | grep "checkout:" | cut --fields=6 --delimiter=' ' | pyc -c  'print(*OrderedDict.fromkeys(stdin).keys(), sep="", end="")' collections)
 
+    allb=$(comm -2 <(echo $allb | sort ) <(echo $recb | sort) | sed "s/^[ \t]*//" | uniq)
+
     local branches
     branches=$({ echo "$recb"; echo "$allb"; } | pyc -c  'stdin=list(stdin);print(*[k for k in OrderedDict.fromkeys(stdin).keys() if stdin.count(k) > 1], sep="", end="")' collections | tail -n +2 | grep -vE 'develop|master|release|'$(git rev-parse --abbrev-ref HEAD) )
     if [[ -z $branches ]]; then
