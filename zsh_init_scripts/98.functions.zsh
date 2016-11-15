@@ -38,14 +38,21 @@ function gco {
     recb=$(git reflog --pretty='%gs' | grep "checkout:" | cut --fields=6 --delimiter=' ' | pyc -c  'print(*OrderedDict.fromkeys(stdin).keys(), sep="", end="")' collections)
 
     allb=$(comm -2 <(echo $allb | sort ) <(echo $recb | sort) | sed "s/^[ \t]*//" | uniq)
+    recb=$({ echo "$recb"; echo "$allb"; } | pyc -c  'stdin=list(stdin);print(*[k for k in OrderedDict.fromkeys(stdin).keys() if stdin.count(k) > 1], sep="", end="")' collections)
 
     local branches
-    branches=$({ echo "$recb"; echo "$allb"; } | pyc -c  'stdin=list(stdin);print(*[k for k in OrderedDict.fromkeys(stdin).keys() if stdin.count(k) > 1], sep="", end="")' collections | tail -n +2 | grep -vE 'develop|master|release|'$(git rev-parse --abbrev-ref HEAD) )
+    branches=$({ echo "$recb"; echo "$allb"; } | pyc -c  'print(*OrderedDict.fromkeys(stdin).keys(), sep="", end="")' collections | grep -vE 'develop|master|release|'$(git rev-parse --abbrev-ref HEAD) )
     if [[ -z $branches ]]; then
         return 1
-    
-    elif [[ $(echo $branches | fzy --show-matches=$1 | wc -l) < 2 ]]; then
-        echo $branches | fzy --show-matches=$1 | xargs -r git checkout
+    fi
+
+    local matches
+    matches=$(echo $branches | fzy --show-matches=$1)
+    if [[ -z $matches ]]; then
+        echo 'no branches found for "'$1'"'
+        return 1
+    elif [[ $(echo $matches | wc -l) < 2 ]]; then
+        git checkout $matches
     else
         echo $branches | fzy --query=$1 | xargs -r git checkout
     fi
