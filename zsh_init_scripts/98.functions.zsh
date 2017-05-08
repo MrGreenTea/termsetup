@@ -31,8 +31,13 @@ function pyc {
 
 alias gco 1>/dev/null && unalias gco #if gco is aliased, the function will not be called
 function gco {
+    git status 1>/dev/null    
+    if [[ $? != 0 ]]; then
+        return $?
+    fi
+
     local allb
-    allb=$(git status 1>/dev/null && git branch -a | cut -c 3- | sed 's|remotes/.*/||g')
+    allb=$(git branch -a | cut -c 3- | sed 's|remotes/.*/||g')
 
     local recb
     recb=$(git reflog --pretty='%gs' | grep "checkout:" | cut --fields=6 --delimiter=' ' | pyc -c  'print(*OrderedDict.fromkeys(stdin).keys(), sep="", end="")' collections)
@@ -43,15 +48,16 @@ function gco {
     local branches
     branches=$({ echo "$recb"; echo "$allb"; } | pyc -c  'print(*OrderedDict.fromkeys(stdin).keys(), sep="", end="")' collections | grep -vE 'develop|master|release|'$(git rev-parse --abbrev-ref HEAD) )
     if [[ -z $branches ]]; then
+        echo 'no branches' >&2
         return 1
     fi
 
     local matches
     matches=$(echo $branches | fzy --show-matches=$1)
     if [[ -z $matches ]]; then
-        echo 'no branches found for "'$1'"'
+        echo 'no branches found for "'$1'"' >&2
         return 1
-    elif [[ $(echo $matches | wc -l) < 2 ]]; then
+    elif [[ $(echo $matches | wc -l) -eq 1 ]]; then
         git checkout $matches
     else
         echo $branches | fzy --query=$1 | xargs -r git checkout
