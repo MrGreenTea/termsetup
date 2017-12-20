@@ -1,5 +1,5 @@
 # add repos
-repos=(ppa:ultradvorka/ppa)
+repos=()
 for repo in $repos; do
     sudo add-apt-repository "$repo"
 done
@@ -7,7 +7,7 @@ done
 sudo apt update
 
 # install
-install_apps=(hh)
+install_apps=()
 
 sudo apt install $install_apps
 
