@@ -1,5 +1,5 @@
 # add repos
-repos=()
+repos=(ppa:philip.scott/elementary-tweaks)
 for repo in $repos; do
     sudo add-apt-repository "$repo"
 done
@@ -7,7 +7,7 @@ done
 sudo apt update
 
 # install
-install_apps=()
+install_apps=(elementary-tweaks)
 
 sudo apt install $install_apps
 
