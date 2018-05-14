@@ -3,11 +3,25 @@ function notebook {
     local activated_venv=0
     if [[ $VIRTUAL_ENV != $WORKON_HOME/$venv_name ]]; then
         activated_venv=1
-        workon $venv_name
+        pyenv activate $venv_name
     fi
     jupyter notebook
     if [[ $activated_venv -eq 1 ]]; then
-        deactivate
+        pyenv deactivate
+    fi
+}
+
+function ipy {
+    local venv_name=testing
+    local activated_venv=0
+    if [[ $VIRTUAL_ENV != $WORKON_HOME/$venv_name ]]; then
+        echo "Activating $venv_name as virtualenv"
+        activated_venv=1
+        pyenv activate $venv_name
+    fi
+    ipython
+    if [[ $activated_venv -eq 1 ]]; then
+        pyenv deactivate
     fi
 }
 
