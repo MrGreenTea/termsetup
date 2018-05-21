@@ -14,7 +14,7 @@ function notebook {
 function ipy {
     local venv_name=testing
     local activated_venv=0
-    if [[ $VIRTUAL_ENV != $WORKON_HOME/$venv_name ]]; then
+    if [[ -z $VIRTUAL_ENV ]]; then
         echo "Activating $venv_name as virtualenv"
         activated_venv=1
         pyenv activate $venv_name
