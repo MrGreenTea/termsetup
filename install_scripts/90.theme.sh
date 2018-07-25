@@ -21,7 +21,3 @@ sudo wget "$font_url" --output-document="$font_file"
 
 echo "Themes and font installed. After a restart they can be set in tweaks"
 unset theme_file icons_file font_file theme_url icons_url font_url
-
-
-
-

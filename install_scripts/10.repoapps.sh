@@ -12,4 +12,3 @@ install_apps=(elementary-tweaks direnv httpie)
 sudo apt install $install_apps
 
 unset repo repos install_apps
-

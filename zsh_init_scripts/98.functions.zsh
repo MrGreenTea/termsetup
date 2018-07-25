@@ -45,7 +45,7 @@ function pyc {
 
 alias gco 1>/dev/null && unalias gco #if gco is aliased, the function will not be called
 function gco {
-    git status 1>/dev/null    
+    git status 1>/dev/null
     if [[ $? != 0 ]]; then
         return $?
     fi
