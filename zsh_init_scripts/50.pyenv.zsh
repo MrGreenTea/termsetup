@@ -1,3 +1,6 @@
 export PATH="/home/jonas/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+
+if [[ -z "$VIRTUAL_ENV" ]]; then
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+fi
