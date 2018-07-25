@@ -77,3 +77,13 @@ function gco {
         echo $branches | fzy --query=$1 | xargs -r git checkout
     fi
 }
+
+
+__LESS_BIN=`which less`
+function less () {
+    if [[ -z "$1" ]]
+      then "$__LESS_BIN"
+    else
+      pygmentize $1 | "$__LESS_BIN" -R "${@:2}"
+    fi
+}
