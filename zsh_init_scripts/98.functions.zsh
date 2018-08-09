@@ -84,6 +84,6 @@ function less () {
     if [[ -z "$1" ]]
       then "$__LESS_BIN"
     else
-      pygmentize $1 | "$__LESS_BIN" -R "${@:2}"
+      pygmentize -g $1 | "$__LESS_BIN" -R "${@:2}"
     fi
 }
