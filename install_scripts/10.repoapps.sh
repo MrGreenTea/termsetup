@@ -1,4 +1,6 @@
 # add repos
+sudo apt install software-properties-common
+
 repos=(ppa:philip.scott/elementary-tweaks)
 for repo in $repos; do
     sudo add-apt-repository "$repo"
