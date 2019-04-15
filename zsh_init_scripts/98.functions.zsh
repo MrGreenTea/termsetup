@@ -40,7 +40,7 @@ function pyc {
         modules=$(python3 -c "print(*('from {} import *;'.format(m.strip()) for m in '$modules'.split(',')), end='')")
     fi
 
-    /usr/bin/env python3.5 -c "$modules""from sys import *; $code"
+    /usr/bin/env python -c "$modules""from sys import *; $code"
 }
 
 alias gco 1>/dev/null && unalias gco #if gco is aliased, the function will not be called
@@ -86,4 +86,8 @@ function less () {
     else
       pygmentize -g $1 | "$__LESS_BIN" -R "${@:2}"
     fi
+}
+
+function sleep () {
+    echo "from time import sleep\ntry:\n import tqdm \nexcept:\n sleep($1)\nelse:\n [sleep(0.1) for _ in tqdm.trange(10 * $1)]" | python
 }
