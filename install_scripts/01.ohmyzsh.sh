@@ -15,4 +15,4 @@ cd "$DIR"
 
 echo "installing init scripts"
 cp --symbolic-link "$DIR"/zsh_init_scripts/* $ZSH_CUSTOM
-cp -fi "$DIR"/.zshrc ~/.zshrc
+cp --symbolic-link -fi "$DIR"/.zshrc ~/.zshrc
