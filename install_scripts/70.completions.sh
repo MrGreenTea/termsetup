@@ -1,3 +1,6 @@
 set -o nounset
+COMPLETIONS_DIR="$ZSH_CUSTOM/completions"
 
-poetry completions zsh > "$ZSH_CUSTOM/completions/_poetry"
+mkdir "$COMPLETIONS_DIR"
+poetry completions zsh > "$COMPLETIONS_DIR/_poetry"
+unset COMPLETIONS_DIR
