@@ -1,3 +1,5 @@
+echo "Installing oh-my-zsh. It might open a new shell. Close it with Ctrl+D to continue"
+read -p "Press enter to continue"
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
 ZSH_CUSTOM=~/.oh-my-zsh/custom
