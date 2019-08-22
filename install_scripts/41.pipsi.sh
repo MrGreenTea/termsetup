@@ -4,6 +4,7 @@ eval "$(pyenv virtualenv-init -)"
 
 # curl https://raw.githubusercontent.com/mitsuhiko/pipsi/master/get-pipsi.py | python
 curl https://raw.githubusercontent.com/mitsuhiko/pipsi/master/get-pipsi.py | python3 - --src 'git+https://github.com/mitsuhiko/pipsi.git#egg=pipsi'
+export PATH="/home/jonas/.local/bin:$PATH"
 
 pipsi install poetry
 pipsi install Pygments
