@@ -1,7 +1,7 @@
 # add repos
 sudo apt install software-properties-common
 
-repos=(ppa:philip.scott/elementary-tweaks)
+repos=()
 for repo in $repos; do
     sudo add-apt-repository "$repo"
 done
@@ -9,7 +9,7 @@ done
 sudo apt update
 
 # install
-install_apps=(elementary-tweaks direnv httpie)
+install_apps=(direnv)
 
 sudo apt install $install_apps
 
