@@ -51,16 +51,17 @@ function gco {
     fi
 
     local allb
-    allb=$(git branch -a | cut -c 3- | sed 's|remotes/.*/||g')
+    allb=$( git branch -a | cut -c 3- | sed 's|remotes/.*/||g' )
 
     local recb
-    recb=$(git reflog --pretty='%gs' | grep "checkout:" | cut --fields=6 --delimiter=' ' | pyc -c  'print(*OrderedDict.fromkeys(stdin).keys(), sep="", end="")' collections)
+    recb=$( git reflog --pretty='%gs' | grep "checkout:" | cut --fields=6 --delimiter=' ' )
 
-    allb=$(comm -2 <(echo $allb | sort ) <(echo $recb | sort) | sed "s/^[ \t]*//" | uniq)
-    recb=$({ echo "$recb"; echo "$allb"; } | pyc -c  'stdin=list(stdin);print(*[k for k in OrderedDict.fromkeys(stdin).keys() if stdin.count(k) > 1], sep="", end="")' collections)
+    # allb=$(comm -2 <(echo $allb | sort ) <(echo $recb | sort) | sed "s/^[ \t]*//" | uniq)
+    # recb=$({ echo "$recb"; echo "$allb"; } | awk '!seen[$0]++'
 
     local branches
-    branches=$({ echo "$recb"; echo "$allb"; } | pyc -c  'print(*OrderedDict.fromkeys(stdin).keys(), sep="", end="")' collections | grep -vE 'develop|master|release|'$(git rev-parse --abbrev-ref HEAD) )
+    # branches=$({ echo "$recb"; echo "$allb"; } | pyc -c  'print(*OrderedDict.fromkeys(stdin).keys(), sep="", end="")' collections | grep -vE 'develop|master|release|'$(git rev-parse --abbrev-ref HEAD) )
+    branches=$({ echo "$recb"; echo "$allb"; }  | awk '!seen[$0]++' | grep -vE "^(develop|master|release|"$(git rev-parse --abbrev-ref HEAD)")$" )
     if [[ -z $branches ]]; then
         echo 'no branches' >&2
         return 1
@@ -78,16 +79,3 @@ function gco {
     fi
 }
 
-
-__LESS_BIN=`which less`
-function less () {
-    if [[ -z "$1" ]]
-      then "$__LESS_BIN"
-    else
-      pygmentize -g $1 | "$__LESS_BIN" -R "${@:2}"
-    fi
-}
-
-function sleep () {
-    echo "from time import sleep\ntry:\n import tqdm \nexcept:\n sleep($1)\nelse:\n [sleep(0.1) for _ in tqdm.trange(10 * $1)]" | python
-}
