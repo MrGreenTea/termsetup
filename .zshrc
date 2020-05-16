@@ -58,7 +58,7 @@ setopt HIST_IGNORE_SPACE
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(zsh-autosuggestions bgnotify command-not-found git python pip pylint pyenv poetry nvm rust cargo zsh-syntax-highlighting docker)
+plugins=(zsh-autosuggestions bgnotify command-not-found git python pip pylint pyenv poetry pipx nvm rust cargo zsh-syntax-highlighting docker)
 
 # User configuration
 
