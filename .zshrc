@@ -58,7 +58,26 @@ setopt HIST_IGNORE_SPACE
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(zsh-autosuggestions bgnotify command-not-found git python pip pylint pyenv poetry pipx nvm rust cargo zsh-syntax-highlighting docker)
+plugins=(
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+  zsh-navigation-tools
+  bgnotify
+  command-not-found
+
+  git
+  docker
+
+  python
+  pip
+  pyenv
+  poetry
+  pipx
+  nvm
+  rustup
+  rust
+  cargo
+)
 
 # User configuration
 
@@ -97,4 +116,5 @@ source $ZSH/oh-my-zsh.sh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # to fix completions
-autoload -U compinit && compinit
+autoload -Uz compinit && compinit
+zstyle ':completion:*' menu select
