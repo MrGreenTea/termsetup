@@ -1,2 +1,7 @@
-wget https://github.com/jhawthorn/fzy/releases/download/0.9/fzy_0.9-1_amd64.deb --output-document=/tmp/fzy.deb
-sudo apt install /tmp/fzy.deb
+curl -s https://api.github.com/repos/junegunn/fzf/releases/latest\
+ | grep "browser_download_url.*linux_amd64" \
+ | cut -d : -f 2,3 \
+ | tr -d '"' \
+ | wget --output-document="/tmp/fzf.tar" --input-file - --no-verbose
+
+sudo tar -xf /tmp/fzf.tar --directory=/usr/bin fzf

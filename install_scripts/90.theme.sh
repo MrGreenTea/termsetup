@@ -1,19 +1,13 @@
 font_dir="/usr/share/fonts/truetype"
 font_size="12"
 
-font_urls="
-  https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
-  https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
-  https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
-  https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
-"
+font_url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"
+
+wget "$font_url" --output-document=/tmp/JetBrainsMono.zip --show-progress --quiet;
+sudo unzip /tmp/JetBrainsMono.zip -d "$font_dir/jetbrains-mono-nf"
 
 
-for font_url in ${font_urls}; do
-  sudo wget "$font_url" --directory-prefix="$font_dir/meslo-lgs-nf/" --show-progress --quiet;
-done
-
-gsettings set org.gnome.desktop.interface monospace-font-name "MesloLGS NF $font_size"
+gsettings set org.gnome.desktop.interface monospace-font-name "JetBrainsMono Nerd Font Mono $font_size"
 echo "Font installed."
 
-unset font_dir font_file font_url font_size font_urls
+unset font_dir font_file font_url font_size
