@@ -7,7 +7,7 @@ wget "$font_url" --output-document=/tmp/JetBrainsMono.zip --show-progress --quie
 sudo unzip /tmp/JetBrainsMono.zip -d "$font_dir/jetbrains-mono-nf"
 
 
-gsettings set org.gnome.desktop.interface monospace-font-name "JetBrainsMono Nerd Font Mono $font_size"
+gsettings set org.gnome.desktop.interface monospace-font-name "JetBrainsMonoMedium Nerd Font $font_size"
 echo "Font installed."
 
 unset font_dir font_file font_url font_size
