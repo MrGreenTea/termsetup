@@ -4,4 +4,5 @@ jobs:
   install:
     runs-on: ubuntu-latest
     steps:
-      - run: bash install.sh
+      - uses: actions/checkout@v2
+      - run: bash ./install.sh
