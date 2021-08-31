@@ -1,0 +1,7 @@
+name: Test basic install
+on: [push]
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - run: bash install.sh
