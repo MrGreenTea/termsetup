@@ -1,6 +1,6 @@
 # add repos
 
-repos=()
+repos=(ppa:fish-shell/release-3)
 
 if [ ${#repos[@]} -gt 0 ]; then
     sudo apt install software-properties-common
@@ -13,7 +13,7 @@ fi
 sudo apt update
 
 # install
-install_apps=(direnv)
+install_apps=(direnv xclip)
 
 sudo apt install $install_apps
 
