@@ -4,7 +4,7 @@ sudo apt install make build-essential libssl-dev zlib1g-dev libbz2-dev libreadli
 
 curl -L https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer | bash
 
-export PATH="/home/jonas/.pyenv/bin:$PATH"
+export PATH="$HOME/.pyenv/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 

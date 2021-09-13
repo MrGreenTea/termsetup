@@ -1,4 +1,4 @@
-set -gx PATH '/home/jonas/.pyenv/shims' $PATH
+set -gx PATH '$HOME/.pyenv/shims' $PATH
 set -gx PYENV_SHELL fish
 function pyenv
   set command $argv[1]
