@@ -1,6 +1,10 @@
-set -gx PATH '$HOME/.pyenv/shims' $PATH
 set -gx PYENV_SHELL fish
-function pyenv
+set -gx PYENV_ROOT "$HOME/.pyenv"
+fish_add_path "$PYENV_ROOT/shims" --prepend
+
+pyenv init - | source
+
+function _pyenv
   set command $argv[1]
   set -e argv[1]
 

@@ -1,6 +1,7 @@
 [user]
-	email = jonas@bulik.dev
+	email = jonas.bulik-extern@deutschebahn.com
 	name = Jonas Bulik
+	signingkey = 0928B40DFCBA0EC5
 [pull]
 	rebase = true
 
@@ -27,3 +28,5 @@
     hunk-header-file-style = red
     hunk-header-line-number-style = "#067a00"
     hunk-header-style = file line-number syntax
+[commit]
+	gpgsign = true
