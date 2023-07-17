@@ -1,6 +1,7 @@
 [user]
 	email = jonas@bulik.dev
 	name = Jonas Bulik
+	signingkey = /var/home/jonas/.ssh/GitHub/id_ed25519.pub
 [pull]
 	rebase = true
 
@@ -29,3 +30,9 @@
     hunk-header-style = file line-number syntax
 [init]
 	defaultBranch = main
+[gpg]
+	format = ssh
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true

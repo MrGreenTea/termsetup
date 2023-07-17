@@ -4,4 +4,5 @@ curl -s https://api.github.com/repos/junegunn/fzf/releases/latest\
  | tr -d '"' \
  | wget --output-document="/tmp/fzf.tar" --input-file - --no-verbose
 
-sudo tar -xf /tmp/fzf.tar --directory=/usr/bin fzf
+mkdir "$HOME/.local/bin"
+tar -xf /tmp/fzf.tar --directory="$HOME/.local/bin" fzf

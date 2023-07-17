@@ -717,3 +717,14 @@ complete -c rtx -n "__fish_seen_subcommand_from help; and __fish_seen_subcommand
 complete -c rtx -n "__fish_seen_subcommand_from help; and __fish_seen_subcommand_from settings; and not __fish_seen_subcommand_from get; and not __fish_seen_subcommand_from ls; and not __fish_seen_subcommand_from set; and not __fish_seen_subcommand_from unset" -f -a "set" -d 'Add/update a setting'
 complete -c rtx -n "__fish_seen_subcommand_from help; and __fish_seen_subcommand_from settings; and not __fish_seen_subcommand_from get; and not __fish_seen_subcommand_from ls; and not __fish_seen_subcommand_from set; and not __fish_seen_subcommand_from unset" -f -a "unset" -d 'Clears a setting'
 
+function __fish_rtx_list_all -a plugin
+    rtx ls-remote $plugin 2>/dev/null
+end
+
+function __fish_rtx_arg_at -a number
+    set -l cmd (commandline -opc)
+    echo $cmd[$number]
+end
+set -l plugin_commands current global install latest local ls ls-remote prune uninstall # etc.
+complete -c rtx -n "__fish_seen_subcommand_from $plugin_commands" -f -a '(rtx plugins)'
+complete -c rtx -n '__fish_seen_subcommand_from (rtx plugins)' -f -a '(__fish_rtx_list_all (__fish_rtx_arg_at 3))'
