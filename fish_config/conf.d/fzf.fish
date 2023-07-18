@@ -1,3 +1,4 @@
+set fzf_fish_custom_keybindings 1
 # Set up the default, mnemonic key bindings unless the user has chosen to customize them
 if not set --query fzf_fish_custom_keybindings
     # \cf is Ctrl+f
