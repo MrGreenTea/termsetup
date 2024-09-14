@@ -18,10 +18,10 @@ function _fzf_selected_branches --wraps='git branch' --description 'search git b
 end
 
 function gco --wraps='git checkout' --description 'use fzf for quick git checkouts' -a "branch"
-  set selected_branch (_fzf_selected_branches $branch)
-  if test -z "$selected_branch"
+  set -l selected_branch (_fzf_selected_branches $selected_branch)
+  if test -z $selected_branch
     return
   end
-  set selected_branch (python3 -c "print('$selected_branch'.removeprefix('origin/').strip())")
-  git switch "$selected_branch"
+  set -l selected_branch (python3 -c "print('$selected_branch'.removeprefix('origin/'))")
+  git switch $selected_branch
 end

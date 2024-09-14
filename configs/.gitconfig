@@ -43,5 +43,8 @@
 	enabled = true
 [help]
 	autocorrect = 10
+[alias]
+	bc = !better-commits
+	bb = !better-branch
 [mergetool "nvim"]
 	cmd = nvim -d -c \"wincmd l\" -c \"norm ]c\" \"$LOCAL\" \"$MERGED\" \"$REMOTE\"

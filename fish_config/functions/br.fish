@@ -1,0 +1,1 @@
+/var/home/jonas/.local/share/broot/launcher/fish/br.fish
