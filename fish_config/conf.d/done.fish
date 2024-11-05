@@ -24,7 +24,7 @@ if not status is-interactive
     exit
 end
 
-set -g __done_version 1.19.1
+set -g __done_version 1.19.3
 
 function __done_run_powershell_script
     set -l powershell_exe (command --search "powershell.exe")
@@ -83,7 +83,7 @@ function __done_get_focused_window_id
         and type -q jq
         swaymsg --type get_tree | jq '.. | objects | select(.focused == true) | .id'
     else if test -n "$HYPRLAND_INSTANCE_SIGNATURE"
-        hyprctl activewindow | awk 'NR==13 {print $2}'
+        hyprctl activewindow | awk 'NR==1 {print $2}'
     else if begin
             test "$XDG_SESSION_DESKTOP" = gnome; and type -q gdbus
         end
@@ -134,22 +134,8 @@ function __done_is_screen_window_active
     string match --quiet --regex "$STY\s+\(Attached" (screen -ls)
 end
 
-function __done_wayland_is_focused
-    # needs this extension: https://github.com/flexagoon/focused-window-dbus/
-    # gdbus returns a tuple (str(result), )
-    # so we have to cut the () and also the single quotes as well as a comma
-    # cut does not support a notation like python ([3:-4]) so we have to use rev twice
-    set __done_gnome_shell_window_info (gdbus call --session --dest org.gnome.Shell --object-path /org/gnome/shell/extensions/FocusedWindow --method org.gnome.shell.extensions.FocusedWindow.Get | cut -b 3- | rev | cut -b 4- | rev)
-    string match --quiet --regex '^"gnome-terminal' (echo $__done_gnome_shell_window_info | jq .wm_class)
-    return $status
-end
-
 function __done_is_process_window_focused
     # Return false if the window is not focused
-    __done_wayland_is_focused
-    if test "$status" -eq 1
-        return 1
-    end
 
     if set -q __done_allow_nongraphical
         return 1
@@ -166,7 +152,7 @@ function __done_is_process_window_focused
         string match --quiet --regex "^true" (swaymsg -t get_tree | jq ".. | objects | select(.id == "$__done_initial_window_id") | .visible")
         return $status
     else if test -n "$HYPRLAND_INSTANCE_SIGNATURE"
-        and test $__done_initial_window_id -eq (hyprctl activewindow | awk 'NR==13 {print $2}')
+        and test $__done_initial_window_id = (hyprctl activewindow | awk 'NR==1 {print $2}')
         return $status
     else if test "$__done_initial_window_id" != "$__done_focused_window_id"
         return 1
@@ -282,7 +268,6 @@ if set -q __done_enabled
                 set -l message (string replace --all '"' '\"' "$message")
                 set -l title (string replace --all '"' '\"' "$title")
 
-                osascript -e "display notification \"$message\" with title \"$title\""
                 if test "$__done_notify_sound" -eq 1
                     osascript -e "display notification \"$message\" with title \"$title\" sound name \"Glass\""
                 else
@@ -305,8 +290,7 @@ if set -q __done_enabled
                     end
                 end
 
-                # TODO: clicking on notification should focus the terminal (or even correct tab)
-                notify-send --hint=int:transient:1 --urgency=$urgency --icon=utilities-terminal --expire-time=$__done_notification_duration "$title" "$message"
+                notify-send --hint=int:transient:1 --urgency=$urgency --icon=utilities-terminal --app-name=fish --expire-time=$__done_notification_duration "$title" "$message"
 
                 if test "$__done_notify_sound" -eq 1
                     echo -e "\a" # bell sound
