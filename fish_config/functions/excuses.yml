@@ -1,3 +1,5 @@
+# https://github.com/michelegera/devexcuses-api/blob/dfc2427fa30810a4fb3b6d980f99618cac1bd948/data/excuses.yml
+
 - id: 1
   text_en: "Actually, that’s a feature."
   text_fr: "En fait, c’est une fonctionnalité."
