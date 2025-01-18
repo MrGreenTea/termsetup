@@ -1,5 +1,5 @@
 # proudly copied from https://github.com/junegunn/fzf-git.sh/blob/main/fzf-git.sh
-function _fzf_selected_branches --wraps='git branch' --description 'search git branches with fzf' -a "branch" 
+function _fzf_selected_branches --wraps='git branch' --description 'search git branches with fzf' -a "branch"
   test -n "$branch" && set -l select1 "--select-1"  # quick-circuit if only one matching branch, if initial branch is given
   __git_branches | fzf --ansi \
       --border-label '🌲 selected_branches' \
@@ -12,8 +12,8 @@ function _fzf_selected_branches --wraps='git branch' --description 'search git b
       --bind 'ctrl-/:change-preview-window(down,70%|hidden|)' \
       --bind "alt-a:change-prompt(🌳 All selected_branches> )+reload:fish --command='__git_branches -a'"  \
       --query "$selected_branch" \
-      $select1 | 
-  sed 's/^..//' | 
+      $select1 |
+  sed 's/^..//' |
   cut -d' ' -f1
 end
 

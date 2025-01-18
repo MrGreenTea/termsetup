@@ -11,7 +11,7 @@ complete -c pet --no-files -x -a "
   version\t'Print the version number'
 "
 
-# # 
+# #
 # pet - Simple command-line snippet manager.
 #
 # Usage:

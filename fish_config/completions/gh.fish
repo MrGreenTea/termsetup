@@ -233,4 +233,3 @@ complete -c gh -n '__gh_clear_perform_completion_once_result'
 complete -c gh -n 'not __gh_requires_order_preservation && __gh_prepare_completions' -f -a '$__gh_comp_results'
 # otherwise we use the -k flag
 complete -k -c gh -n '__gh_requires_order_preservation && __gh_prepare_completions' -f -a '$__gh_comp_results'
-

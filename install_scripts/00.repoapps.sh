@@ -18,4 +18,3 @@ install_apps=(direnv xclip)
 sudo apt install $install_apps
 
 unset repo repos install_apps
-

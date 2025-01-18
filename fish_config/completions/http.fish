@@ -57,4 +57,3 @@ complete    -c http      -l help         -d 'Show help'
 complete    -c http      -l version      -d 'Show version'
 complete    -c http      -l traceback    -d 'Prints exception traceback should one occur'
 complete    -c http      -l debug        -d 'Show debugging information'
-
