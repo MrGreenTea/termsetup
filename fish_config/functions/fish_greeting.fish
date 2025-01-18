@@ -1,3 +1,3 @@
 function fish_greeting
-  string join " " "I'm sorry, but" (nu -c 'open ~/.config/fish/functions/excuses.yml | shuffle | first | get text_en' | sed -e 's/^./\L&\E/')
+  string join " " "I'm sorry, but" (shuf -n 1 ~/.config/fish/functions/excuses.txt | sed -e 's/^./\L&\E/')
 end
