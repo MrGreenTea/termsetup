@@ -1,127 +1,177 @@
-The project manager told me to do it that way.
-It’s always been like that.
-Well, at least it displays a very pretty error.
-That’s the fault of the graphic designer.
-It’s not a code problem — our users need more training.
-Well, that’s a first.
+the project manager told me to do it that way.
+it’s always been like that.
+well, at least it displays a very pretty error.
+that’s the fault of the graphic designer.
+it’s not a code problem — our users need more training.
+well, that’s a first.
 I didn’t anticipate that I would make any errors.
-You used the wrong compiling options in the build I made.
-The third party documentation doesn’t exist.
+you used the wrong compiling options in the build I made.
+the third party documentation doesn’t exist.
 I was just fixing that.
-Our internet connection must not be working.
-There’s currently a problem with our hosting company.
-Management insisted we wouldn’t need to waste our time writing unit tests.
-The client wanted it changed at the last minute.
+our internet connection must not be working.
+there’s currently a problem with our hosting company.
+management insisted we wouldn’t need to waste our time writing unit tests.
+the client wanted it changed at the last minute.
 I got pulled into another project that needed to be done urgently.
 THIS can’t be the source of THAT.
-It’s an unexpected emergent behaviour of several last minute abstractions.
+it’s an unexpected emergent behaviour of several last minute abstractions.
 I must have been stress-testing our production server.
-It would take too long to rewrite the code from scratch.
+it would take too long to rewrite the code from scratch.
 I didn’t create that part of the program.
 I told you yesterday it would be done by the end of today.
-Well, at least we know not to try that again.
-That feature was slated for phase two.
-It must be because of a leap year.
-The existing design makes it difficult to do the right thing.
-Even though it doesn’t work, how does it feel?
-That feature would be outside the scope.
-It can’t be broken, it passes all unit tests.
-What did I tell you about using parts of the system you don’t understand?
-That’s interesting, how did you manage to make it do that?
-Oh, that was only supposed to be a placeholder.
-Please ignore that, it’s for debugging
-Our code quality is no worse than anyone else in the industry.
-It’s a browser compatibility issue.
-There must be something strange in your data.
-That behaviour is in the original specification.
-Actually, that’s a feature.
-Our redundant systems must have failed as well.
-The marketing department made us put that there.
-Well done, you found my easter egg!
-Where were you when the program blew up?
+well, at least we know not to try that again.
+that feature was slated for phase two.
+it must be because of a leap year.
+the existing design makes it difficult to do the right thing.
+even though it doesn’t work, how does it feel?
+that feature would be outside the scope.
+it can’t be broken, it passes all unit tests.
+what did I tell you about using parts of the system you don’t understand?
+that’s interesting, how did you manage to make it do that?
+oh, that was only supposed to be a placeholder.
+please ignore that, it’s for debugging.
+our code quality is no worse than anyone else in the industry.
+it’s a browser compatibility issue.
+there must be something strange in your data.
+that behaviour is in the original specification.
+actually, that’s a feature.
+our redundant systems must have failed as well.
+the marketing department made us put that there.
+well done, you found my easter egg!
+where were you when the program blew up?
 I was told to stop working on that when something important came up.
-That was literally a one in a million error.
-That process requires human oversight that nobody was providing.
+that was literally a one in a million error.
+that process requires human oversight that nobody was providing.
 I can’t test everything.
 I have too many other high priority things to do right now.
-It probably won’t happen again.
-It’s a character encoding issue.
+it probably won’t happen again.
+it’s a character encoding issue.
 I’m not getting any error codes.
 I thought you signed off on that.
-The program has never collected that information.
+the program has never collected that information.
 I thought he knew the context of what I was talking about.
 I heard there was a solar flare today.
 I forgot to commit the code that fixes that.
 I haven’t had any experience with that before.
 I couldn’t find any library that can even do that.
 I’m not familiar with it so I didn’t fix it in case I made it worse.
-There was too little data to bother with the extra functionality at the time.
-Everything looks fine on my end.
-You must have done something wrong.
-You must have the wrong version.
-We didn’t have enough time to peer review the final changes.
-That worked perfectly when I developed it.
-Oh, you said you DIDN’T want that to happen?
-It would have taken twice as long to build it properly.
-The problem seems to be with our legacy software.
-It’s a compatibility issue.
+there was too little data to bother with the extra functionality at the time.
+everything looks fine on my end.
+you must have done something wrong.
+you must have the wrong version.
+we didn’t have enough time to peer review the final changes.
+that worked perfectly when I developed it.
+oh, you said you DIDN’T want that to happen?
+it would have taken twice as long to build it properly.
+the problem seems to be with our legacy software.
+it’s a compatibility issue.
 I haven’t had a chance to run that code yet.
-That’s not a bug it’s a configuration issue.
-The code is compiling.
-Oh, that was just a temporary fix.
+that’s not a bug it’s a configuration issue.
+the code is compiling.
+oh, that was just a temporary fix.
 I’ll have to fix that at a later date.
-That important email must have been marked as spam.
-Did you check for a virus on your system?
+that important email must have been marked as spam.
+did you check for a virus on your system?
 I’m not sure as I’ve never had a look at how that works before.
-No one told me so I was forced to assume which way to do that.
+no one told me so I was forced to assume which way to do that.
 I can’t make that a priority right now.
-Nobody has ever complained about it.
+nobody has ever complained about it.
 I did a quick fix last time but it broke when we rebooted.
-Somebody must have changed my code.
-It works for me.
-The user must not know how to use it.
-Nobody asked me how long it would actually take.
-That wouldn’t be economically feasible.
-The accounting department must have cancelled that subscription.
-What did you type in wrong to get it to crash?
-How is that possible?
+somebody must have changed my code.
+it works for me.
+the user must not know how to use it.
+nobody asked me how long it would actually take.
+that wouldn’t be economically feasible.
+the accounting department must have cancelled that subscription.
+what did you type in wrong to get it to crash?
+how is that possible?
 I’m still working on that as we speak.
 I have never seen that before in my life.
-Our hardware is too slow to cope with demand.
-It works, but it’s not been tested.
-This is a previously known bug you told me not to work on yet.
-This code was not supposed to go in to production yet.
-The DNS hasn’t propagated yet.
-It’s never shown unexpected behavior like this before.
-It’s never done that before.
-It’s a remote vendor issue.
+our hardware is too slow to cope with demand.
+it works, but it’s not been tested.
+this is a previously known bug you told me not to work on yet.
+this code was not supposed to go in to production yet.
+the DNS hasn’t propagated yet.
+it’s never shown unexpected behavior like this before.
+it’s never done that before.
+it’s a remote vendor issue.
 I broke that deliberately to do some testing.
-It’s just some unlucky coincidence.
+it’s just some unlucky coincidence.
 I haven’t been able to reproduce that.
 I’m surprised it was working at all.
-The specifications were ambiguous.
+the specifications were ambiguous.
 I couldn’t find any examples of how that can be done anywhere online.
-That code seemed so simple I didn’t think it needed testing.
+that code seemed so simple I didn’t think it needed testing.
 I usually get a notification when that happens.
 I must not have understood what you were asking for.
-That error means it was successful.
-Why do you want to do it that way?
-The client must have been hacked.
-You’re doing it wrong.
-The download must have been corrupted.
-That wasn’t in the original specification.
-My time was split in a way that meant I couldn’t do either project properly
-The project manager said no one would want that feature
+that error means it was successful.
+why do you want to do it that way?
+the client must have been hacked.
+you’re doing it wrong.
+the download must have been corrupted.
+that wasn’t in the original specification.
+my time was split in a way that meant I couldn’t do either project properly.
+the project manager said no one would want that feature.
 I didn’t receive a ticket for it.
-It’s a known bug with the programming language.
-The person responsible doesn’t work here anymore.
-That isn’t covered by my job description.
-Maybe somebody forgot to pay our hosting company.
-It must be a hardware problem.
-That’s already fixed, it just hasn’t taken effect yet.
+it’s a known bug with the programming language.
+the person responsible doesn’t work here anymore.
+that isn’t covered by my job description.
+maybe somebody forgot to pay our hosting company.
+it must be a hardware problem.
+that’s already fixed, it just hasn’t taken effect yet.
 I’m surprised it works as well as it does.
-It was working in my head.
+it was working in my head.
 I thought I finished that.
-The request must have dropped some packets.
+the request must have dropped some packets.
 I haven’t touched that code in weeks.
-In the interest of efficiency I only check my email for that on a Friday.
+in the interest of efficiency I only check my email for that on a Friday.
+the build server must be misconfigured.
+it worked fine before the last update.
+that’s a problem with the library, not our code.
+I wasn’t informed about the latest changes.
+I had to follow the outdated documentation.
+it’s not a critical issue, so I deprioritized it.
+I was working on a workaround instead of a fix.
+I’m waiting on another team to complete their part.
+that issue only happens under very specific conditions.
+the staging environment doesn’t mirror production exactly.
+I’m sure it’s a caching problem.
+the database must have been locked when I ran that query.
+I was testing a hypothesis.
+the debugger skipped over that part of the code.
+that problem is outside of our control.
+I haven’t had time to review the logs yet.
+I didn’t realize that feature had been deployed.
+it’s technically working, just not the way you expect.
+that’s a known edge case.
+I assumed it would never need to handle that much data.
+the API must have changed without notice.
+I didn’t think anyone would use it like that.
+it’s not optimized for your hardware.
+I haven’t checked the error logs yet.
+it’s probably a problem with your operating system.
+I think the script might have run twice.
+the sandbox environment behaves differently.
+it must be a race condition.
+that feature is experimental.
+it’s a legacy issue we can’t fix easily.
+I don’t have access to that part of the system.
+it’s a regional server issue.
+there must have been a typo in the deployment script.
+I wasn’t aware that feature was enabled.
+that bug is caused by an undocumented feature.
+it’s too complicated to explain right now.
+I’ll have to ask the original developer about that.
+I thought someone else was responsible for that.
+I assumed someone else was handling the testing.
+the framework we’re using has a known limitation.
+that’s an unexpected interaction with another module.
+it must have been a temporary outage.
+the test environment wasn’t configured properly.
+the latest patch must have introduced that bug.
+I didn’t have the right permissions to test that.
+that’s just a cosmetic issue, not a functional one.
+the compiler must have optimized something incorrectly.
+it’s probably an undocumented breaking change in the API.
+the server time must be off.
+I’ll need more time to reproduce the issue.
