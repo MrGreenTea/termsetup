@@ -175,3 +175,54 @@ the compiler must have optimized something incorrectly.
 it’s probably an undocumented breaking change in the API.
 the server time must be off.
 I’ll need more time to reproduce the issue.
+the design constraints didn’t account for that scenario.  
+I wasn’t the last one to touch it.  
+that’s a limitation of the hardware.  
+I thought it was only a warning, not an error.  
+it worked fine during the demo.  
+we didn’t budget enough time for testing.  
+it must be a memory leak.  
+someone accidentally commented out that code.  
+I didn’t have access to the full documentation.  
+the API key must have expired.  
+there was a conflict in the merge.  
+the system requires a reboot to apply the fix.  
+that’s just how the framework works.  
+we’re waiting for feedback from the client.  
+the server was overloaded at the time.  
+it’s an issue with our service provider.  
+that functionality is still in beta.  
+it must be an intermittent problem.  
+I wasn’t aware that was a requirement.  
+I didn’t realize that configuration needed to be updated.  
+we need to apply the latest security patch first.  
+it’s an experimental feature.  
+the test cases didn’t cover that edge case.  
+that tool isn’t compatible with the latest version.  
+it’s not a bug, it’s a misunderstanding of the feature.  
+the input data didn’t meet the expected format.  
+the upgrade introduced some unforeseen issues.  
+it worked fine in isolation.  
+we need to consult with the vendor before making changes.  
+the permissions were set incorrectly.  
+I ran out of time to refactor the code.  
+it must be an issue with the load balancer.  
+the feature was deprioritized due to other deadlines.  
+the timezone settings were incorrect.  
+I accidentally used a deprecated function.  
+it’s a known issue with the third-party library.  
+the codebase is too old to modify easily.  
+I thought that change was already deployed.  
+the error messages are not descriptive enough.  
+we don’t have the budget to address that.  
+it’s a problem with the mobile version of the app.  
+that’s the default behavior of the operating system.  
+it’s a bug, but it’s not critical.  
+I didn’t have enough test data.  
+the logs were rotated before I could analyze them.  
+that’s an external dependency issue.  
+the version control history is unclear.  
+it must have been caused by a missing dependency.  
+the script wasn’t tested in production.  
+the specs didn’t mention that scenario.  
+I assumed someone else would handle that task.  
