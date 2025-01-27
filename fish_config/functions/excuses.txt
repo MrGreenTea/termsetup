@@ -61,7 +61,7 @@ you must have done something wrong.
 you must have the wrong version.
 we didn’t have enough time to peer review the final changes.
 that worked perfectly when I developed it.
-oh, you said you DIDN’T want that to happen?
+you DIDN’T want that to happen?
 it would have taken twice as long to build it properly.
 the problem seems to be with our legacy software.
 it’s a compatibility issue.
