@@ -9,3 +9,4 @@ abbr --add gcm "git switch main"
 abbr --add gbb "git bb"
 abbr --add ipy ipython
 abbr --add gcp "git commit && git push"
+abbr --add npx "dum"
