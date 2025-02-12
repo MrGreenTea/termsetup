@@ -48,4 +48,4 @@ function openSummary({ url = window.location.href } = {}) {
 
 api.mapkey("=s", "View summary for page", openSummary);
 
-api.unmapAllExcept(["E", "R", "T", "ok"], /linear\.app/);
+api.unmapAllExcept(["E", "R", "T", "ok"], /linear\.app\/\w+\/.+$/);
