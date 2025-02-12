@@ -1,5 +1,3 @@
-api.unmapAllExcept(["o"], /linear.app/);
-
 // remove baidu, bing and duckduckgo
 ["b", "w", "d"].map((s) => api.removeSearchAlias(s));
 
@@ -49,3 +47,5 @@ function openSummary({ url = window.location.href } = {}) {
 }
 
 api.mapkey("=s", "View summary for page", openSummary);
+
+api.unmapAllExcept(["E", "R", "T", "ok"], /linear\.app/);
