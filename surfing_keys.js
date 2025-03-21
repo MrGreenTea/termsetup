@@ -48,4 +48,10 @@ function openSummary({ url = window.location.href } = {}) {
 
 api.mapkey("=s", "View summary for page", openSummary);
 
+
+
+// Linear brings it's own very nice keyboard navigation
 api.unmapAllExcept(["E", "R", "T", "ok"], /linear\.app\/\w+\/.+$/);
+
+// Readwise also brings nice keyboard navigation (mostly)
+api.unmapAllExcept(["E", "R", "T"], /read.readwise.io/);
