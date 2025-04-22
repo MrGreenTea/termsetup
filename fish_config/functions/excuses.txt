@@ -115,8 +115,8 @@ my time was split in a way that meant I couldn’t do either project properly.
 nobody asked me how long it would actually take.
 nobody has ever complained about it.
 no one told me so I was forced to assume which way to do that.
-oh, that was just a temporary fix.
-oh, that was only supposed to be a placeholder.
+that was just a temporary fix.
+that was only supposed to be a placeholder.
 our code quality is no worse than anyone else in the industry.
 our hardware is too slow to cope with demand.
 our internet connection must not be working.

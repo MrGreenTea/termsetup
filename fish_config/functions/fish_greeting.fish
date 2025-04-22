@@ -11,9 +11,9 @@ function fish_greeting
         set random_excuse (shuf -n 1 $excuse_file)
 
         # Display the excuse with the desired message format
-        echo "$intro $random_excuse"
+        fancy_box "$intro $random_excuse"
     else
         # Fallback message if excuses.txt is missing
-        echo "I'm sorry, but I can't think of any excuses right now."
+        fancy_box "I'm sorry, but I can't think of any excuses right now."
     end
 end
