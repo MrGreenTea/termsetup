@@ -55,3 +55,5 @@ api.unmapAllExcept(["E", "R", "T", "ok"], /linear\.app\/\w+\/.+$/);
 
 // Readwise also brings nice keyboard navigation (mostly)
 api.unmapAllExcept(["E", "R", "T"], /read.readwise.io/);
+
+api.unmapAllExcept(["E", "R", "T"], /actual.jonasbulik.de/);
