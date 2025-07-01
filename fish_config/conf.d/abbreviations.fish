@@ -1,5 +1,6 @@
 abbr --add gbc better-commits
 abbr --add bc better-commits
+abbr --add bb better-branch
 
 abbr --add please sudo
 
@@ -15,3 +16,4 @@ abbr --add gcp "git commit && git push"
 abbr --add npx "dum"
 
 abbr --add docker-compose "podman compose"
+abbr --add docker "podman"
