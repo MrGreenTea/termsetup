@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__playwright",
+      "mcp__context7",
+      "Bash(grep:*)",
+      "Bash(notify-send:*)",
+      "Bash(curl -X GET:*)"
+    ],
+    "deny": []
+  },
+  "model": "sonnet"
+}
