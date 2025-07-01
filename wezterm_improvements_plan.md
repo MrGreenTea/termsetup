@@ -138,7 +138,8 @@ local commands = {
   project = {
     { label = "Clone Repository", action = "git_clone" },
     { label = "Create New Project", action = "project_create" },
-    { label = "Open in VS Code", action = "code_open" }
+    { label = "Open in Neovim", action = "nvim_open" },
+    { label = "Open with Claude", action = "claude_open" }
   },
   git = {
     { label = "Quick Commit", action = "git_quick_commit" },
