@@ -8,15 +8,9 @@
       "Bash(grep:*)",
       "Bash(notify-send:*)",
       "Bash(curl -X GET:*)",
-      "Bash(podman:*)",
-      "Bash(podman-compose:*)",
       "Bash(git:*)",
       "Bash(rg:*)",
-      "Bash(npm:*)",
-      "Bash(pnpm:*)",
-      "Bash(cargo:*)",
-      "Bash(poetry:*)",
-      "Bash(fish:*)"
+      "WebFetch"
     ],
     "deny": ["Bash(docker:*)"]
   },
