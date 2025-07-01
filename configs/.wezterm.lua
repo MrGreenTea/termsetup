@@ -1,15 +1,11 @@
 local wezterm = require("wezterm")
 
-function basename(s)
-	return string.gsub(s, "(.*[/\\])(.*)", "%2")
-end
-
 local config = wezterm.config_builder()
 
 config.color_scheme = "Catppuccin Mocha"
 
 -- HACK: fractional scaling / Wayland issue: https://github.com/wez/wezterm/issues/5263
--- config.use_fancy_tab_bar = false
+config.use_fancy_tab_bar = false
 config.font = wezterm.font("JetBrains Mono")
 
 config.quick_select_patterns = {
