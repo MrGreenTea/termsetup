@@ -2,11 +2,8 @@ local wezterm = require("wezterm")
 
 local config = wezterm.config_builder()
 
-config.color_scheme = "Catppuccin Mocha"
-
--- HACK: fractional scaling / Wayland issue: https://github.com/wez/wezterm/issues/5263
-config.use_fancy_tab_bar = false
-config.font = wezterm.font("JetBrains Mono")
+local init = require('init')
+init.apply_to_config(config)
 
 config.quick_select_patterns = {
 	-- emails
