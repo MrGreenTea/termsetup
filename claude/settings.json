@@ -4,6 +4,7 @@
       "mcp__playwright",
       "mcp__context7",
       "mcp__memory",
+      "mcp_sequential-thinking",
       "Bash(grep:*)",
       "Bash(notify-send:*)",
       "Bash(curl -X GET:*)",
@@ -17,9 +18,24 @@
       "Bash(poetry:*)",
       "Bash(fish:*)"
     ],
-    "deny": [
-      "Bash(docker:*)"
-    ]
+    "deny": ["Bash(docker:*)"]
   },
-  "model": "sonnet"
+  "model": "sonnet",
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '\"\\(.title) - \\(.message // \"No description\")\"' >> /tmp/claude-notifications.txt"
+          },
+          {
+            "type": "command",
+            "command": "/var/home/jonas/Development/termsetup/scripts/notification_hook.py"
+          }
+        ]
+      }
+    ]
+  }
 }
