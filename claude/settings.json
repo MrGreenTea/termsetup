@@ -10,9 +10,12 @@
       "Bash(curl -X GET:*)",
       "Bash(git:*)",
       "Bash(rg:*)",
-      "WebFetch"
+      "WebFetch",
+      "Fetch"
     ],
-    "deny": ["Bash(docker:*)"]
+    "deny": [
+      "Bash(docker:*)"
+    ]
   },
   "model": "sonnet",
   "hooks": {
