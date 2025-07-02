@@ -400,6 +400,70 @@ local function shorten_path(full_path)
 	return full_path
 end
 
+-- Parse ISO 8601 timestamp to epoch seconds
+local function parse_iso_timestamp(iso_string)
+	if not iso_string or iso_string == "" then
+		return nil
+	end
+	
+	-- Parse ISO 8601 format: 2025-07-02T10:24:06Z
+	local year, month, day, hour, min, sec = iso_string:match("(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)Z")
+	if not year then
+		return nil
+	end
+	
+	return os.time({
+		year = tonumber(year),
+		month = tonumber(month),
+		day = tonumber(day),
+		hour = tonumber(hour),
+		min = tonumber(min),
+		sec = tonumber(sec)
+	})
+end
+
+-- Format relative time from ISO timestamp (section 3.1 of redesign spec)
+local function format_relative_time(iso_timestamp, current_time_iso)
+	if not iso_timestamp or iso_timestamp == "" then
+		return "never"
+	end
+	
+	local timestamp = parse_iso_timestamp(iso_timestamp)
+	if not timestamp then
+		return "unknown"
+	end
+	
+	local current_time
+	if current_time_iso then
+		current_time = parse_iso_timestamp(current_time_iso)
+		if not current_time then
+			return "unknown"
+		end
+	else
+		current_time = os.time()
+	end
+	
+	local diff = current_time - timestamp
+	
+	-- Future timestamps
+	if diff < 0 then
+		return "in future"
+	end
+	
+	-- Time ranges as per specification
+	if diff < 60 then
+		return "just now"
+	elseif diff < 3600 then
+		return math.floor(diff / 60) .. "m ago"
+	elseif diff < 86400 then
+		return math.floor(diff / 3600) .. "h ago"
+	elseif diff < 604800 then
+		return math.floor(diff / 86400) .. "d ago"
+	else
+		return math.floor(diff / 604800) .. "w ago"
+	end
+end
+
 -- Workspace persistence
 local function get_workspace_dir()
 	local home = os.getenv("HOME")
@@ -692,5 +756,6 @@ module._get_basename = get_basename
 module._detect_project_details = detect_project_details
 module._get_project_symbol = get_project_symbol
 module._shorten_path = shorten_path
+module._format_relative_time = format_relative_time
 
 return module
