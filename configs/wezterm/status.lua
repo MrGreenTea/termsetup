@@ -310,7 +310,16 @@ function module.format_status_bar(window, pane)
 
 	-- Current directory
 	if cwd and cwd.file_path then
-		local dir_name = cwd.file_path:match("[^/]+$") or "~"
+		local dir_name
+		local home_dir = wezterm.home_dir
+		
+		-- Show ~ if we're in the home directory
+		if cwd.file_path == home_dir then
+			dir_name = "~"
+		else
+			dir_name = cwd.file_path:match("[^/]+$") or "~"
+		end
+		
 		table.insert(
 			elements,
 			wezterm.format({
