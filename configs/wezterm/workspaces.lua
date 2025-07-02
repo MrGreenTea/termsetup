@@ -6,11 +6,33 @@ local wezterm = require("wezterm")
 local module = {}
 
 -- Workspace data structure
-local function create_workspace(name, root_path, project_type)
+local function create_workspace(name, root_path, project_details)
+	-- Handle backward compatibility - if project_details is a string, treat as project_type
+	local details
+	if type(project_details) == "string" then
+		details = {
+			project_type = project_details,
+			project_subtype = nil,
+			package_manager = nil,
+			detection_evidence = {},
+		}
+	else
+		details = project_details
+			or {
+				project_type = "generic",
+				project_subtype = nil,
+				package_manager = nil,
+				detection_evidence = {},
+			}
+	end
+
 	return {
 		name = name,
 		root_path = root_path,
-		project_type = project_type or "generic",
+		project_type = details.project_type,
+		project_subtype = details.project_subtype,
+		package_manager = details.package_manager,
+		detection_evidence = details.detection_evidence,
 		created_at = os.date("%Y-%m-%dT%H:%M:%SZ"),
 		last_accessed = os.date("%Y-%m-%dT%H:%M:%SZ"),
 		socket_path = "",
@@ -51,18 +73,111 @@ local project_detectors = {
 	},
 }
 
-local function detect_project_type(path)
+-- Enhanced Python project detection
+local function detect_python_details(path)
+	local evidence = {}
+	local package_manager = nil
+	local subtype = nil
+
+	-- Helper function to check if file exists
+	local function file_exists(file_path)
+		local f = io.open(file_path, "r")
+		if f then
+			f:close()
+			return true
+		end
+		return false
+	end
+
+	-- Check for UV first (highest priority when uv.lock exists)
+	if file_exists(path .. "/uv.lock") then
+		package_manager = "uv"
+		subtype = "uv"
+		table.insert(evidence, "uv.lock")
+		if file_exists(path .. "/pyproject.toml") then
+			table.insert(evidence, "pyproject.toml")
+		end
+
+		-- Check for Poetry (with lock file)
+	elseif file_exists(path .. "/pyproject.toml") and file_exists(path .. "/poetry.lock") then
+		package_manager = "poetry"
+		subtype = "poetry"
+		table.insert(evidence, "pyproject.toml")
+		table.insert(evidence, "poetry.lock")
+
+		-- Check for Poetry project without lock file
+	elseif file_exists(path .. "/pyproject.toml") then
+		-- Need to verify it's actually a poetry project by checking content
+		-- For now, assume any pyproject.toml is poetry (could enhance later)
+		package_manager = "poetry"
+		subtype = "poetry"
+		table.insert(evidence, "pyproject.toml")
+
+		-- Check for Pip requirements
+	elseif file_exists(path .. "/requirements.txt") then
+		package_manager = "pip"
+		subtype = "pip"
+		table.insert(evidence, "requirements.txt")
+
+		-- Check for additional requirements files
+		local additional_reqs =
+			{ "requirements-dev.txt", "requirements-test.txt", "dev-requirements.txt", "test-requirements.txt" }
+		for _, req_file in ipairs(additional_reqs) do
+			if file_exists(path .. "/" .. req_file) then
+				table.insert(evidence, req_file)
+			end
+		end
+	else
+		return nil -- Not a Python project
+	end
+
+	return {
+		project_type = "python",
+		project_subtype = subtype,
+		package_manager = package_manager,
+		detection_evidence = evidence,
+	}
+end
+
+-- Enhanced project detection with details
+local function detect_project_details(path)
+	-- Try Python detection first (more specific)
+	local python_details = detect_python_details(path)
+	if python_details then
+		return python_details
+	end
+
+	-- Fall back to original detection logic for other project types
 	for _, detector in ipairs(project_detectors) do
 		for _, file in ipairs(detector.files) do
 			local file_path = path .. "/" .. file
 			local f = io.open(file_path, "r")
 			if f then
 				f:close()
-				return detector.name
+				-- Return enhanced format for compatibility
+				return {
+					project_type = detector.name,
+					project_subtype = nil,
+					package_manager = nil,
+					detection_evidence = { file },
+				}
 			end
 		end
 	end
-	return "generic"
+
+	-- Generic fallback
+	return {
+		project_type = "generic",
+		project_subtype = nil,
+		package_manager = nil,
+		detection_evidence = {},
+	}
+end
+
+-- Backward compatibility wrapper
+local function detect_project_type(path)
+	local details = detect_project_details(path)
+	return details.project_type
 end
 
 -- Extract basename from path for workspace name suggestion
@@ -70,10 +185,10 @@ local function get_basename(path)
 	if not path or path == "" then
 		return "workspace"
 	end
-	
+
 	-- Remove trailing slash if present
 	path = path:gsub("/$", "")
-	
+
 	-- Extract basename (last component after /)
 	local basename = path:match("([^/]+)$")
 	return basename or "workspace"
@@ -146,6 +261,31 @@ local function load_workspace(workspace_name)
 		return nil
 	end
 
+	-- Migration logic for existing workspaces
+	if workspace and not workspace.project_subtype then
+		wezterm.log_info("Migrating workspace '" .. workspace_name .. "' to new format")
+
+		-- Add missing fields with defaults
+		workspace.project_subtype = nil
+		workspace.package_manager = nil
+		workspace.detection_evidence = {}
+
+		-- Try to enhance detection for Python projects
+		if workspace.project_type == "python" and workspace.root_path then
+			local python_details = detect_python_details(workspace.root_path)
+			if python_details then
+				workspace.project_subtype = python_details.project_subtype
+				workspace.package_manager = python_details.package_manager
+				workspace.detection_evidence = python_details.detection_evidence
+			end
+		end
+
+		-- Save the migrated workspace
+		if not save_workspace(workspace) then
+			wezterm.log_warn("Failed to save migrated workspace: " .. workspace_name)
+		end
+	end
+
 	return workspace
 end
 
@@ -175,6 +315,9 @@ local function list_all_workspaces()
 				table.insert(workspaces, {
 					name = workspace.name,
 					project_type = workspace.project_type or "generic",
+					project_subtype = workspace.project_subtype,
+					package_manager = workspace.package_manager,
+					detection_evidence = workspace.detection_evidence or {},
 					root_path = workspace.root_path,
 					last_accessed = workspace.last_accessed,
 					created_at = workspace.created_at,
@@ -243,11 +386,11 @@ local function create_workspace_from_current_directory(workspace_name, current_p
 		return false
 	end
 
-	local project_type = detect_project_type(current_path)
-	local workspace = create_workspace(workspace_name, current_path, project_type)
+	local project_details = detect_project_details(current_path)
+	local workspace = create_workspace(workspace_name, current_path, project_details)
 
 	if save_workspace(workspace) then
-		wezterm.log_info("Created workspace: " .. workspace_name .. " (" .. project_type .. ")")
+		wezterm.log_info("Created workspace: " .. workspace_name .. " (" .. project_details.project_type .. ")")
 		return true
 	end
 
@@ -268,7 +411,7 @@ function module.apply_to_config(config)
 		end
 
 		window:perform_action(
-			wezterm.action.PromptInputLine{
+			wezterm.action.PromptInputLine({
 				description = "Enter workspace name:",
 				initial_value = get_basename(current_path),
 				action = wezterm.action_callback(function(window, pane, line)
@@ -285,7 +428,7 @@ function module.apply_to_config(config)
 						end
 					end
 				end),
-			},
+			}),
 			pane
 		)
 	end)
@@ -301,7 +444,15 @@ function module.apply_to_config(config)
 
 		local choices = {}
 		for _, workspace in ipairs(workspaces) do
-			local label = string.format("[%s] %s - %s", workspace.project_type, workspace.name, workspace.root_path)
+			-- Build enhanced project type display
+			local project_display = workspace.project_type
+			if workspace.package_manager then
+				project_display = project_display .. "/" .. workspace.package_manager
+			elseif workspace.project_subtype then
+				project_display = project_display .. "/" .. workspace.project_subtype
+			end
+
+			local label = string.format("[%s] %s - %s", project_display, workspace.name, workspace.root_path)
 			if workspace.last_accessed then
 				label = label .. " (last: " .. workspace.last_accessed .. ")"
 			end
@@ -332,5 +483,6 @@ end
 
 -- Export for testing
 module._get_basename = get_basename
+module._detect_project_details = detect_project_details
 
 return module
