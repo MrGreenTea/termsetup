@@ -41,6 +41,9 @@ function module.apply_to_config(config)
     -- Quick new tab/window
     { key = 't', mods = 'CTRL|ALT', action = wezterm.action.SpawnTab('CurrentPaneDomain') },
     { key = 'n', mods = 'CTRL|SHIFT|ALT', action = wezterm.action.SpawnWindow },
+    
+    -- Workspace management
+    { key = 'n', mods = 'CTRL|ALT', action = wezterm.action.EmitEvent('create-workspace') },
   }
   
   for _, binding in ipairs(convenience_bindings) do
