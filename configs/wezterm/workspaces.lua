@@ -50,28 +50,8 @@ local function create_workspace(name, root_path, project_details)
 end
 
 -- Project type detection - order matters! More specific types first
-local project_detectors = {
-	{
-		name = "nodejs",
-		files = { "package.json", "node_modules" },
-		template = "nodejs_template",
-	},
-	{
-		name = "rust",
-		files = { "Cargo.toml", "src/main.rs", "src/lib.rs" },
-		template = "rust_template",
-	},
-	{
-		name = "python",
-		files = { "requirements.txt", "pyproject.toml", "setup.py", "poetry.lock" },
-		template = "python_template",
-	},
-	{
-		name = "git",
-		files = { ".git" },
-		template = "git_template",
-	},
-}
+-- Note: Enhanced detectors for nodejs, python, rust, and git are implemented as separate functions
+local project_detectors = {}
 
 -- Enhanced Python project detection
 local function detect_python_details(path)
@@ -258,6 +238,52 @@ local function detect_rust_details(path)
 	}
 end
 
+-- Enhanced Git project detection
+local function detect_git_details(path)
+	local evidence = {}
+
+	-- Helper function to check if directory exists
+	local function directory_exists(dir_path)
+		local f = io.open(dir_path .. "/.", "r")
+		if f then
+			f:close()
+			return true
+		end
+		return false
+	end
+
+	-- Helper function to check if file exists
+	local function file_exists(file_path)
+		local f = io.open(file_path, "r")
+		if f then
+			f:close()
+			return true
+		end
+		return false
+	end
+
+	-- Check for .git directory (required)
+	if not directory_exists(path .. "/.git") then
+		return nil -- Not a Git repository
+	end
+	table.insert(evidence, ".git")
+
+	-- Check for additional common Git-related files
+	local git_files = { "README.md", ".gitignore", ".gitattributes", "LICENSE" }
+	for _, file in ipairs(git_files) do
+		if file_exists(path .. "/" .. file) then
+			table.insert(evidence, file)
+		end
+	end
+
+	return {
+		project_type = "git",
+		project_subtype = "repository",
+		package_manager = nil,
+		detection_evidence = evidence,
+	}
+end
+
 -- Enhanced project detection with details
 local function detect_project_details(path)
 	-- Try Python detection first (more specific)
@@ -276,6 +302,12 @@ local function detect_project_details(path)
 	local rust_details = detect_rust_details(path)
 	if rust_details then
 		return rust_details
+	end
+
+	-- Try Git detection
+	local git_details = detect_git_details(path)
+	if git_details then
+		return git_details
 	end
 
 	-- Fall back to original detection logic for other project types
