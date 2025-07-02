@@ -28,6 +28,40 @@ local function get_test_git_status()
 	}
 end
 
+-- Format pane running time
+local function format_running_time(pane)
+	if not pane then
+		return "00:00"
+	end
+
+	-- Initialize pane start times table if it doesn't exist
+	if not wezterm.GLOBAL.pane_start_times then
+		wezterm.GLOBAL.pane_start_times = {}
+	end
+
+	local pane_id = tostring(pane:pane_id())
+	local current_time = os.time()
+
+	-- Record start time for this pane if not already recorded
+	if not wezterm.GLOBAL.pane_start_times[pane_id] then
+		wezterm.GLOBAL.pane_start_times[pane_id] = current_time
+		wezterm.log_info("DEBUG: Recorded start time for pane " .. pane_id .. ": " .. current_time)
+	end
+
+	local elapsed = current_time - wezterm.GLOBAL.pane_start_times[pane_id]
+	local hours = math.floor(elapsed / 3600)
+	local minutes = math.floor((elapsed % 3600) / 60)
+	local seconds = elapsed % 60
+
+	if hours > 0 then
+		return string.format("%dh %dm", hours, minutes)
+	elseif minutes > 0 then
+		return string.format("%dm %ds", minutes, seconds)
+	else
+		return string.format("%ds", seconds)
+	end
+end
+
 -- Get git status information
 local function get_git_status(repo_path)
 	wezterm.log_info("DEBUG: get_git_status called with repo_path: " .. tostring(repo_path))
@@ -354,11 +388,11 @@ function module.format_status_bar(window, pane)
 		)
 	end
 
-	-- Current time
+	-- Pane running time
 	table.insert(
 		elements,
 		wezterm.format({
-			{ Text = " " .. os.date("%H:%M") .. " " },
+			{ Text = " " .. format_running_time(pane) .. " " },
 		})
 	)
 
@@ -367,7 +401,7 @@ end
 
 function module.apply_to_config(config)
 	-- Enable status bar
-	config.status_update_interval = 2000
+	config.status_update_interval = 1000
 
 	-- Set up status bar event handler
 	wezterm.on("update-status", module.format_status_bar)
