@@ -73,6 +73,15 @@
             "command": "/var/home/jonas/Development/termsetup-claude/scripts/typescript_formatter_hook.py"
           }
         ]
+      },
+      {
+        "matcher": "Edit(*.lua)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/var/home/jonas/Development/termsetup-claude/scripts/lua_formatter_hook.py"
+          }
+        ]
       }
     ]
   }
