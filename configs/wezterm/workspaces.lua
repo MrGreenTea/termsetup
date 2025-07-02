@@ -181,6 +181,37 @@ local function list_all_workspaces()
 end
 
 -- Workspace management functions
+local function switch_to_workspace(workspace_name, window, pane)
+	local workspace = load_workspace(workspace_name)
+	if not workspace then
+		wezterm.log_error("Workspace '" .. workspace_name .. "' not found")
+		window:toast_notification("WezTerm Workspace", "Failed to load workspace: " .. workspace_name, nil, 4000)
+		return false
+	end
+
+	-- Update last_accessed timestamp
+	workspace.last_accessed = os.date("%Y-%m-%dT%H:%M:%SZ")
+	if not save_workspace(workspace) then
+		wezterm.log_warn("Failed to update workspace timestamp for: " .. workspace_name)
+	end
+
+	-- Switch to the workspace
+	window:perform_action(
+		wezterm.action.SwitchToWorkspace({
+			name = workspace_name,
+			spawn = {
+				cwd = workspace.root_path,
+			},
+		}),
+		pane
+	)
+
+	-- Show success notification
+	window:toast_notification("WezTerm Workspace", "Switched to workspace: " .. workspace_name, nil, 4000)
+	wezterm.log_info("Switched to workspace: " .. workspace_name)
+	return true
+end
+
 local function create_workspace_from_current_directory(workspace_name, current_path)
 	if not workspace_name or workspace_name == "" then
 		wezterm.log_error("Workspace name cannot be empty")
@@ -270,9 +301,7 @@ function module.apply_to_config(config)
 			wezterm.action.InputSelector({
 				action = wezterm.action_callback(function(window, pane, id, label)
 					if id then
-						-- For now, just show which workspace was selected
-						-- Switching functionality will be implemented in step 3
-						window:toast_notification("WezTerm Workspace", "Selected workspace: " .. id, nil, 4000)
+						switch_to_workspace(id, window, pane)
 					end
 				end),
 				title = "Select Workspace",
