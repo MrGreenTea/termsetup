@@ -25,9 +25,9 @@ bash install.sh
 bash install_scripts/01_something.sh
 ```
 
-- When testing WezTerm configuration, use `flatpak run org.wezfurlong.wezterm` since WezTerm is installed via flatpak
+- When testing WezTerm configuration, use `wezterm` since WezTerm is installed via rpm-ostree
 - Never specify `--config-file` when testing WezTerm - always use the default config path at `~/.config/wezterm/`
-- Always test WezTerm with a command that exits to prevent it staying open: `flatpak run org.wezfurlong.wezterm start --always-new-process -- sleep 1 && echo "test"`
+- Always test WezTerm with a command that exits to prevent it staying open: `wezterm start --always-new-process -- sleep 1 && echo "test"`
 
 ## Claude Personal Preferences
 
