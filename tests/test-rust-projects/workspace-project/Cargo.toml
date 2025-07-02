@@ -1,0 +1,6 @@
+[workspace]
+members = ["crate1", "crate2"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
