@@ -357,6 +357,49 @@ local function get_basename(path)
 	return basename or "workspace"
 end
 
+-- Symbol mapping for project types (section 1.1 of redesign spec)
+local project_symbols = {
+	nodejs = "⚡",  -- Lightning bolt - fast/dynamic
+	rust = "🦀",    -- Crab - Rust mascot
+	python = "🐍",  -- Snake - Python symbol
+	git = "📁",     -- Folder - repository
+	generic = "⚙️"  -- Gear - general tool/project
+}
+
+-- Get Unicode symbol for project type (section 1.2 of redesign spec)
+local function get_project_symbol(project_type)
+	if not project_type then
+		return project_symbols.generic
+	end
+	
+	return project_symbols[project_type] or project_symbols.generic
+end
+
+-- Shorten path by replacing HOME with ~ (section 2.1 of redesign spec)
+local function shorten_path(full_path)
+	if not full_path or full_path == "" then
+		return full_path or ""
+	end
+	
+	local home = os.getenv("HOME")
+	if not home then
+		return full_path
+	end
+	
+	-- Replace exact home directory
+	if full_path == home then
+		return "~"
+	end
+	
+	-- Replace home prefix with trailing slash
+	if full_path:find("^" .. home .. "/") then
+		return "~" .. full_path:sub(#home + 1)
+	end
+	
+	-- No substitution needed
+	return full_path
+end
+
 -- Workspace persistence
 local function get_workspace_dir()
 	local home = os.getenv("HOME")
@@ -647,5 +690,7 @@ end
 -- Export for testing
 module._get_basename = get_basename
 module._detect_project_details = detect_project_details
+module._get_project_symbol = get_project_symbol
+module._shorten_path = shorten_path
 
 return module
