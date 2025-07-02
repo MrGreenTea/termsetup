@@ -464,12 +464,54 @@ local function format_relative_time(iso_timestamp, current_time_iso)
 	end
 end
 
--- Calculate visual width (handles Unicode ellipsis properly)
+-- Calculate visual width (handles Unicode characters properly)
 local function visual_width(str)
 	if not str then return 0 end
-	-- Replace ellipsis with single placeholder for width calculation
-	local normalized = str:gsub("…", "X")
-	return #normalized
+	
+	-- Handle specific Unicode characters used in this project
+	local width = 0
+	local i = 1
+	while i <= #str do
+		local byte = string.byte(str, i)
+		if byte < 128 then
+			-- ASCII character
+			width = width + 1
+			i = i + 1
+		elseif byte == 0xE2 and i + 2 <= #str then
+			-- Check for ellipsis (U+2026): E2 80 A6
+			if string.byte(str, i + 1) == 0x80 and string.byte(str, i + 2) == 0xA6 then
+				width = width + 1  -- Ellipsis is 1 visual character
+				i = i + 3
+			-- Check for lightning bolt (U+26A1): E2 9A A1
+			elseif string.byte(str, i + 1) == 0x9A and string.byte(str, i + 2) == 0xA1 then
+				width = width + 2  -- Lightning bolt is 2 visual characters (same as other emoji)
+				i = i + 3
+			else
+				-- Other E2 prefix characters, skip the whole sequence
+				width = width + 1
+				i = i + 3
+			end
+		elseif byte == 0xF0 and i + 3 <= #str then
+			-- 4-byte emoji sequences (most emoji)
+			width = width + 2  -- Most emoji are 2 visual characters wide
+			i = i + 4
+		elseif byte >= 0xC0 then
+			-- Multi-byte UTF-8 character, determine length
+			local bytes = 1
+			if byte >= 0xF0 then bytes = 4
+			elseif byte >= 0xE0 then bytes = 3
+			elseif byte >= 0xC0 then bytes = 2
+			end
+			width = width + 1  -- Assume 1 visual character for other multi-byte chars
+			i = i + bytes
+		else
+			-- Invalid UTF-8, treat as 1 character
+			width = width + 1
+			i = i + 1
+		end
+	end
+	
+	return width
 end
 
 -- Truncate path with ellipsis if needed (section 5.1 of redesign spec)
@@ -776,6 +818,56 @@ end
 function module.apply_to_config(config)
 	wezterm.log_info("Applying workspace configuration")
 
+	-- Calculate column widths for workspace display (section 4.1 of redesign spec)
+	local function calculate_column_widths(workspaces, terminal_width)
+		terminal_width = terminal_width or 80
+		
+		-- Fixed widths per specification
+		local symbol_width = 3
+		local time_width = 10
+		local padding_width = 4   -- spaces between columns
+		
+		-- Calculate maximum name length across all workspaces
+		local max_name_length = 15  -- minimum per spec
+		if workspaces and #workspaces > 0 then
+			for _, workspace in ipairs(workspaces) do
+				if workspace.name then
+					max_name_length = math.max(max_name_length, visual_width(workspace.name))
+				end
+			end
+		end
+		
+		-- Calculate remaining space for path
+		local used_width = symbol_width + max_name_length + time_width + padding_width
+		local path_width = math.max(20, terminal_width - used_width)  -- minimum 20 chars for path
+		
+		return {
+			symbol = symbol_width,
+			name = max_name_length, 
+			path = path_width,
+			time = time_width
+		}
+	end
+
+	-- Format workspace row with proper alignment (section 4.2 of redesign spec)
+	local function format_workspace_row(workspace, widths, current_time_iso)
+		-- Get components
+		local symbol = get_project_symbol(workspace.project_type)
+		local name = workspace.name or "unknown"
+		local shortened_path = shorten_path(workspace.root_path or "")
+		local time_str = format_relative_time(workspace.last_accessed, current_time_iso)
+		
+		-- Truncate path if necessary
+		local truncated_path = truncate_path(shortened_path, widths.path)
+		
+		-- Pad components manually to handle Unicode characters properly
+		local symbol_padded = symbol .. string.rep(" ", widths.symbol - visual_width(symbol))
+		local name_padded = name .. string.rep(" ", widths.name - visual_width(name))
+		local path_padded = truncated_path .. string.rep(" ", widths.path - visual_width(truncated_path))
+		
+		return symbol_padded .. " " .. name_padded .. " " .. path_padded .. " " .. time_str
+	end
+
 	-- Register workspace creation action
 	wezterm.on("create-workspace", function(window, pane)
 		local current_path = pane:get_current_working_dir()
@@ -818,23 +910,17 @@ function module.apply_to_config(config)
 		end
 
 		local choices = {}
+
+		-- Calculate optimal column layout
+		local column_widths = calculate_column_widths(workspaces, 80)
+
+		-- Format each workspace with new layout
 		for _, workspace in ipairs(workspaces) do
-			-- Build enhanced project type display
-			local project_display = workspace.project_type
-			if workspace.package_manager then
-				project_display = project_display .. "/" .. workspace.package_manager
-			elseif workspace.project_subtype then
-				project_display = project_display .. "/" .. workspace.project_subtype
-			end
-
-			local label = string.format("[%s] %s - %s", project_display, workspace.name, workspace.root_path)
-			if workspace.last_accessed then
-				label = label .. " (last: " .. workspace.last_accessed .. ")"
-			end
-
+			local formatted_row = format_workspace_row(workspace, column_widths, os.date("!%Y-%m-%dT%H:%M:%SZ"))
+			
 			table.insert(choices, {
 				id = workspace.name,
-				label = label,
+				label = formatted_row,
 			})
 		end
 
@@ -856,40 +942,6 @@ function module.apply_to_config(config)
 	wezterm.log_info("Workspace configuration applied successfully")
 end
 
--- Calculate column widths for workspace display (section 4.1 of redesign spec)
-local function calculate_column_widths(workspaces, terminal_width)
-	terminal_width = terminal_width or 80
-	
-	-- Fixed widths per specification
-	local symbol_width = 3    -- symbol + space
-	local time_width = 10     -- "Xd ago" format
-	local padding_width = 4   -- spaces between columns
-	
-	-- Calculate maximum name length across all workspaces
-	local max_name_length = 15  -- minimum per spec
-	if workspaces and #workspaces > 0 then
-		for _, workspace in ipairs(workspaces) do
-			if workspace.name then
-				max_name_length = math.max(max_name_length, visual_width(workspace.name))
-			end
-		end
-	end
-	
-	-- Calculate remaining space for path
-	local used_width = symbol_width + max_name_length + time_width + padding_width
-	local path_width = terminal_width - used_width
-	
-	-- Ensure minimum path width per spec
-	path_width = math.max(path_width, 20)
-	
-	return {
-		symbol = symbol_width,
-		name = max_name_length,
-		path = path_width,
-		time = time_width
-	}
-end
-
 -- Export for testing
 module._get_basename = get_basename
 module._detect_project_details = detect_project_details
@@ -898,5 +950,6 @@ module._shorten_path = shorten_path
 module._format_relative_time = format_relative_time
 module._truncate_path = truncate_path
 module._calculate_column_widths = calculate_column_widths
+module._format_workspace_row = format_workspace_row
 
 return module
