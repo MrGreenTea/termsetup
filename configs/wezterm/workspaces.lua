@@ -856,6 +856,40 @@ function module.apply_to_config(config)
 	wezterm.log_info("Workspace configuration applied successfully")
 end
 
+-- Calculate column widths for workspace display (section 4.1 of redesign spec)
+local function calculate_column_widths(workspaces, terminal_width)
+	terminal_width = terminal_width or 80
+	
+	-- Fixed widths per specification
+	local symbol_width = 3    -- symbol + space
+	local time_width = 10     -- "Xd ago" format
+	local padding_width = 4   -- spaces between columns
+	
+	-- Calculate maximum name length across all workspaces
+	local max_name_length = 15  -- minimum per spec
+	if workspaces and #workspaces > 0 then
+		for _, workspace in ipairs(workspaces) do
+			if workspace.name then
+				max_name_length = math.max(max_name_length, visual_width(workspace.name))
+			end
+		end
+	end
+	
+	-- Calculate remaining space for path
+	local used_width = symbol_width + max_name_length + time_width + padding_width
+	local path_width = terminal_width - used_width
+	
+	-- Ensure minimum path width per spec
+	path_width = math.max(path_width, 20)
+	
+	return {
+		symbol = symbol_width,
+		name = max_name_length,
+		path = path_width,
+		time = time_width
+	}
+end
+
 -- Export for testing
 module._get_basename = get_basename
 module._detect_project_details = detect_project_details
@@ -863,5 +897,6 @@ module._get_project_symbol = get_project_symbol
 module._shorten_path = shorten_path
 module._format_relative_time = format_relative_time
 module._truncate_path = truncate_path
+module._calculate_column_widths = calculate_column_widths
 
 return module
