@@ -33,8 +33,8 @@ local function create_workspace(name, root_path, project_details)
 		project_subtype = details.project_subtype,
 		package_manager = details.package_manager,
 		detection_evidence = details.detection_evidence,
-		created_at = os.date("%Y-%m-%dT%H:%M:%SZ"),
-		last_accessed = os.date("%Y-%m-%dT%H:%M:%SZ"),
+		created_at = os.date("!%Y-%m-%dT%H:%M:%SZ"),
+		last_accessed = os.date("!%Y-%m-%dT%H:%M:%SZ"),
 		socket_path = "",
 		layout = {
 			panes = {},
@@ -764,7 +764,7 @@ local function switch_to_workspace(workspace_name, window, pane)
 	end
 
 	-- Update last_accessed timestamp
-	workspace.last_accessed = os.date("%Y-%m-%dT%H:%M:%SZ")
+	workspace.last_accessed = os.date("!%Y-%m-%dT%H:%M:%SZ")
 	if not save_workspace(workspace) then
 		wezterm.log_warn("Failed to update workspace timestamp for: " .. workspace_name)
 	end
