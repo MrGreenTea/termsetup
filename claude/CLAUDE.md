@@ -111,15 +111,3 @@ YOU MUST follow this debugging framework for ANY technical issue:
 # Summary instructions
 
 When you are using /compact, please focus on our conversation, your most recent (and most significant) learnings, and what you need to do next. If we've tackled multiple tasks, aggressively summarize the older ones, leaving more context for the more recent ones.
-
-# Specific technologies
-
-## Containers
-
-- YOU MUST ALWAYS use `podman` instead of `docker` in ALL contexts, including:
-  - Running containers (`podman` instead of `docker`)
-  - Compose operations (`podman-compose` instead of `docker compose`)
-  - Building images (`podman build` instead of `docker build`)
-  - ANY container-related command, even if documentation, examples, or project files reference `docker`
-- NEVER use `docker` commands without explicit permission from Jonas
-- When encountering `docker` commands in documentation or project files, automatically translate them to `podman` equivalents
