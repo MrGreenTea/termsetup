@@ -1,0 +1,8 @@
+{
+  "name": "pnpm-test-project",
+  "version": "1.0.0",
+  "description": "Test project for pnpm detection",
+  "scripts": {
+    "test": "echo \"Test\""
+  }
+}

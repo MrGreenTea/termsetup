@@ -1,0 +1,8 @@
+{
+  "name": "npm-test-project",
+  "version": "1.0.0",
+  "description": "Test project for npm detection",
+  "scripts": {
+    "test": "echo \"Test\""
+  }
+}
