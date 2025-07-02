@@ -464,6 +464,111 @@ local function format_relative_time(iso_timestamp, current_time_iso)
 	end
 end
 
+-- Calculate visual width (handles Unicode ellipsis properly)
+local function visual_width(str)
+	if not str then return 0 end
+	-- Replace ellipsis with single placeholder for width calculation
+	local normalized = str:gsub("…", "X")
+	return #normalized
+end
+
+-- Truncate path with ellipsis if needed (section 5.1 of redesign spec)
+local function truncate_path(path, max_width)
+	if not path or path == "" then
+		return path or ""
+	end
+	
+	if visual_width(path) <= max_width then
+		return path
+	end
+	
+	-- Use Unicode ellipsis character (visually 1 char, 3 bytes)
+	local ellipsis = "…"
+	local available_chars = max_width - 1  -- Ellipsis counts as 1 visual character
+	
+	if available_chars <= 0 then
+		-- Very narrow width - return as much as possible
+		return path:sub(1, max_width)
+	end
+	
+	-- Split path into components
+	local components = {}
+	for component in path:gmatch("[^/]+") do
+		table.insert(components, component)
+	end
+	
+	-- Check if we have a single overlong component that needs truncation
+	local last_component = components[#components]
+	if visual_width(last_component) > max_width then
+		-- Last component is too long, truncate it without leading slash
+		return ellipsis .. last_component:sub(-(max_width - 1))
+	end
+	
+	-- Check if path has meaningful path structure (multiple logical components)
+	-- Special case: ~/filename is considered a single logical component if filename fits
+	local has_path_structure = #components > 1 and not (components[1] == "~" and #components == 2)
+	
+	if not has_path_structure then
+		-- Single component that fits - return as is
+		return path
+	end
+	
+	-- Try to fit as many complete components as possible from the end
+	local best_result = nil
+	local best_length = 0
+	
+	-- First pass: try with leading slash
+	for num_components = 1, #components do
+		local start_idx = #components - num_components + 1
+		local selected_components = {}
+		
+		for i = start_idx, #components do
+			table.insert(selected_components, components[i])
+		end
+		
+		local components_str = table.concat(selected_components, "/")
+		local with_slash = "/" .. components_str
+		
+		if visual_width(with_slash) <= available_chars then
+			-- This fits - it's better if it uses more characters
+			if visual_width(with_slash) > best_length then
+				best_result = ellipsis .. with_slash
+				best_length = visual_width(with_slash)
+			end
+		end
+	end
+	
+	-- Second pass: try without leading slash (fallback for tight spaces)
+	if not best_result then
+		for num_components = 1, #components do
+			local start_idx = #components - num_components + 1
+			local selected_components = {}
+			
+			for i = start_idx, #components do
+				table.insert(selected_components, components[i])
+			end
+			
+			local components_str = table.concat(selected_components, "/")
+			
+			if visual_width(components_str) <= available_chars then
+				-- This fits - it's better if it uses more characters
+				if visual_width(components_str) > best_length then
+					best_result = ellipsis .. components_str
+					best_length = visual_width(components_str)
+				end
+			end
+		end
+	end
+	
+	-- If we found a result, use it
+	if best_result then
+		return best_result
+	end
+	
+	-- Fallback: just truncate
+	return ellipsis .. path:sub(-available_chars)
+end
+
 -- Workspace persistence
 local function get_workspace_dir()
 	local home = os.getenv("HOME")
@@ -757,5 +862,6 @@ module._detect_project_details = detect_project_details
 module._get_project_symbol = get_project_symbol
 module._shorten_path = shorten_path
 module._format_relative_time = format_relative_time
+module._truncate_path = truncate_path
 
 return module
