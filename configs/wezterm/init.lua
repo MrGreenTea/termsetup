@@ -20,7 +20,8 @@ function module.apply_to_config(config)
     panes = safe_require('panes'),
     status = safe_require('status'),
     keybindings = safe_require('keybindings'),
-    utils = safe_require('utils')
+    utils = safe_require('utils'),
+    workspaces = safe_require('workspaces')
   }
   
   -- Apply modules in correct order: appearance first, then panes, then keybindings that depend on panes
@@ -42,6 +43,11 @@ function module.apply_to_config(config)
   if modules.status and modules.status.apply_to_config then
     wezterm.log_info('Applying status configuration')
     modules.status.apply_to_config(config)
+  end
+  
+  if modules.workspaces and modules.workspaces.apply_to_config then
+    wezterm.log_info('Applying workspaces configuration')
+    modules.workspaces.apply_to_config(config)
   end
   
   wezterm.log_info('WezTerm modular configuration initialized successfully')

@@ -32,3 +32,7 @@ bash install_scripts/01_something.sh
 ## Claude Personal Preferences
 
 - Always call me "Mr. Brontosaurus"
+
+## WezTerm Configuration Notes
+
+- Wezterm config scripts are symlinked to `$HOME/.config/wezterm/`. When adding new scripts you have to symlink them as well.
