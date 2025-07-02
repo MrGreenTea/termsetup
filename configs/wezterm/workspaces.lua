@@ -278,7 +278,7 @@ function module.apply_to_config(config)
 	-- Register workspace listing action
 	wezterm.on("list-workspaces", function(window, pane)
 		local workspaces = list_all_workspaces()
-		
+
 		if #workspaces == 0 then
 			window:toast_notification("WezTerm Workspace", "No workspaces found", nil, 4000)
 			return
@@ -290,7 +290,7 @@ function module.apply_to_config(config)
 			if workspace.last_accessed then
 				label = label .. " (last: " .. workspace.last_accessed .. ")"
 			end
-			
+
 			table.insert(choices, {
 				id = workspace.name,
 				label = label,
