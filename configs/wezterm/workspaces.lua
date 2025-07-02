@@ -65,6 +65,20 @@ local function detect_project_type(path)
 	return "generic"
 end
 
+-- Extract basename from path for workspace name suggestion
+local function get_basename(path)
+	if not path or path == "" then
+		return "workspace"
+	end
+	
+	-- Remove trailing slash if present
+	path = path:gsub("/$", "")
+	
+	-- Extract basename (last component after /)
+	local basename = path:match("([^/]+)$")
+	return basename or "workspace"
+end
+
 -- Workspace persistence
 local function get_workspace_dir()
 	local home = os.getenv("HOME")
@@ -254,8 +268,9 @@ function module.apply_to_config(config)
 		end
 
 		window:perform_action(
-			wezterm.action.PromptInputLine({
+			wezterm.action.PromptInputLine{
 				description = "Enter workspace name:",
+				initial_value = get_basename(current_path),
 				action = wezterm.action_callback(function(window, pane, line)
 					if line and line ~= "" then
 						if create_workspace_from_current_directory(line, current_path) then
@@ -270,7 +285,7 @@ function module.apply_to_config(config)
 						end
 					end
 				end),
-			}),
+			},
 			pane
 		)
 	end)
@@ -314,5 +329,8 @@ function module.apply_to_config(config)
 
 	wezterm.log_info("Workspace configuration applied successfully")
 end
+
+-- Export for testing
+module._get_basename = get_basename
 
 return module
