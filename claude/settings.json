@@ -30,7 +30,47 @@
           },
           {
             "type": "command",
-            "command": "/var/home/jonas/Development/termsetup/scripts/notification_hook.py"
+            "command": "/var/home/jonas/Development/termsetup/scripts/notification_hook.py --ntfy-topic mrgreen_claude_code_notifications"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/var/home/jonas/Development/termsetup-claude/scripts/config_backup_hook.py"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit(*.py)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/var/home/jonas/Development/termsetup-claude/scripts/python_formatter_hook.py"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit(*.js)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/var/home/jonas/Development/termsetup-claude/scripts/javascript_formatter_hook.py"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit(*.ts) OR Edit(*.tsx)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/var/home/jonas/Development/termsetup-claude/scripts/typescript_formatter_hook.py"
           }
         ]
       }
