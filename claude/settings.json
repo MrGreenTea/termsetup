@@ -41,7 +41,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/var/home/jonas/Development/termsetup-claude/scripts/config_backup_hook.py"
+            "command": "/var/home/jonas/Development/termsetup/scripts/config_backup_hook.py"
           }
         ]
       }
@@ -52,7 +52,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/var/home/jonas/Development/termsetup-claude/scripts/python_formatter_hook.py"
+            "command": "/var/home/jonas/Development/termsetup/scripts/python_formatter_hook.py"
           }
         ]
       },
@@ -61,7 +61,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/var/home/jonas/Development/termsetup-claude/scripts/javascript_formatter_hook.py"
+            "command": "/var/home/jonas/Development/termsetup/scripts/javascript_formatter_hook.py"
           }
         ]
       },
@@ -70,7 +70,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/var/home/jonas/Development/termsetup-claude/scripts/typescript_formatter_hook.py"
+            "command": "/var/home/jonas/Development/termsetup/scripts/typescript_formatter_hook.py"
           }
         ]
       },
@@ -79,7 +79,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/var/home/jonas/Development/termsetup-claude/scripts/lua_formatter_hook.py"
+            "command": "/var/home/jonas/Development/termsetup/scripts/lua_formatter_hook.py"
           }
         ]
       }
