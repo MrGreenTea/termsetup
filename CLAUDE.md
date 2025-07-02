@@ -32,6 +32,11 @@ bash install_scripts/01_something.sh
 - Always test WezTerm with a command that exits to prevent it staying open: `wezterm start --always-new-process -- sleep 1 && echo "test"`
 - Wezterm config scripts are symlinked to `$HOME/.config/wezterm/`. When adding new scripts you have to symlink them as well.
 
+### Lua Timestamps
+
+- **ALWAYS use UTC**: `os.date("!%Y-%m-%dT%H:%M:%SZ")` (note the "!" prefix)
+- NEVER use `os.date("%Y-%m-%dT%H:%M:%SZ")` without "!" - creates local time with UTC suffix
+
 ## Claude Personal Preferences
 
 - Always call me "Mr. Brontosaurus"
