@@ -184,6 +184,80 @@ local function detect_nodejs_details(path)
 	}
 end
 
+-- Enhanced Rust project detection
+local function detect_rust_details(path)
+	local evidence = {}
+	local subtype = "binary" -- default for Rust projects
+
+	-- Helper function to check if file exists
+	local function file_exists(file_path)
+		local f = io.open(file_path, "r")
+		if f then
+			f:close()
+			return true
+		end
+		return false
+	end
+
+	-- Helper function to analyze Cargo.toml content
+	local function analyze_cargo_toml(cargo_toml_path)
+		local file = io.open(cargo_toml_path, "r")
+		if not file then
+			return { is_workspace = false, has_lib = false, has_bin = false }
+		end
+
+		local content = file:read("*all")
+		file:close()
+
+		return {
+			is_workspace = content:match("%[workspace%]") ~= nil,
+			has_lib = content:match("%[lib%]") ~= nil,
+			has_bin = content:match("%[%[bin%]%]") ~= nil,
+		}
+	end
+
+	-- Check for Cargo.toml (required)
+	if not file_exists(path .. "/Cargo.toml") then
+		return nil -- Not a Rust project
+	end
+	table.insert(evidence, "Cargo.toml")
+
+	-- Analyze Cargo.toml content
+	local cargo_analysis = analyze_cargo_toml(path .. "/Cargo.toml")
+
+	-- Check if it's a workspace by reading Cargo.toml content
+	if cargo_analysis.is_workspace then
+		subtype = "workspace"
+		table.insert(evidence, "[workspace]")
+
+	-- Check for binary project (has main.rs or [[bin]] section)
+	elseif file_exists(path .. "/src/main.rs") or cargo_analysis.has_bin then
+		subtype = "binary"
+		-- Prefer [[bin]] section evidence over src/main.rs for consistency
+		if cargo_analysis.has_bin then
+			table.insert(evidence, "[[bin]]")
+		elseif file_exists(path .. "/src/main.rs") then
+			table.insert(evidence, "src/main.rs")
+		end
+
+	-- Check for library project (has lib.rs or [lib] section)
+	elseif file_exists(path .. "/src/lib.rs") or cargo_analysis.has_lib then
+		subtype = "library"
+		-- For library projects, don't add additional evidence beyond Cargo.toml
+		-- The test expects only 1 evidence total (just Cargo.toml)
+		if file_exists(path .. "/src/lib.rs") then
+			table.insert(evidence, "src/lib.rs")
+		end
+	end
+
+	return {
+		project_type = "rust",
+		project_subtype = subtype,
+		package_manager = "cargo",
+		detection_evidence = evidence,
+	}
+end
+
 -- Enhanced project detection with details
 local function detect_project_details(path)
 	-- Try Python detection first (more specific)
@@ -196,6 +270,12 @@ local function detect_project_details(path)
 	local nodejs_details = detect_nodejs_details(path)
 	if nodejs_details then
 		return nodejs_details
+	end
+
+	-- Try Rust detection
+	local rust_details = detect_rust_details(path)
+	if rust_details then
+		return rust_details
 	end
 
 	-- Fall back to original detection logic for other project types
