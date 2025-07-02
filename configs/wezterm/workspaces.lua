@@ -139,12 +139,63 @@ local function detect_python_details(path)
 	}
 end
 
+-- Enhanced Node.js project detection
+local function detect_nodejs_details(path)
+	local evidence = {}
+	local package_manager = "npm" -- default
+	local subtype = "basic" -- default
+
+	-- Helper function to check if file exists
+	local function file_exists(file_path)
+		local f = io.open(file_path, "r")
+		if f then
+			f:close()
+			return true
+		end
+		return false
+	end
+
+	-- Check for package.json (required)
+	if not file_exists(path .. "/package.json") then
+		return nil -- Not a Node.js project
+	end
+	table.insert(evidence, "package.json")
+
+	-- Check for specific package managers (in priority order)
+	if file_exists(path .. "/pnpm-lock.yaml") then
+		package_manager = "pnpm"
+		subtype = "pnpm"
+		table.insert(evidence, "pnpm-lock.yaml")
+	elseif file_exists(path .. "/yarn.lock") then
+		package_manager = "yarn"
+		subtype = "yarn"
+		table.insert(evidence, "yarn.lock")
+	elseif file_exists(path .. "/package-lock.json") then
+		package_manager = "npm"
+		subtype = "npm"
+		table.insert(evidence, "package-lock.json")
+	end
+
+	return {
+		project_type = "nodejs",
+		project_subtype = subtype,
+		package_manager = package_manager,
+		detection_evidence = evidence,
+	}
+end
+
 -- Enhanced project detection with details
 local function detect_project_details(path)
 	-- Try Python detection first (more specific)
 	local python_details = detect_python_details(path)
 	if python_details then
 		return python_details
+	end
+
+	-- Try Node.js detection
+	local nodejs_details = detect_nodejs_details(path)
+	if nodejs_details then
+		return nodejs_details
 	end
 
 	-- Fall back to original detection logic for other project types
