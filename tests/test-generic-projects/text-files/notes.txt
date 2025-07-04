@@ -1,0 +1,2 @@
+This is a test project with only text files.
+It should be detected as generic type.

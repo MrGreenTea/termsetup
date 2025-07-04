@@ -1,0 +1,8 @@
+{
+  "name": "mixed-test-project",
+  "version": "1.0.0",
+  "description": "Test project with multiple package managers (should prioritize pnpm)",
+  "scripts": {
+    "test": "echo \"Test\""
+  }
+}

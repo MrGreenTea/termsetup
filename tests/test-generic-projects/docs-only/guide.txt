@@ -1,0 +1,4 @@
+User Guide
+==========
+
+This is a plain text guide for the project.

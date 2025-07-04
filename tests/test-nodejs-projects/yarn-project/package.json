@@ -1,0 +1,8 @@
+{
+  "name": "yarn-test-project",
+  "version": "1.0.0",
+  "description": "Test project for yarn detection",
+  "scripts": {
+    "test": "echo \"Test\""
+  }
+}
