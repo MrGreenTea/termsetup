@@ -1,0 +1,8 @@
+[package]
+name = "library-test"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "library_test"
+path = "src/lib.rs"
