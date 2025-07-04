@@ -34,16 +34,32 @@ def analyze_git_changes():
         )
         diff_content = result.stdout
         
-        # Analyze changes to suggest commit type
-        commit_type = "feat"  # default
+        # Analyze changes to suggest commit type using CursorAI approach
+        commit_type = "chore"  # default
         
-        # Check for specific patterns
-        if any(f.endswith('.md') for f in staged_files):
-            commit_type = "docs"
-        elif any(f.startswith('test') or 'test' in f for f in staged_files):
+        # First check for action verbs in diff content (like CursorAI)
+        if re.search(r'\+.*\b(add|create|implement|new)\b', diff_content, re.IGNORECASE):
+            commit_type = "feat"
+        elif re.search(r'\+.*\b(fix|correct|resolve|bug)\b', diff_content, re.IGNORECASE):
+            commit_type = "fix"
+        elif re.search(r'\+.*\b(refactor|restructure|reorganize)\b', diff_content, re.IGNORECASE):
+            commit_type = "refactor"
+        elif re.search(r'\+.*\b(test|spec)\b', diff_content, re.IGNORECASE):
             commit_type = "test"
-        elif any(f.endswith('.json') or f.endswith('.yml') or f.endswith('.yaml') for f in staged_files):
+        elif re.search(r'\+.*\b(doc|comment|readme)\b', diff_content, re.IGNORECASE):
+            commit_type = "docs"
+        elif re.search(r'\+.*\b(style|format|lint)\b', diff_content, re.IGNORECASE):
+            commit_type = "style"
+        elif re.search(r'\+.*\b(perf|performance|optimize)\b', diff_content, re.IGNORECASE):
+            commit_type = "perf"
+        # Then check file-based patterns (fallback)
+        elif any(f.endswith('.md') or 'README' in f for f in staged_files):
+            commit_type = "docs"
+        elif any(f.startswith('test') or 'test' in f or f.endswith('.test.') or f.endswith('.spec.') for f in staged_files):
+            commit_type = "test"
+        elif any(f.endswith('.json') or f.endswith('.yml') or f.endswith('.yaml') or f.endswith('.toml') for f in staged_files):
             commit_type = "chore"
+        # Check for general patterns in diff
         elif re.search(r'(fix|bug|error|issue)', diff_content, re.IGNORECASE):
             commit_type = "fix"
         elif re.search(r'(refactor|cleanup|reorganize)', diff_content, re.IGNORECASE):
@@ -52,30 +68,113 @@ def analyze_git_changes():
             commit_type = "style"
         elif re.search(r'(perf|performance|optimize)', diff_content, re.IGNORECASE):
             commit_type = "perf"
+        # If we're adding new content, likely a feature
+        elif re.search(r'^\+.*\S', diff_content, re.MULTILINE):
+            commit_type = "feat"
         
-        return commit_type, staged_files
+        return commit_type, staged_files, diff_content
         
     except subprocess.CalledProcessError:
-        return "feat", []
+        return "chore", [], ""
 
 
-def generate_commit_message(commit_type, staged_files):
+def extract_commit_description(diff_content, commit_type):
+    """Extract a meaningful commit description from diff content."""
+    # Look for function/class names being added
+    function_matches = re.findall(r'\+.*def\s+(\w+)', diff_content)
+    class_matches = re.findall(r'\+.*class\s+(\w+)', diff_content)
+    
+    # Look for comment patterns that might indicate what was done
+    comment_matches = re.findall(r'\+.*(?:#|//|/\*)\s*([A-Z].*)', diff_content)
+    
+    # Generate description based on commit type and findings
+    if function_matches:
+        if commit_type == "feat":
+            return f"add {function_matches[0]} function"
+        elif commit_type == "fix":
+            return f"fix {function_matches[0]} function"
+        elif commit_type == "refactor":
+            return f"refactor {function_matches[0]} function"
+        else:
+            return f"update {function_matches[0]} function"
+    elif class_matches:
+        if commit_type == "feat":
+            return f"add {class_matches[0]} class"
+        elif commit_type == "fix":
+            return f"fix {class_matches[0]} class"
+        else:
+            return f"update {class_matches[0]} class"
+    elif comment_matches:
+        # Use the first meaningful comment as description
+        comment = comment_matches[0].strip()
+        if len(comment) > 50:
+            comment = comment[:47] + "..."
+        return comment.lower()
+    else:
+        # Generic descriptions based on type
+        type_descriptions = {
+            "feat": "add new feature",
+            "fix": "fix bug",
+            "docs": "update documentation",
+            "style": "improve formatting",
+            "refactor": "refactor code",
+            "perf": "improve performance",
+            "test": "add tests",
+            "chore": "update configuration"
+        }
+        return type_descriptions.get(commit_type, "make changes")
+
+
+def generate_commit_message(commit_type, staged_files, diff_content=None):
     """Generate a conventional commit message template."""
     
-    # Get scope suggestion from files
+    # Get scope suggestion from files using CursorAI approach
     scope = ""
     if staged_files:
+        # Get common directory path
         common_dirs = set()
         for file in staged_files:
-            parts = Path(file).parts
-            if len(parts) > 1:
-                common_dirs.add(parts[0])
+            file_path = Path(file)
+            if len(file_path.parts) > 1:
+                # Use directory path, convert slashes to dashes
+                dir_path = str(file_path.parent).replace('/', '-').replace('\\', '-')
+                common_dirs.add(dir_path)
         
+        # If all files share the same directory structure, use it as scope
         if len(common_dirs) == 1:
-            scope = f"({list(common_dirs)[0]})"
+            scope_name = list(common_dirs)[0]
+            # Clean up scope name (remove leading dots, limit length)
+            if scope_name.startswith('.'):
+                scope_name = scope_name[1:]
+            if len(scope_name) > 20:  # Limit scope length
+                scope_name = scope_name[:20]
+            if scope_name and scope_name != '.':
+                scope = f"({scope_name})"
+        elif len(common_dirs) > 1:
+            # Multiple directories - check if they're related
+            dir_list = sorted(common_dirs)
+            # Find common prefix
+            common_prefix = ""
+            if len(dir_list) > 1:
+                first_parts = dir_list[0].split('-')
+                for i, part in enumerate(first_parts):
+                    if all(d.split('-')[i:i+1] == [part] for d in dir_list if len(d.split('-')) > i):
+                        common_prefix += part + '-'
+                    else:
+                        break
+            if common_prefix and len(common_prefix) > 2:
+                scope = f"({common_prefix.rstrip('-')})"
+    
+    # Generate description if diff content is provided
+    description = ""
+    if diff_content:
+        description = extract_commit_description(diff_content, commit_type)
     
     # Generate the message template
-    template = f"{commit_type}{scope}: "
+    if description:
+        template = f"{commit_type}{scope}: {description}"
+    else:
+        template = f"{commit_type}{scope}: "
     
     return template
 
@@ -113,8 +212,8 @@ def main():
             return 0
         
         # Analyze changes and generate commit message
-        commit_type, staged_files = analyze_git_changes()
-        commit_template = generate_commit_message(commit_type, staged_files)
+        commit_type, staged_files, diff_content = analyze_git_changes()
+        commit_template = generate_commit_message(commit_type, staged_files, diff_content)
         
         # Output user message to stderr
         print(f"\n💡 Conventional commit suggestion: {commit_template}", file=sys.stderr)
