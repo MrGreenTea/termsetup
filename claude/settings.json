@@ -85,6 +85,17 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/var/home/jonas/Development/termsetup/scripts/conventional_commit_hook.py"
+          }
+        ]
+      }
     ]
   }
 }
