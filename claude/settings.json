@@ -12,6 +12,7 @@
       "Bash(rg:*)",
       "Bash(find:*)",
       "Bash(cat:*)",
+      "Bash(uuidgen:*)",
       "Read(/tmp/*)",
       "Write(/tmp/*)",
       "WebFetch",
