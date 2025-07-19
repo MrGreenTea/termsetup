@@ -15,6 +15,7 @@
       "Bash(uuidgen:*)",
       "Bash(mkdir:*)",
       "Bash(ls:*)",
+      "Bash(gh:*)",
       "Read(/tmp/*)",
       "Write(/tmp/*)",
       "WebFetch",
