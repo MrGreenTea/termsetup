@@ -59,6 +59,10 @@
           {
             "type": "command",
             "command": "/var/home/jonas/Development/termsetup/scripts/block_command_hook.py pip uv"
+          },
+          {
+            "type": "command",
+            "command": "/var/home/jonas/Development/termsetup/gh_command_classifier.py"
           }
         ]
       }
