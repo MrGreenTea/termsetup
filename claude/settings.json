@@ -64,6 +64,10 @@
           {
             "type": "command",
             "command": "/var/home/jonas/Development/termsetup/gh_command_classifier.py"
+          },
+          {
+            "type": "command",
+            "command": "/var/home/jonas/Development/termsetup/scripts/bash_command_validator.py"
           }
         ]
       }
