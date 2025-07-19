@@ -55,6 +55,10 @@
           {
             "type": "command",
             "command": "/var/home/jonas/Development/termsetup/scripts/block_command_hook.py docker-compose \"podman compose\""
+          },
+          {
+            "type": "command",
+            "command": "/var/home/jonas/Development/termsetup/scripts/block_command_hook.py pip uv"
           }
         ]
       }
