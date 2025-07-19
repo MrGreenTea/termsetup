@@ -29,10 +29,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "jq -r '\"\\(.title) - \\(.message // \"No description\")\"' >> /tmp/claude-notifications.txt"
-          },
-          {
-            "type": "command",
             "command": "/var/home/jonas/Development/termsetup/scripts/notification_hook.py --ntfy-topic mrgreen_claude_code_notifications"
           }
         ]
