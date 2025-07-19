@@ -814,59 +814,64 @@ local function create_workspace_from_current_directory(workspace_name, current_p
 	return false
 end
 
+-- Calculate column widths for workspace display (section 4.1 of redesign spec)
+local function calculate_column_widths(workspaces, terminal_width)
+	terminal_width = terminal_width or 80
+	
+	-- Fixed widths per specification
+	local symbol_width = 3
+	local time_width = 10
+	local padding_width = 4   -- spaces between columns
+	
+	-- Calculate maximum name length across all workspaces
+	local max_name_length = 15  -- minimum per spec
+	if workspaces and #workspaces > 0 then
+		for _, workspace in ipairs(workspaces) do
+			if workspace.name then
+				max_name_length = math.max(max_name_length, visual_width(workspace.name))
+			end
+		end
+	end
+	
+	-- Calculate remaining space for path
+	local used_width = symbol_width + max_name_length + time_width + padding_width
+	local path_width = math.max(20, terminal_width - used_width)  -- minimum 20 chars for path
+	
+	return {
+		symbol = symbol_width,
+		name = max_name_length, 
+		path = path_width,
+		time = time_width
+	}
+end
+
+-- Format workspace row with proper alignment (section 4.2 of redesign spec)
+local function format_workspace_row(workspace, widths, current_time_iso)
+	-- Handle nil workspace
+	if not workspace then
+		return ""
+	end
+	
+	-- Get components
+	local symbol = get_project_symbol(workspace.project_type)
+	local name = workspace.name or ""  -- Use empty string for nil names
+	local shortened_path = shorten_path(workspace.root_path or "")
+	local time_str = format_relative_time(workspace.last_accessed, current_time_iso)
+	
+	-- Truncate path if necessary
+	local truncated_path = truncate_path(shortened_path, widths.path)
+	
+	-- Pad components manually to handle Unicode characters properly
+	local symbol_padded = symbol .. string.rep(" ", widths.symbol - visual_width(symbol))
+	local name_padded = name .. string.rep(" ", widths.name - visual_width(name))
+	local path_padded = truncated_path .. string.rep(" ", widths.path - visual_width(truncated_path))
+	
+	return symbol_padded .. " " .. name_padded .. " " .. path_padded .. " " .. time_str
+end
+
 -- WezTerm integration
 function module.apply_to_config(config)
 	wezterm.log_info("Applying workspace configuration")
-
-	-- Calculate column widths for workspace display (section 4.1 of redesign spec)
-	local function calculate_column_widths(workspaces, terminal_width)
-		terminal_width = terminal_width or 80
-		
-		-- Fixed widths per specification
-		local symbol_width = 3
-		local time_width = 10
-		local padding_width = 4   -- spaces between columns
-		
-		-- Calculate maximum name length across all workspaces
-		local max_name_length = 15  -- minimum per spec
-		if workspaces and #workspaces > 0 then
-			for _, workspace in ipairs(workspaces) do
-				if workspace.name then
-					max_name_length = math.max(max_name_length, visual_width(workspace.name))
-				end
-			end
-		end
-		
-		-- Calculate remaining space for path
-		local used_width = symbol_width + max_name_length + time_width + padding_width
-		local path_width = math.max(20, terminal_width - used_width)  -- minimum 20 chars for path
-		
-		return {
-			symbol = symbol_width,
-			name = max_name_length, 
-			path = path_width,
-			time = time_width
-		}
-	end
-
-	-- Format workspace row with proper alignment (section 4.2 of redesign spec)
-	local function format_workspace_row(workspace, widths, current_time_iso)
-		-- Get components
-		local symbol = get_project_symbol(workspace.project_type)
-		local name = workspace.name or "unknown"
-		local shortened_path = shorten_path(workspace.root_path or "")
-		local time_str = format_relative_time(workspace.last_accessed, current_time_iso)
-		
-		-- Truncate path if necessary
-		local truncated_path = truncate_path(shortened_path, widths.path)
-		
-		-- Pad components manually to handle Unicode characters properly
-		local symbol_padded = symbol .. string.rep(" ", widths.symbol - visual_width(symbol))
-		local name_padded = name .. string.rep(" ", widths.name - visual_width(name))
-		local path_padded = truncated_path .. string.rep(" ", widths.path - visual_width(truncated_path))
-		
-		return symbol_padded .. " " .. name_padded .. " " .. path_padded .. " " .. time_str
-	end
 
 	-- Register workspace creation action
 	wezterm.on("create-workspace", function(window, pane)
