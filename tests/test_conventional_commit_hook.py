@@ -155,7 +155,7 @@ class TestAnalyzeGitChangesPatterns:
         conventional_commit_hook.subprocess.run = mock_run
 
         try:
-            commit_type, files, content = analyze_git_changes()
+            commit_type, staged_files, unstaged_files, diff_content = analyze_git_changes()
             assert commit_type == expected_type
         finally:
             # Restore original function
