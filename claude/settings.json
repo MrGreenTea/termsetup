@@ -14,6 +14,7 @@
       "Bash(cat:*)",
       "Bash(uuidgen:*)",
       "Bash(mkdir:*)",
+      "Bash(ls:*)",
       "Read(/tmp/*)",
       "Write(/tmp/*)",
       "WebFetch",
