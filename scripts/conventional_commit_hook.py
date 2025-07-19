@@ -27,11 +27,27 @@ def analyze_git_changes():
             result.stdout.strip().split("\n") if result.stdout.strip() else []
         )
 
-        # Get git diff for analysis
+        # Get unstaged files
+        result = subprocess.run(
+            ["git", "diff", "--name-only"], capture_output=True, text=True, check=True
+        )
+        unstaged_files = (
+            result.stdout.strip().split("\n") if result.stdout.strip() else []
+        )
+
+        # Get git diff for analysis (both staged and unstaged)
         result = subprocess.run(
             ["git", "diff", "--cached"], capture_output=True, text=True, check=True
         )
-        diff_content = result.stdout
+        staged_diff = result.stdout
+
+        result = subprocess.run(
+            ["git", "diff"], capture_output=True, text=True, check=True
+        )
+        unstaged_diff = result.stdout
+
+        # Combine diffs for analysis
+        diff_content = staged_diff + unstaged_diff
 
         # Analyze changes to suggest commit type using CursorAI approach
         commit_type = "chore"  # default
@@ -91,10 +107,10 @@ def analyze_git_changes():
         elif re.search(r"^\+.*\S", diff_content, re.MULTILINE):
             commit_type = "feat"
 
-        return commit_type, staged_files, diff_content
+        return commit_type, staged_files, unstaged_files, diff_content
 
     except subprocess.CalledProcessError:
-        return "chore", [], ""
+        return "chore", [], [], ""
 
 
 def extract_commit_description(diff_content, commit_type):
@@ -226,32 +242,69 @@ def main():
             return 0
 
         # Check if there are staged changes
-        result = subprocess.run(
+        staged_result = subprocess.run(
             ["git", "diff", "--cached", "--quiet"], capture_output=True
         )
 
-        if result.returncode == 0:
-            # No staged changes, allow normal stopping
+        # Check if there are unstaged changes
+        unstaged_result = subprocess.run(
+            ["git", "diff", "--quiet"], capture_output=True
+        )
+
+        if staged_result.returncode == 0 and unstaged_result.returncode == 0:
+            # No staged or unstaged changes, allow normal stopping
             return 0
 
         # Analyze changes and generate commit message
-        commit_type, staged_files, diff_content = analyze_git_changes()
-        commit_template = generate_commit_message(
-            commit_type, staged_files, diff_content
-        )
+        commit_type, staged_files, unstaged_files, diff_content = analyze_git_changes()
+        all_files = staged_files + unstaged_files
+        commit_template = generate_commit_message(commit_type, all_files, diff_content)
 
         # Output user message to stderr
         print(
             f"\n💡 Conventional commit suggestion: {commit_template}", file=sys.stderr
         )
-        print(f"   Files changed: {', '.join(staged_files[:3])}", file=sys.stderr)
-        if len(staged_files) > 3:
-            print(f"   ... and {len(staged_files) - 3} more files", file=sys.stderr)
+
+        # Show different file categories
+        if staged_files:
+            print(f"   Staged files: {', '.join(staged_files[:3])}", file=sys.stderr)
+            if len(staged_files) > 3:
+                print(
+                    f"   ... and {len(staged_files) - 3} more staged files",
+                    file=sys.stderr,
+                )
+
+        if unstaged_files:
+            print(
+                f"   Unstaged files: {', '.join(unstaged_files[:3])}", file=sys.stderr
+            )
+            if len(unstaged_files) > 3:
+                print(
+                    f"   ... and {len(unstaged_files) - 3} more unstaged files",
+                    file=sys.stderr,
+                )
 
         # Block the stop with decision control JSON to stdout
+        reason_parts = []
+        if staged_files:
+            reason_parts.append("staged changes")
+        if unstaged_files:
+            reason_parts.append("unstaged changes")
+
+        change_types = " and ".join(reason_parts)
+
+        if staged_files and unstaged_files:
+            suggestion = f"Consider staging your changes with 'git add .' and then running: git commit -m \"{commit_template}[description]\""
+        elif staged_files:
+            suggestion = (
+                f'Consider running: git commit -m "{commit_template}[description]"'
+            )
+        else:
+            suggestion = f"Consider staging your changes with 'git add .' and then running: git commit -m \"{commit_template}[description]\""
+
         decision_response = {
             "decision": "block",
-            "reason": f'You have staged changes ready to commit. Consider running: git commit -m "{commit_template}[description]" to commit your changes with the suggested conventional commit format.',
+            "reason": f"You have {change_types} ready to commit. {suggestion} to commit your changes with the suggested conventional commit format.",
         }
 
         print(json.dumps(decision_response), flush=True)
