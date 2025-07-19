@@ -13,12 +13,16 @@
       "Bash(find:*)",
       "Bash(cat:*)",
       "Bash(uuidgen:*)",
+      "Bash(mkdir:*)",
       "Read(/tmp/*)",
       "Write(/tmp/*)",
       "WebFetch",
       "Fetch"
     ],
-    "deny": ["Bash(docker:*)"]
+    "deny": [
+      "Bash(docker:*)",
+      "Bash(docker-compose:*)"
+    ]
   },
   "model": "sonnet",
   "hooks": {
@@ -44,6 +48,24 @@
           {
             "type": "command",
             "command": "/var/home/jonas/Development/termsetup/scripts/config_backup_hook.py"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(docker:*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"decision\": \"block\", \"stopReason\": \"Use '\\''podman'\\'' instead of '\\''docker'\\''\")}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(docker-compose:*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"decision\": \"block\", \"stopReason\": \"Use '\\''podman compose'\\'' instead of '\\''docker-compose'\\''\")}'"
           }
         ]
       }
