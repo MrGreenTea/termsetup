@@ -122,10 +122,19 @@ if __name__ == "__main__":
     if not command.strip().startswith("gh "):
         sys.exit(0)
 
-    # Check safety
+    # Check safety and output JSON decision
     if classify_gh_command(command) == GhCommandSafety.UNSAFE:
-        print(f"• Unsafe GitHub CLI command detected: {command}", file=sys.stderr)
-        sys.exit(0)  # Allow unsafe commands through but log them
+        # Unsafe command - use undefined decision to trigger standard approval flow
+        response = {
+            "reason": f"Unsafe GitHub CLI command detected: {command}"
+        }
+        print(json.dumps(response))
+        sys.exit(0)
 
-    # Safe command - allow it
+    # Safe command - approve to bypass permission system
+    response = {
+        "decision": "approve",
+        "reason": "Safe GitHub CLI command"
+    }
+    print(json.dumps(response))
     sys.exit(0)
