@@ -11,11 +11,7 @@ import sys
 
 def main():
     if len(sys.argv) != 3:
-        print(
-            "Usage: block_command_hook.py <blocked_command> <suggested_replacement>",
-            file=sys.stderr,
-        )
-        sys.exit(1)
+        return 1
 
     blocked_command = sys.argv[1]
     suggested_replacement = sys.argv[2]
