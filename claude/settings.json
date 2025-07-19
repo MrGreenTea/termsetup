@@ -19,10 +19,7 @@
       "WebFetch",
       "Fetch"
     ],
-    "deny": [
-      "Bash(docker:*)",
-      "Bash(docker-compose:*)"
-    ]
+    "deny": []
   },
   "model": "sonnet",
   "hooks": {
@@ -52,20 +49,15 @@
         ]
       },
       {
-        "matcher": "Bash(docker:*)",
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"decision\": \"block\", \"stopReason\": \"Use '\\''podman'\\'' instead of '\\''docker'\\''\")}'"
-          }
-        ]
-      },
-      {
-        "matcher": "Bash(docker-compose:*)",
-        "hooks": [
+            "command": "/var/home/jonas/Development/termsetup/scripts/block_command_hook.py docker podman"
+          },
           {
             "type": "command",
-            "command": "echo '{\"decision\": \"block\", \"stopReason\": \"Use '\\''podman compose'\\'' instead of '\\''docker-compose'\\''\")}'"
+            "command": "/var/home/jonas/Development/termsetup/scripts/block_command_hook.py docker-compose \"podman compose\""
           }
         ]
       }
@@ -90,7 +82,7 @@
         ]
       },
       {
-        "matcher": "Edit(*.ts) OR Edit(*.tsx)",
+        "matcher": "Edit(*.ts)|Edit(*.tsx)",
         "hooks": [
           {
             "type": "command",
