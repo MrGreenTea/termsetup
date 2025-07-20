@@ -114,6 +114,55 @@ def analyze_git_changes():
         return "chore", [], [], ""
 
 
+def get_last_commit_files():
+    """Get list of files changed in the last commit."""
+    try:
+        result = subprocess.run(
+            ["git", "show", "--name-only", "HEAD"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        files = result.stdout.strip().split("\n")
+        # Filter out empty lines and commit message lines
+        return [f for f in files if f and not f.startswith("commit ") and "/" in f or "." in f]
+    except subprocess.CalledProcessError:
+        return []
+
+
+def check_files_overlap_with_last_commit(current_files):
+    """Check if any current files were changed in the last commit."""
+    last_commit_files = get_last_commit_files()
+    if not last_commit_files or not current_files:
+        return False, []
+    
+    # Check for any file overlap
+    current_set = set(current_files)
+    last_commit_set = set(last_commit_files)
+    overlapping_files = current_set.intersection(last_commit_set)
+    
+    return len(overlapping_files) > 0, list(overlapping_files)
+
+
+def check_git_absorb_available(staged_files):
+    """Check if git absorb would work with current staged changes."""
+    if not staged_files:
+        return False, ""
+    
+    try:
+        result = subprocess.run(
+            ["git", "absorb", "--dry-run"],
+            capture_output=True,
+            text=True,
+            check=False  # Don't raise on non-zero exit
+        )
+        # git absorb returns 0 if it would work, non-zero otherwise
+        return result.returncode == 0, result.stdout + result.stderr
+    except FileNotFoundError:
+        # git absorb not installed
+        return False, "git absorb not available"
+
+
 def extract_commit_description(diff_content, commit_type):
     """Extract a meaningful commit description from diff content."""
     # Look for function/class names being added
@@ -264,10 +313,17 @@ def main():
         all_files = staged_files + unstaged_files
         commit_template = generate_commit_message(commit_type, all_files, diff_content)
 
-        # Output user message to stderr
-        print(
-            f"\n💡 Conventional commit suggestion: {commit_template}", file=sys.stderr
-        )
+        # Check if files overlap with last commit
+        files_overlap, overlapping_files = check_files_overlap_with_last_commit(all_files)
+        
+        if files_overlap:
+            print(f"\n🔄 These files were also changed in the last commit: {', '.join(overlapping_files)}", file=sys.stderr)
+            print(f"   Consider amending the last commit instead of creating a new one.", file=sys.stderr)
+        else:
+            # Output user message to stderr
+            print(
+                f"\n💡 Conventional commit suggestion: {commit_template}", file=sys.stderr
+            )
 
         # Show different file categories
         if staged_files:
@@ -293,6 +349,8 @@ def main():
         if total_files > 1:
             print(f"   📝 Note: {total_files} files changed. Separate commits may be appropriate for unrelated changes.", file=sys.stderr)
         
+        # Warning about committing unrelated changes
+        print(f"   ⚠️  Warning: Only stage and commit files related to your current task. Avoid using 'git add .' to prevent committing unrelated changes.", file=sys.stderr)
         print(f"   💡 If these changes are actually unrelated to your current task, then you may ignore this suggestion.", file=sys.stderr)
 
         # Block the stop with decision control JSON to stdout
@@ -304,18 +362,48 @@ def main():
 
         change_types = " and ".join(reason_parts)
 
-        if staged_files and unstaged_files:
-            suggestion = f"Consider staging your changes with 'git add .' and then running: git commit -m \"{commit_template}[description]\""
-        elif staged_files:
-            suggestion = (
-                f'Consider running: git commit -m "{commit_template}[description]"'
-            )
+        # Provide different suggestions based on file overlap
+        if files_overlap:
+            # Check if git absorb is available for staged changes
+            if staged_files:
+                absorb_available, absorb_output = check_git_absorb_available(staged_files)
+                if absorb_available:
+                    suggestion = "Consider using 'git absorb' to automatically fixup the relevant commits, or 'git commit --amend' to amend the last commit"
+                else:
+                    suggestion = "Consider using 'git commit --amend' to amend the last commit instead of creating a new one"
+            else:
+                # Suggest specific files for staging
+                file_suggestions = " ".join([f"'{f}'" for f in unstaged_files[:5]])
+                if len(unstaged_files) > 5:
+                    file_suggestions += f" (and {len(unstaged_files) - 5} more)"
+                suggestion = f"Consider staging your changes with 'git add {file_suggestions}' and then using 'git commit --amend' to amend the last commit"
         else:
-            suggestion = f"Consider staging your changes with 'git add .' and then running: git commit -m \"{commit_template}[description]\""
+            # Original suggestion logic for new commits
+            if staged_files and unstaged_files:
+                # Suggest specific files for staging
+                file_suggestions = " ".join([f"'{f}'" for f in unstaged_files[:5]])
+                if len(unstaged_files) > 5:
+                    file_suggestions += f" (and {len(unstaged_files) - 5} more)"
+                suggestion = f"Consider staging your changes with 'git add {file_suggestions}' and then running: git commit -m \"{commit_template}[description]\""
+            elif staged_files:
+                suggestion = (
+                    f'Consider running: git commit -m "{commit_template}[description]"'
+                )
+            else:
+                # Suggest specific files for staging
+                file_suggestions = " ".join([f"'{f}'" for f in unstaged_files[:5]])
+                if len(unstaged_files) > 5:
+                    file_suggestions += f" (and {len(unstaged_files) - 5} more)"
+                suggestion = f"Consider staging your changes with 'git add {file_suggestions}' and then running: git commit -m \"{commit_template}[description]\""
+
+        if files_overlap:
+            reason_text = f"You have {change_types} that affect files from the last commit. {suggestion} since these changes appear to be related to your previous work."
+        else:
+            reason_text = f"You have {change_types} ready to commit. {suggestion} to commit your changes with the suggested conventional commit format. If these changes are actually unrelated to your current task, then you may ignore this suggestion."
 
         decision_response = {
             "decision": "block",
-            "reason": f"You have {change_types} ready to commit. {suggestion} to commit your changes with the suggested conventional commit format. If these changes are actually unrelated to your current task, then you may ignore this suggestion.",
+            "reason": reason_text,
         }
 
         print(json.dumps(decision_response), flush=True)
