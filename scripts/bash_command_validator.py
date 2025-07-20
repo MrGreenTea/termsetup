@@ -20,6 +20,10 @@ VALIDATION_RULES = [
         r"\bsed\s+(-i|--in-place)\b",
         "Use the Edit tool instead of 'sed -i' for file modifications",
     ),
+    (
+        r"&\s*$",
+        "Background processes (&) are not supported in Claude Code and will cause hanging",
+    ),
 ]
 
 def validate_command(command: str) -> list[str]:
