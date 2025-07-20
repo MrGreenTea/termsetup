@@ -288,7 +288,12 @@ def main():
                     file=sys.stderr,
                 )
 
-        print(f"   💡 If these changes are unrelated to your current work, you can ignore this suggestion.", file=sys.stderr)
+        # Check if multiple files are changed and provide reminder
+        total_files = len(staged_files) + len(unstaged_files)
+        if total_files > 1:
+            print(f"   📝 Note: {total_files} files changed. Separate commits may be appropriate for unrelated changes.", file=sys.stderr)
+        
+        print(f"   💡 If these changes are actually unrelated to your current task, then you may ignore this suggestion.", file=sys.stderr)
 
         # Block the stop with decision control JSON to stdout
         reason_parts = []
@@ -310,7 +315,7 @@ def main():
 
         decision_response = {
             "decision": "block",
-            "reason": f"You have {change_types} ready to commit. {suggestion} to commit your changes with the suggested conventional commit format. If these changes are unrelated to your current work, you may ignore this suggestion.",
+            "reason": f"You have {change_types} ready to commit. {suggestion} to commit your changes with the suggested conventional commit format. If these changes are actually unrelated to your current task, then you may ignore this suggestion.",
         }
 
         print(json.dumps(decision_response), flush=True)
