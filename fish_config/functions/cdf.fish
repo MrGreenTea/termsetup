@@ -23,7 +23,7 @@ function cdf --description "Fuzzy find and cd to directory"
         --exit-0 \
         --preview 'eza -la {}' \
         --bind 'ctrl-/:change-preview-window(down,70%|hidden|)' \
-        --bind "alt-h:change-prompt(📁 directories (hidden)> )+reload:fd --type d --hidden --exclude .git" \
+        --bind "alt-h:transform:[[ \$FZF_PROMPT =~ hidden ]] && echo 'change-prompt(📁 directories> )+reload:fd --type d' || echo 'change-prompt(📁 directories (hidden)> )+reload:fd --type d --hidden --exclude .git'" \
         --bind 'ctrl-r:reload:fd --type d')
     
     if test -n "$selected_dir"
