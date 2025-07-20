@@ -10,6 +10,7 @@ import sys
 import subprocess
 import click
 import re
+import os
 from pathlib import Path
 
 
@@ -223,6 +224,9 @@ def main():
     """Hook that suggests conventional commit messages when Claude Code completes successfully."""
 
     try:
+        # Allow bypassing for unrelated changes
+        if os.environ.get('IGNORE_COMMIT_HOOK') == '1':
+            return 0
         # Read JSON input from stdin
         input_data = sys.stdin.read()
         data = json.loads(input_data)
@@ -284,6 +288,8 @@ def main():
                     file=sys.stderr,
                 )
 
+        print(f"   💡 If these changes are unrelated to your current work, you can ignore this suggestion.", file=sys.stderr)
+
         # Block the stop with decision control JSON to stdout
         reason_parts = []
         if staged_files:
@@ -304,7 +310,7 @@ def main():
 
         decision_response = {
             "decision": "block",
-            "reason": f"You have {change_types} ready to commit. {suggestion} to commit your changes with the suggested conventional commit format.",
+            "reason": f"You have {change_types} ready to commit. {suggestion} to commit your changes with the suggested conventional commit format. If these changes are unrelated to your current work, you may ignore this suggestion.",
         }
 
         print(json.dumps(decision_response), flush=True)
