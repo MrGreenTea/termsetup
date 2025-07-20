@@ -24,6 +24,10 @@ VALIDATION_RULES = [
         r"&\s*$",
         "Background processes (&) are not supported in Claude Code and will cause hanging",
     ),
+    (
+        r"\bgit\s+add\s+\.\s*$",
+        "Use 'git add' with specific file paths instead of 'git add .' to avoid staging unwanted files",
+    ),
 ]
 
 def validate_command(command: str) -> list[str]:
