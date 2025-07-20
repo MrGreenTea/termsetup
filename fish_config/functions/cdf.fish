@@ -1,10 +1,11 @@
-# ABOUTME: Fuzzy search directories in current tree with fd+fzf and cd to selection
+# ABOUTME: Fuzzy search directories in current tree with fzf walker and cd to selection  
 # ABOUTME: Usage: cdf to interactively select and navigate to any subdirectory
 
 function cdf --description "Fuzzy find and cd to directory"
     set -l selected_dir (fd --type d | fzf --ansi \
         --border=rounded \
         --border-label '📁 directories' \
+        --prompt '📁 directories> ' \
         --height=80% \
         --layout=reverse \
         --tiebreak begin \
@@ -23,7 +24,8 @@ function cdf --description "Fuzzy find and cd to directory"
         --exit-0 \
         --preview 'eza -la {}' \
         --bind 'ctrl-/:change-preview-window(down,70%|hidden|)' \
-        --bind "alt-h:transform:[[ \$FZF_PROMPT =~ hidden ]] && echo 'change-prompt(📁 directories> )+reload:fd --type d' || echo 'change-prompt(📁 directories (hidden)> )+reload:fd --type d --hidden --exclude .git'" \
+        --bind "alt-h:change-prompt(📁 directories (hidden)> )+reload:fd --type d --hidden --exclude .git" \
+        --bind "alt-v:change-prompt(📁 directories> )+reload:fd --type d" \
         --bind 'ctrl-r:reload:fd --type d')
     
     if test -n "$selected_dir"
