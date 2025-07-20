@@ -47,6 +47,7 @@
       "Bash(tee:*)",
       "Bash(column:*)",
       "Bash(nl:*)",
+      "Bash(sed:*)",
       "Read(/tmp/*)",
       "Write(/tmp/*)",
       "WebFetch",
