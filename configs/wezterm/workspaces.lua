@@ -210,7 +210,7 @@ local function detect_rust_details(path)
 		subtype = "workspace"
 		table.insert(evidence, "[workspace]")
 
-	-- Check for binary project (has main.rs or [[bin]] section)
+		-- Check for binary project (has main.rs or [[bin]] section)
 	elseif file_exists(path .. "/src/main.rs") or cargo_analysis.has_bin then
 		subtype = "binary"
 		-- Prefer [[bin]] section evidence over src/main.rs for consistency
@@ -220,7 +220,7 @@ local function detect_rust_details(path)
 			table.insert(evidence, "src/main.rs")
 		end
 
-	-- Check for library project (has lib.rs or [lib] section)
+		-- Check for library project (has lib.rs or [lib] section)
 	elseif file_exists(path .. "/src/lib.rs") or cargo_analysis.has_lib then
 		subtype = "library"
 		-- For library projects, don't add additional evidence beyond Cargo.toml
@@ -359,11 +359,11 @@ end
 
 -- Symbol mapping for project types (section 1.1 of redesign spec)
 local project_symbols = {
-	nodejs = "⚡",  -- Lightning bolt - fast/dynamic
-	rust = "🦀",    -- Crab - Rust mascot
-	python = "🐍",  -- Snake - Python symbol
-	git = "📁",     -- Folder - repository
-	generic = "⚙️"  -- Gear - general tool/project
+	nodejs = "⚡", -- Lightning bolt - fast/dynamic
+	rust = "🦀", -- Crab - Rust mascot
+	python = "🐍", -- Snake - Python symbol
+	git = "📁", -- Folder - repository
+	generic = "⚙️", -- Gear - general tool/project
 }
 
 -- Get Unicode symbol for project type (section 1.2 of redesign spec)
@@ -371,7 +371,7 @@ local function get_project_symbol(project_type)
 	if not project_type then
 		return project_symbols.generic
 	end
-	
+
 	return project_symbols[project_type] or project_symbols.generic
 end
 
@@ -380,22 +380,22 @@ local function shorten_path(full_path)
 	if not full_path or full_path == "" then
 		return full_path or ""
 	end
-	
+
 	local home = os.getenv("HOME")
 	if not home then
 		return full_path
 	end
-	
+
 	-- Replace exact home directory
 	if full_path == home then
 		return "~"
 	end
-	
+
 	-- Replace home prefix with trailing slash
 	if full_path:find("^" .. home .. "/") then
 		return "~" .. full_path:sub(#home + 1)
 	end
-	
+
 	-- No substitution needed
 	return full_path
 end
@@ -405,20 +405,20 @@ local function parse_iso_timestamp(iso_string)
 	if not iso_string or iso_string == "" then
 		return nil
 	end
-	
+
 	-- Parse ISO 8601 format: 2025-07-02T10:24:06Z
 	local year, month, day, hour, min, sec = iso_string:match("(%d+)-(%d+)-(%d+)T(%d+):(%d+):(%d+)Z")
 	if not year then
 		return nil
 	end
-	
+
 	return os.time({
 		year = tonumber(year),
 		month = tonumber(month),
 		day = tonumber(day),
 		hour = tonumber(hour),
 		min = tonumber(min),
-		sec = tonumber(sec)
+		sec = tonumber(sec),
 	})
 end
 
@@ -427,12 +427,12 @@ local function format_relative_time(iso_timestamp, current_time_iso)
 	if not iso_timestamp or iso_timestamp == "" then
 		return "never"
 	end
-	
+
 	local timestamp = parse_iso_timestamp(iso_timestamp)
 	if not timestamp then
 		return "unknown"
 	end
-	
+
 	local current_time
 	if current_time_iso then
 		current_time = parse_iso_timestamp(current_time_iso)
@@ -442,14 +442,14 @@ local function format_relative_time(iso_timestamp, current_time_iso)
 	else
 		current_time = os.time()
 	end
-	
+
 	local diff = current_time - timestamp
-	
+
 	-- Future timestamps
 	if diff < 0 then
 		return "in future"
 	end
-	
+
 	-- Time ranges as per specification
 	if diff < 60 then
 		return "just now"
@@ -466,8 +466,10 @@ end
 
 -- Calculate visual width (handles Unicode characters properly)
 local function visual_width(str)
-	if not str then return 0 end
-	
+	if not str then
+		return 0
+	end
+
 	-- Handle specific Unicode characters used in this project
 	local width = 0
 	local i = 1
@@ -480,11 +482,11 @@ local function visual_width(str)
 		elseif byte == 0xE2 and i + 2 <= #str then
 			-- Check for ellipsis (U+2026): E2 80 A6
 			if string.byte(str, i + 1) == 0x80 and string.byte(str, i + 2) == 0xA6 then
-				width = width + 1  -- Ellipsis is 1 visual character
+				width = width + 1 -- Ellipsis is 1 visual character
 				i = i + 3
-			-- Check for lightning bolt (U+26A1): E2 9A A1
+				-- Check for lightning bolt (U+26A1): E2 9A A1
 			elseif string.byte(str, i + 1) == 0x9A and string.byte(str, i + 2) == 0xA1 then
-				width = width + 2  -- Lightning bolt is 2 visual characters (same as other emoji)
+				width = width + 2 -- Lightning bolt is 2 visual characters (same as other emoji)
 				i = i + 3
 			else
 				-- Other E2 prefix characters, skip the whole sequence
@@ -493,16 +495,19 @@ local function visual_width(str)
 			end
 		elseif byte == 0xF0 and i + 3 <= #str then
 			-- 4-byte emoji sequences (most emoji)
-			width = width + 2  -- Most emoji are 2 visual characters wide
+			width = width + 2 -- Most emoji are 2 visual characters wide
 			i = i + 4
 		elseif byte >= 0xC0 then
 			-- Multi-byte UTF-8 character, determine length
 			local bytes = 1
-			if byte >= 0xF0 then bytes = 4
-			elseif byte >= 0xE0 then bytes = 3
-			elseif byte >= 0xC0 then bytes = 2
+			if byte >= 0xF0 then
+				bytes = 4
+			elseif byte >= 0xE0 then
+				bytes = 3
+			elseif byte >= 0xC0 then
+				bytes = 2
 			end
-			width = width + 1  -- Assume 1 visual character for other multi-byte chars
+			width = width + 1 -- Assume 1 visual character for other multi-byte chars
 			i = i + bytes
 		else
 			-- Invalid UTF-8, treat as 1 character
@@ -510,7 +515,7 @@ local function visual_width(str)
 			i = i + 1
 		end
 	end
-	
+
 	return width
 end
 
@@ -519,58 +524,58 @@ local function truncate_path(path, max_width)
 	if not path or path == "" then
 		return path or ""
 	end
-	
+
 	if visual_width(path) <= max_width then
 		return path
 	end
-	
+
 	-- Use Unicode ellipsis character (visually 1 char, 3 bytes)
 	local ellipsis = "…"
-	local available_chars = max_width - 1  -- Ellipsis counts as 1 visual character
-	
+	local available_chars = max_width - 1 -- Ellipsis counts as 1 visual character
+
 	if available_chars <= 0 then
 		-- Very narrow width - return as much as possible
 		return path:sub(1, max_width)
 	end
-	
+
 	-- Split path into components
 	local components = {}
 	for component in path:gmatch("[^/]+") do
 		table.insert(components, component)
 	end
-	
+
 	-- Check if we have a single overlong component that needs truncation
 	local last_component = components[#components]
 	if visual_width(last_component) > max_width then
 		-- Last component is too long, truncate it without leading slash
 		return ellipsis .. last_component:sub(-(max_width - 1))
 	end
-	
+
 	-- Check if path has meaningful path structure (multiple logical components)
 	-- Special case: ~/filename is considered a single logical component if filename fits
 	local has_path_structure = #components > 1 and not (components[1] == "~" and #components == 2)
-	
+
 	if not has_path_structure then
 		-- Single component that fits - return as is
 		return path
 	end
-	
+
 	-- Try to fit as many complete components as possible from the end
 	local best_result = nil
 	local best_length = 0
-	
+
 	-- First pass: try with leading slash
 	for num_components = 1, #components do
 		local start_idx = #components - num_components + 1
 		local selected_components = {}
-		
+
 		for i = start_idx, #components do
 			table.insert(selected_components, components[i])
 		end
-		
+
 		local components_str = table.concat(selected_components, "/")
 		local with_slash = "/" .. components_str
-		
+
 		if visual_width(with_slash) <= available_chars then
 			-- This fits - it's better if it uses more characters
 			if visual_width(with_slash) > best_length then
@@ -579,19 +584,19 @@ local function truncate_path(path, max_width)
 			end
 		end
 	end
-	
+
 	-- Second pass: try without leading slash (fallback for tight spaces)
 	if not best_result then
 		for num_components = 1, #components do
 			local start_idx = #components - num_components + 1
 			local selected_components = {}
-			
+
 			for i = start_idx, #components do
 				table.insert(selected_components, components[i])
 			end
-			
+
 			local components_str = table.concat(selected_components, "/")
-			
+
 			if visual_width(components_str) <= available_chars then
 				-- This fits - it's better if it uses more characters
 				if visual_width(components_str) > best_length then
@@ -601,12 +606,11 @@ local function truncate_path(path, max_width)
 			end
 		end
 	end
-	
+
 	-- If we found a result, use it
 	if best_result then
 		return best_result
 	end
-	
 	-- Fallback: just truncate
 	return ellipsis .. path:sub(-available_chars)
 end
@@ -817,14 +821,14 @@ end
 -- Calculate column widths for workspace display (section 4.1 of redesign spec)
 local function calculate_column_widths(workspaces, terminal_width)
 	terminal_width = terminal_width or 80
-	
+
 	-- Fixed widths per specification
 	local symbol_width = 3
 	local time_width = 10
-	local padding_width = 4   -- spaces between columns
-	
+	local padding_width = 4 -- spaces between columns
+
 	-- Calculate maximum name length across all workspaces
-	local max_name_length = 15  -- minimum per spec
+	local max_name_length = 15 -- minimum per spec
 	if workspaces and #workspaces > 0 then
 		for _, workspace in ipairs(workspaces) do
 			if workspace.name then
@@ -832,16 +836,16 @@ local function calculate_column_widths(workspaces, terminal_width)
 			end
 		end
 	end
-	
+
 	-- Calculate remaining space for path
 	local used_width = symbol_width + max_name_length + time_width + padding_width
-	local path_width = math.max(20, terminal_width - used_width)  -- minimum 20 chars for path
-	
+	local path_width = math.max(20, terminal_width - used_width) -- minimum 20 chars for path
+
 	return {
 		symbol = symbol_width,
-		name = max_name_length, 
+		name = max_name_length,
 		path = path_width,
-		time = time_width
+		time = time_width,
 	}
 end
 
@@ -851,21 +855,21 @@ local function format_workspace_row(workspace, widths, current_time_iso)
 	if not workspace then
 		return ""
 	end
-	
+
 	-- Get components
 	local symbol = get_project_symbol(workspace.project_type)
-	local name = workspace.name or ""  -- Use empty string for nil names
+	local name = workspace.name or "" -- Use empty string for nil names
 	local shortened_path = shorten_path(workspace.root_path or "")
 	local time_str = format_relative_time(workspace.last_accessed, current_time_iso)
-	
+
 	-- Truncate path if necessary
 	local truncated_path = truncate_path(shortened_path, widths.path)
-	
+
 	-- Pad components manually to handle Unicode characters properly
 	local symbol_padded = symbol .. string.rep(" ", widths.symbol - visual_width(symbol))
 	local name_padded = name .. string.rep(" ", widths.name - visual_width(name))
 	local path_padded = truncated_path .. string.rep(" ", widths.path - visual_width(truncated_path))
-	
+
 	return symbol_padded .. " " .. name_padded .. " " .. path_padded .. " " .. time_str
 end
 
@@ -922,7 +926,7 @@ function module.apply_to_config(config)
 		-- Format each workspace with new layout
 		for _, workspace in ipairs(workspaces) do
 			local formatted_row = format_workspace_row(workspace, column_widths, os.date("!%Y-%m-%dT%H:%M:%SZ"))
-			
+
 			table.insert(choices, {
 				id = workspace.name,
 				label = formatted_row,
