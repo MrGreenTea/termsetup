@@ -37,8 +37,7 @@ local function create_workspace(name, root_path, project_details)
 		last_accessed = os.date("!%Y-%m-%dT%H:%M:%SZ"),
 		socket_path = "",
 		layout = {
-			panes = {},
-			split_direction = "horizontal",
+			tabs = {},
 		},
 		environment = {},
 		metadata = {
@@ -760,6 +759,21 @@ end
 
 -- Workspace management functions
 local function switch_to_workspace(workspace_name, window, pane)
+	-- Capture current workspace layout before switching
+	local current_workspace_name = window:mux_window():get_workspace()
+	if current_workspace_name and current_workspace_name ~= workspace_name then
+		local current_workspace = load_workspace(current_workspace_name)
+		if current_workspace then
+			current_workspace.layout = capture_workspace_layout(window)
+			current_workspace.last_accessed = os.date("!%Y-%m-%dT%H:%M:%SZ")
+			if not save_workspace(current_workspace) then
+				wezterm.log_warn("Failed to save current workspace layout: " .. current_workspace_name)
+			else
+				wezterm.log_info("Saved layout for workspace: " .. current_workspace_name)
+			end
+		end
+	end
+
 	local workspace = load_workspace(workspace_name)
 	if not workspace then
 		wezterm.log_error("Workspace '" .. workspace_name .. "' not found")
@@ -816,6 +830,83 @@ local function create_workspace_from_current_directory(workspace_name, current_p
 	end
 
 	return false
+end
+
+-- Layout capture functionality
+local function capture_pane_info(pane_info)
+	-- Extract current working directory
+	local cwd = ""
+	if pane_info.current_working_dir then
+		if type(pane_info.current_working_dir) == "string" then
+			cwd = pane_info.current_working_dir
+		elseif pane_info.current_working_dir.file_path then
+			cwd = pane_info.current_working_dir.file_path
+		else
+			cwd = tostring(pane_info.current_working_dir)
+		end
+	end
+	
+	-- Try getting CWD from the actual pane object if available
+	if cwd == "" and pane_info.pane then
+		local pane_cwd = pane_info.pane:get_current_working_dir()
+		if pane_cwd then
+			if type(pane_cwd) == "string" then
+				cwd = pane_cwd
+			elseif pane_cwd.file_path then
+				cwd = pane_cwd.file_path
+			end
+		end
+	end
+	
+	return {
+		pane_id = pane_info.pane_id,
+		is_active = pane_info.is_active,
+		is_zoomed = pane_info.is_zoomed,
+		left = pane_info.left,
+		top = pane_info.top,
+		width = pane_info.width,
+		height = pane_info.height,
+		pixel_width = pane_info.pixel_width,
+		pixel_height = pane_info.pixel_height,
+		title = pane_info.title,
+		current_working_dir = cwd,
+		foreground_process_name = pane_info.foreground_process_name or "",
+	}
+end
+
+local function capture_tab_info(tab_info)
+	local panes = {}
+	for _, pane_info in ipairs(tab_info.tab:panes_with_info()) do
+		table.insert(panes, capture_pane_info(pane_info))
+	end
+
+	return {
+		index = tab_info.index,
+		is_active = tab_info.is_active,
+		title = tab_info.tab:get_title(),
+		panes = panes,
+	}
+end
+
+local function capture_workspace_layout(window)
+	local mux_window = window:mux_window()
+	
+	if not mux_window then
+		wezterm.log_warn("Could not get mux_window for layout capture")
+		return { tabs = {} }
+	end
+
+	local tabs_with_info = mux_window:tabs_with_info()
+	local tabs = {}
+	
+	for _, tab_info in ipairs(tabs_with_info) do
+		table.insert(tabs, capture_tab_info(tab_info))
+	end
+
+	return {
+		tabs = tabs,
+		captured_at = os.date("!%Y-%m-%dT%H:%M:%SZ"),
+	}
 end
 
 -- Calculate column widths for workspace display (section 4.1 of redesign spec)
@@ -893,6 +984,14 @@ function module.apply_to_config(config)
 				action = wezterm.action_callback(function(window, pane, line)
 					if line and line ~= "" then
 						if create_workspace_from_current_directory(line, current_path) then
+							-- Capture current layout for the new workspace
+							local workspace = load_workspace(line)
+							if workspace then
+								workspace.layout = capture_workspace_layout(window)
+								if save_workspace(workspace) then
+									wezterm.log_info("Captured initial layout for new workspace: " .. line)
+								end
+							end
 							window:toast_notification("WezTerm Workspace", "Created workspace: " .. line, nil, 4000)
 						else
 							window:toast_notification(
@@ -948,6 +1047,57 @@ function module.apply_to_config(config)
 		)
 	end)
 
+	-- Register manual layout capture action
+	wezterm.on("capture-layout", function(window, pane)
+		local mux_window = window:mux_window()
+		if mux_window then
+			local workspace_name = mux_window:get_workspace()
+			if workspace_name then
+				local workspace = load_workspace(workspace_name)
+				if workspace then
+					workspace.layout = capture_workspace_layout(window)
+					workspace.last_accessed = os.date("!%Y-%m-%dT%H:%M:%SZ")
+					if save_workspace(workspace) then
+						window:toast_notification("WezTerm Workspace", "Layout captured for: " .. workspace_name, nil, 4000)
+						wezterm.log_info("Manual layout capture completed for workspace: " .. workspace_name)
+					else
+						window:toast_notification("WezTerm Workspace", "Failed to save layout", nil, 4000)
+					end
+				else
+					window:toast_notification("WezTerm Workspace", "Workspace not found: " .. workspace_name, nil, 4000)
+				end
+			else
+				window:toast_notification("WezTerm Workspace", "No active workspace", nil, 4000)
+			end
+		else
+			window:toast_notification("WezTerm Workspace", "Cannot access mux window", nil, 4000)
+		end
+	end)
+
+	-- Register periodic layout auto-save
+	wezterm.on("update-status", function(window, pane)
+		-- Auto-save layout every 5 minutes (300 seconds)
+		local now = os.time()
+		if not module._last_auto_save or (now - module._last_auto_save) >= 300 then
+			module._last_auto_save = now
+			
+			local mux_window = window:mux_window()
+			if mux_window then
+				local workspace_name = mux_window:get_workspace()
+				if workspace_name then
+					local workspace = load_workspace(workspace_name)
+					if workspace then
+						workspace.layout = capture_workspace_layout(window)
+						workspace.last_accessed = os.date("!%Y-%m-%dT%H:%M:%SZ")
+						if save_workspace(workspace) then
+							wezterm.log_info("Auto-saved layout for workspace: " .. workspace_name)
+						end
+					end
+				end
+			end
+		end
+	end)
+
 	wezterm.log_info("Workspace configuration applied successfully")
 end
 
@@ -960,5 +1110,8 @@ module._format_relative_time = format_relative_time
 module._truncate_path = truncate_path
 module._calculate_column_widths = calculate_column_widths
 module._format_workspace_row = format_workspace_row
+module._capture_pane_info = capture_pane_info
+module._capture_tab_info = capture_tab_info
+module._capture_workspace_layout = capture_workspace_layout
 
 return module

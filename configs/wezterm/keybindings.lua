@@ -45,6 +45,7 @@ function module.apply_to_config(config)
 		-- Workspace management
 		{ key = "n", mods = "CTRL|ALT", action = wezterm.action.EmitEvent("create-workspace") },
 		{ key = "p", mods = "CTRL|ALT", action = wezterm.action.EmitEvent("list-workspaces") },
+		{ key = "l", mods = "CTRL|ALT", action = wezterm.action.EmitEvent("capture-layout") },
 	}
 
 	for _, binding in ipairs(convenience_bindings) do
