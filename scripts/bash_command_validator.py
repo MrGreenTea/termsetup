@@ -25,8 +25,8 @@ VALIDATION_RULES = [
         "Background processes (&) are not supported in Claude Code and will cause hanging",
     ),
     (
-        r"\bgit\s+add\s+\.\s*$",
-        "Use 'git add' with specific file paths instead of 'git add .' to avoid staging unwanted files",
+        r"\bgit\s+add\s+(\.(\s|$)|--all|-A|\S*[*?[\]]\S*)",
+        "Use 'git add' with specific file paths instead of glob patterns (., *, --all, -A, etc.) to avoid staging unwanted files",
     ),
 ]
 
