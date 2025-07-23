@@ -125,7 +125,11 @@ def get_last_commit_files():
         )
         files = result.stdout.strip().split("\n")
         # Filter out empty lines and commit message lines
-        return [f for f in files if f and not f.startswith("commit ") and "/" in f or "." in f]
+        return [
+            f
+            for f in files
+            if f and not f.startswith("commit ") and "/" in f or "." in f
+        ]
     except subprocess.CalledProcessError:
         return []
 
@@ -135,12 +139,12 @@ def check_files_overlap_with_last_commit(current_files):
     last_commit_files = get_last_commit_files()
     if not last_commit_files or not current_files:
         return False, []
-    
+
     # Check for any file overlap
     current_set = set(current_files)
     last_commit_set = set(last_commit_files)
     overlapping_files = current_set.intersection(last_commit_set)
-    
+
     return len(overlapping_files) > 0, list(overlapping_files)
 
 
@@ -148,13 +152,13 @@ def check_git_absorb_available(staged_files):
     """Check if git absorb would work with current staged changes."""
     if not staged_files:
         return False, ""
-    
+
     try:
         result = subprocess.run(
             ["git", "absorb", "--dry-run"],
             capture_output=True,
             text=True,
-            check=False  # Don't raise on non-zero exit
+            check=False,  # Don't raise on non-zero exit
         )
         # git absorb returns 0 if it would work, non-zero otherwise
         return result.returncode == 0, result.stdout + result.stderr
@@ -274,7 +278,7 @@ def main():
 
     try:
         # Allow bypassing for unrelated changes
-        if os.environ.get('IGNORE_COMMIT_HOOK') == '1':
+        if os.environ.get("IGNORE_COMMIT_HOOK") == "1":
             return 0
         # Read JSON input from stdin
         input_data = sys.stdin.read()
@@ -314,15 +318,24 @@ def main():
         commit_template = generate_commit_message(commit_type, all_files, diff_content)
 
         # Check if files overlap with last commit
-        files_overlap, overlapping_files = check_files_overlap_with_last_commit(all_files)
-        
+        files_overlap, overlapping_files = check_files_overlap_with_last_commit(
+            all_files
+        )
+
         if files_overlap:
-            print(f"\n🔄 These files were also changed in the last commit: {', '.join(overlapping_files)}", file=sys.stderr)
-            print(f"   Consider amending the last commit instead of creating a new one.", file=sys.stderr)
+            print(
+                f"\n🔄 These files were also changed in the last commit: {', '.join(overlapping_files)}",
+                file=sys.stderr,
+            )
+            print(
+                "If they are related to the previous work you are allowed to amend the commit.",
+                file=sys.stderr,
+            )
         else:
             # Output user message to stderr
             print(
-                f"\n💡 Conventional commit suggestion: {commit_template}", file=sys.stderr
+                f"\n💡 Conventional commit suggestion: {commit_template}",
+                file=sys.stderr,
             )
 
         # Show different file categories
@@ -347,11 +360,16 @@ def main():
         # Check if multiple files are changed and provide reminder
         total_files = len(staged_files) + len(unstaged_files)
         if total_files > 1:
-            print(f"   📝 Note: {total_files} files changed. Separate commits may be appropriate for unrelated changes.", file=sys.stderr)
-        
+            print(
+                f"   📝 Note: {total_files} files changed. Separate commits may be appropriate.",
+                file=sys.stderr,
+            )
+
         # Warning about committing unrelated changes
-        print(f"   ⚠️  Warning: Only stage and commit files related to your current task. Avoid using 'git add .' to prevent committing unrelated changes.", file=sys.stderr)
-        print(f"   💡 If these changes are actually unrelated to your current task, then you may ignore this suggestion.", file=sys.stderr)
+        print(
+            "   💡 If these changes are actually unrelated to your current task, then you may ignore this suggestion.",
+            file=sys.stderr,
+        )
 
         # Block the stop with decision control JSON to stdout
         reason_parts = []
@@ -366,7 +384,7 @@ def main():
         if files_overlap:
             # Check if git absorb is available for staged changes
             if staged_files:
-                absorb_available, absorb_output = check_git_absorb_available(staged_files)
+                absorb_available, _ = check_git_absorb_available(staged_files)
                 if absorb_available:
                     suggestion = "Consider using 'git absorb' to automatically fixup the relevant commits, or 'git commit --amend' to amend the last commit"
                 else:
