@@ -328,7 +328,7 @@ def main():
                 file=sys.stderr,
             )
             print(
-                f"   Consider amending the last commit instead of creating a new one.",
+                "If they are related to the previous work you are allowed to amend the commit.",
                 file=sys.stderr,
             )
         else:
@@ -361,17 +361,13 @@ def main():
         total_files = len(staged_files) + len(unstaged_files)
         if total_files > 1:
             print(
-                f"   📝 Note: {total_files} files changed. Separate commits may be appropriate for unrelated changes.",
+                f"   📝 Note: {total_files} files changed. Separate commits may be appropriate.",
                 file=sys.stderr,
             )
 
         # Warning about committing unrelated changes
         print(
-            f"   ⚠️  Warning: Only stage and commit files related to your current task. Avoid using 'git add .' to prevent committing unrelated changes.",
-            file=sys.stderr,
-        )
-        print(
-            f"   💡 If these changes are actually unrelated to your current task, then you may ignore this suggestion.",
+            "   💡 If these changes are actually unrelated to your current task, then you may ignore this suggestion.",
             file=sys.stderr,
         )
 
@@ -388,9 +384,7 @@ def main():
         if files_overlap:
             # Check if git absorb is available for staged changes
             if staged_files:
-                absorb_available, absorb_output = check_git_absorb_available(
-                    staged_files
-                )
+                absorb_available, _ = check_git_absorb_available(staged_files)
                 if absorb_available:
                     suggestion = "Consider using 'git absorb' to automatically fixup the relevant commits, or 'git commit --amend' to amend the last commit"
                 else:
