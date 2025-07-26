@@ -36,18 +36,30 @@ Good names tell a story about the domain:
 - `Registry` not `ToolRegistryManager`
 - `execute()` not `executeToolWithValidation()`
 
-Comments must describe what the code does NOW, not:
+Comments must describe why the code does what it does NOW, not:
 
 - What it used to do
 - How it was refactored
 - What framework/library it uses internally
 - Why it's better than some previous version
+- Just Repeat the code
 
 Examples:
-// BAD: This uses Zod for validation instead of manual checking
-// BAD: Refactored from the old validation system
-// BAD: Wrapper around MCP tool protocol
-// GOOD: Executes tools with validated arguments
+<BAD>// This uses Zod for validation instead of manual checking</BAD>
+<BAD>// Refactored from the old validation system</BAD>
+<BAD>// Wrapper around MCP tool protocol</BAD>
+<BAD>
+// Add Listeners
+this.addListeners();
+</BAD>
+<BAD>// Call tool with validated arguments</BAD>
+<BAD>
+// Check current permission status
+const permStatus = await PushNotifications.checkPermissions();
+</BAD>
+
+<GOOD>// Email was validated at this point, so it's safe to assume it is correct here</GOOD>
+<GOOD>// Because we rely on external, asynchronous completion we have to continuously poll here</GOOD>
 
 If you catch yourself writing "new", "old", "legacy", "wrapper", "unified", or implementation details in names or comments, STOP and find a better name that describes the thing's
 actual purpose.
