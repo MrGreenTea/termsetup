@@ -55,6 +55,12 @@
     ],
     "deny": []
   },
+  "env": {
+    "EDITOR": "false",
+    "VISUAL": "false",
+    "NO_COLOR": "1",
+    "PAGER": "cat"
+  },
   "hooks": {
     "Notification": [
       {
