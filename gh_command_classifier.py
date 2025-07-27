@@ -124,17 +124,24 @@ if __name__ == "__main__":
 
     # Check safety and output JSON decision
     if classify_gh_command(command) == GhCommandSafety.UNSAFE:
-        # Unsafe command - use undefined decision to trigger standard approval flow
+        # Unsafe command - defer to user for approval
         response = {
-            "reason": f"Unsafe GitHub CLI command detected: {command}"
+            "hookSpecificOutput": {
+                "hookEventName": "PreToolUse",
+                "permissionDecision": "ask",
+                "permissionDecisionReason": f"Unsafe GitHub CLI command detected: {command}"
+            }
         }
         print(json.dumps(response))
         sys.exit(0)
 
     # Safe command - approve to bypass permission system
     response = {
-        "decision": "approve",
-        "reason": "Safe GitHub CLI command"
+        "hookSpecificOutput": {
+            "hookEventName": "PreToolUse",
+            "permissionDecision": "allow",
+            "permissionDecisionReason": "Safe GitHub CLI command"
+        }
     }
     print(json.dumps(response))
     sys.exit(0)
