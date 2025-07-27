@@ -114,6 +114,20 @@ def analyze_git_changes():
         return "chore", [], [], ""
 
 
+def is_jj_repository():
+    """Check if current directory is in a jj (Jujutsu) repository."""
+    try:
+        result = subprocess.run(
+            ["jj", "workspace", "root"],
+            capture_output=True,
+            check=False
+        )
+        return result.returncode == 0
+    except FileNotFoundError:
+        # jj not installed
+        return False
+
+
 def get_last_commit_files():
     """Get list of files changed in the last commit."""
     try:
@@ -287,6 +301,11 @@ def main():
         # Check if stop hook is already active to prevent loops
         if data.get("stop_hook_active", False):
             # Allow normal stopping if hook is already active
+            return 0
+
+        # Check if we're in a jj repository
+        if is_jj_repository():
+            # jj repos don't use conventional commits in the same way
             return 0
 
         # Check if we're in a git repository

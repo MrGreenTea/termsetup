@@ -24,6 +24,7 @@ from conventional_commit_hook import (
     extract_commit_description,
     generate_commit_message,
     analyze_git_changes,
+    is_jj_repository,
 )
 
 
@@ -236,6 +237,67 @@ class TestHookIntegration:
         # Should return 0 and produce no output when not in git repo
         assert result.returncode == 0
         assert result.stdout == ""
+
+    def test_hook_in_jj_repo(self, tmp_path, monkeypatch):
+        """Test hook behavior in a jj repository."""
+        # Mock is_jj_repository to return True
+        import conventional_commit_hook
+        
+        def mock_is_jj_repository():
+            return True
+        
+        monkeypatch.setattr(conventional_commit_hook, "is_jj_repository", mock_is_jj_repository)
+        
+        hook_path = (
+            Path(__file__).parent.parent / "scripts" / "conventional_commit_hook.py"
+        )
+
+        result = subprocess.run(
+            [str(hook_path)],
+            input="{}",
+            text=True,
+            capture_output=True,
+            cwd=tmp_path,
+        )
+
+        # Should return 0 and produce no output when in jj repo
+        assert result.returncode == 0
+        assert result.stdout == ""
+
+
+class TestJJDetection:
+    """Test jj repository detection."""
+
+    def test_is_jj_repository_mock(self, monkeypatch):
+        """Test is_jj_repository function with mocked subprocess."""
+        import conventional_commit_hook
+        
+        # Mock successful jj workspace root
+        def mock_run_success(cmd, **kwargs):
+            class MockResult:
+                returncode = 0
+                stdout = "/var/home/jonas/Development/termsetup"
+            return MockResult()
+        
+        monkeypatch.setattr(subprocess, "run", mock_run_success)
+        assert is_jj_repository() is True
+        
+        # Mock failed jj workspace root (not in jj repo)
+        def mock_run_fail(cmd, **kwargs):
+            class MockResult:
+                returncode = 1
+                stdout = ""
+            return MockResult()
+        
+        monkeypatch.setattr(subprocess, "run", mock_run_fail)
+        assert is_jj_repository() is False
+        
+        # Mock jj not installed
+        def mock_run_not_found(cmd, **kwargs):
+            raise FileNotFoundError("jj not found")
+        
+        monkeypatch.setattr(subprocess, "run", mock_run_not_found)
+        assert is_jj_repository() is False
 
 
 if __name__ == "__main__":
