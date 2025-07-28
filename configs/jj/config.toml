@@ -8,8 +8,7 @@ email = "jonas@bulik.dev"
 
 [ui]
 pager = "delta"
-
-merge-editor = "nvim"
+default-command = "status"
 
 [merge-tools.nvim]
 program = "nvim"

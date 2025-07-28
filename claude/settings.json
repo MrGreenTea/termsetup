@@ -48,6 +48,8 @@
       "Bash(column:*)",
       "Bash(nl:*)",
       "Bash(sed:*)",
+      "Bash(jj log:*)",
+      "Bash(jj show:*)",
       "Read(/tmp/*)",
       "Write(/tmp/*)",
       "WebFetch",
