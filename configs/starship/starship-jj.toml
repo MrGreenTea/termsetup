@@ -17,7 +17,9 @@ behind_symbol = "⇡"
 
 [[module]]
 type = "Commit"
-max_length = 24
+max_length = 6
+color = "White"
+empty_text = "(empty)"
 
 [[module]]
 type = "State"
@@ -25,33 +27,33 @@ separator = " "
 
 [module.conflict]
 disabled = false
-text = "(CONFLICT)"
+text = "💥"
 color = "Red"
 
 [module.divergent]
 disabled = false
-text = "(DIVERGENT)"
-color = "Cyan"
+text = "🚧"
+color = "Yellow"
 
 [module.empty]
 disabled = false
-text = "(EMPTY)"
+text = ""
 color = "Yellow"
 
 [module.immutable]
 disabled = false
-text = "(IMMUTABLE)"
+text = "🔒"
 color = "Yellow"
 
 [module.hidden]
 disabled = false
-text = "(HIDDEN)"
+text = "👻"
 color = "Yellow"
 
 [[module]]
 type = "Metrics"
-template = "[{changed} {added} {removed}]"
-color = "Magenta"
+template = "[{changed} {added}{removed}]"
+color = "Blue"
 
 [module.changed_files]
 prefix = ""
