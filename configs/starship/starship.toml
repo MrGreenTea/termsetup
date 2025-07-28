@@ -7,6 +7,9 @@ use_stdin = false
 when = true
 
 # optionally disable git modules
+[git_status]
+disabled = true
+
 [git_state]
 disabled = true
 

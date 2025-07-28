@@ -8,8 +8,7 @@ email = "jonas@bulik.dev"
 
 [ui]
 pager = "delta"
-
-merge-editor = "nvim"
+default-command = "status"
 
 [merge-tools.nvim]
 program = "nvim"
@@ -32,4 +31,3 @@ key = "F19710F77B1A3CBC"
 
 [revset-aliases]
 "trunk()" = "main@origin"
-
