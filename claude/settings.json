@@ -136,7 +136,7 @@
           },
           {
             "type": "command",
-            "command": "/var/home/jonas/Development/termsetup/gh_command_classifier.py"
+            "command": "/var/home/jonas/Development/termsetup/scripts/gh_command_validator.py"
           },
           {
             "type": "command",
