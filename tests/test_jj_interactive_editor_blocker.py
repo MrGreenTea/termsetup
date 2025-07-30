@@ -477,5 +477,82 @@ class TestCommandsWithArguments:
         assert result == CommandCheckResult(decision="allow", reason="safe")
 
 
+class TestHelpFlags:
+    """Test that --help and -h flags are always allowed for all jj commands."""
+
+    def test_jj_describe_with_help_flag_allows(self):
+        result = check_jj_interactive_command("jj describe --help")
+        assert result == CommandCheckResult(decision="allow", reason="safe")
+
+    def test_jj_commit_with_help_flag_allows(self):
+        result = check_jj_interactive_command("jj commit --help")
+        assert result == CommandCheckResult(decision="allow", reason="safe")
+
+    def test_jj_split_with_help_flag_allows(self):
+        result = check_jj_interactive_command("jj split --help")
+        assert result == CommandCheckResult(decision="allow", reason="safe")
+
+    def test_jj_squash_with_help_flag_allows(self):
+        result = check_jj_interactive_command("jj squash --help")
+        assert result == CommandCheckResult(decision="allow", reason="safe")
+
+    def test_jj_resolve_with_help_flag_allows(self):
+        result = check_jj_interactive_command("jj resolve --help")
+        assert result == CommandCheckResult(decision="allow", reason="safe")
+
+    def test_jj_diffedit_with_help_flag_allows(self):
+        result = check_jj_interactive_command("jj diffedit --help")
+        assert result == CommandCheckResult(decision="allow", reason="safe")
+
+    def test_jj_describe_with_short_help_flag_allows(self):
+        result = check_jj_interactive_command("jj describe -h")
+        assert result == CommandCheckResult(decision="allow", reason="safe")
+
+    def test_jj_commit_with_short_help_flag_allows(self):
+        result = check_jj_interactive_command("jj commit -h")
+        assert result == CommandCheckResult(decision="allow", reason="safe")
+
+    def test_jj_diffedit_with_short_help_flag_allows(self):
+        result = check_jj_interactive_command("jj diffedit -h")
+        assert result == CommandCheckResult(decision="allow", reason="safe")
+
+    def test_jj_describe_help_with_other_args_allows(self):
+        result = check_jj_interactive_command("jj describe --help @")
+        assert result == CommandCheckResult(decision="allow", reason="safe")
+
+    def test_jj_commit_help_with_message_allows(self):
+        result = check_jj_interactive_command("jj commit --help -m 'message'")
+        assert result == CommandCheckResult(decision="allow", reason="safe")
+
+    def test_jj_split_help_with_files_allows(self):
+        result = check_jj_interactive_command("jj split --help file.py")
+        assert result == CommandCheckResult(decision="allow", reason="safe")
+
+    def test_jj_global_help_allows(self):
+        result = check_jj_interactive_command("jj --help describe")
+        assert result == CommandCheckResult(decision="allow", reason="safe")
+
+    def test_jj_help_in_commit_message_without_message_flag_blocks(self):
+        result = check_jj_interactive_command("jj describe")
+        assert result.decision == "block"
+        assert "interactive editor" in result.reason
+
+    def test_jj_help_in_commit_message_with_message_flag_allows(self):
+        result = check_jj_interactive_command("jj describe -m 'need --help with this'")
+        assert result == CommandCheckResult(decision="allow", reason="safe")
+
+    def test_jj_commit_help_in_message_allows(self):
+        result = check_jj_interactive_command("jj commit -m 'use --help flag'")
+        assert result == CommandCheckResult(decision="allow", reason="safe")
+
+    def test_jj_squash_with_help_and_interactive_flag_allows(self):
+        result = check_jj_interactive_command("jj squash --help -i")
+        assert result == CommandCheckResult(decision="allow", reason="safe")
+
+    def test_jj_commit_with_interactive_and_help_flag_allows(self):
+        result = check_jj_interactive_command("jj commit -i --help")
+        assert result == CommandCheckResult(decision="allow", reason="safe")
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
