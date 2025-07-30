@@ -148,6 +148,17 @@
         ]
       }
     ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/var/home/jonas/Development/termsetup/scripts/jujutsu_repo_detector.py"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "matcher": "",
