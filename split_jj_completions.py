@@ -6,7 +6,69 @@ import subprocess
 import sys
 import re
 from pathlib import Path
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Set
+
+
+def get_subcommands_from_help() -> Tuple[Set[str], Dict[str, str]]:
+    """
+    Parse jj help output to get all subcommands and their aliases.
+    Returns (all_subcommands, alias_to_main_mapping).
+    """
+    try:
+        result = subprocess.run(
+            ["jj", "help"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        help_output = result.stdout
+    except subprocess.CalledProcessError as e:
+        print(f"Error running 'jj help': {e}")
+        raise
+
+    subcommands = set()
+    alias_mappings = {}
+    
+    # Parse the Commands section
+    in_commands_section = False
+    
+    for line in help_output.splitlines():
+        if line.strip() == "Commands:":
+            in_commands_section = True
+            continue
+        elif in_commands_section and line.strip() == "":
+            # Empty line might end the commands section, but let's be cautious
+            continue
+        elif in_commands_section and line.strip().startswith("Options:"):
+            # Definitely end of commands section 
+            break
+        elif in_commands_section and line.startswith("  ") and not line.startswith("   "):
+            # Command line: "  command    Description [aliases: alias1, alias2]"
+            # Strip leading spaces for easier parsing
+            stripped_line = line.strip()
+            # First try to match with aliases
+            alias_match = re.match(r'^([a-zA-Z][a-zA-Z0-9-]*)\s+.*?\[(?:default )?alias(?:es)?: ([^\]]+)\]', stripped_line)
+            if alias_match:
+                main_command = alias_match.group(1)
+                subcommands.add(main_command)
+                
+                # Extract aliases
+                aliases_str = alias_match.group(2)
+                if aliases_str:
+                    # Split by comma and clean up
+                    aliases = [alias.strip() for alias in aliases_str.split(',')]
+                    for alias in aliases:
+                        alias_mappings[alias] = main_command
+                        subcommands.add(alias)
+                continue
+                
+            # Otherwise match regular commands without aliases    
+            match = re.match(r'^([a-zA-Z][a-zA-Z0-9-]*)\s+', stripped_line)
+            if match:
+                main_command = match.group(1)
+                subcommands.add(main_command)
+    
+    return subcommands, alias_mappings
 
 
 def get_completion_input() -> List[str]:
@@ -152,8 +214,22 @@ def write_section_to_file(lines: List[str], filepath: Path, header_comment: str)
             f.write(line + "\n")
 
 
+def write_alias_wrapper(alias: str, main_command: str, filepath: Path):
+    """Write a wrapper completion file for an alias using fish's --wraps."""
+    with open(filepath, "w") as f:
+        f.write(f"# ABOUTME: Alias wrapper for jj {alias} -> jj {main_command}\n")
+        f.write("# ABOUTME: Auto-generated from jj help output\n\n")
+        f.write(f"complete -c jj -n '__fish_jj_using_subcommand {alias}' --wraps 'jj {main_command}'\n")
+
+
 def main():
     """Main function to split jj completions."""
+    # Get subcommands and aliases from help first
+    print("Discovering subcommands from jj help...")
+    all_subcommands, alias_mappings = get_subcommands_from_help()
+    print(f"Found {len(all_subcommands)} total subcommands")
+    print(f"Found {len(alias_mappings)} aliases: {dict(list(alias_mappings.items())[:5])}{'...' if len(alias_mappings) > 5 else ''}")
+    
     # Get completion input
     lines = get_completion_input()
     print(f"Got {len(lines)} lines of completion data")
@@ -183,16 +259,34 @@ def main():
     )
 
     # Write individual subcommand files
-    print(f"Writing {len(sections['subcommands'])} subcommand files...")
+    print(f"Processing {len(sections['subcommands'])} subcommands...")
+    main_commands_written = set()
+    aliases_created = 0
+    
     for subcommand, lines in sections["subcommands"].items():
-        if lines:  # Only write non-empty files
-            filename = f"{subcommand}.fish"
-            print(f"  Writing {filename} ({len(lines)} lines)")
+        if not lines:  # Skip empty subcommands
+            continue
+            
+        filename = f"{subcommand}.fish"
+        
+        # Check if this is an alias
+        if subcommand in alias_mappings:
+            main_command = alias_mappings[subcommand]
+            print(f"  Creating alias wrapper {filename} -> {main_command}")
+            write_alias_wrapper(
+                subcommand,
+                main_command,
+                output_dir / filename
+            )
+            aliases_created += 1
+        else:
+            print(f"  Writing main command {filename} ({len(lines)} lines)")
             write_section_to_file(
                 lines,
                 output_dir / filename,
                 f"Completions for jj {subcommand} subcommand",
             )
+            main_commands_written.add(subcommand)
 
     # Create main completion file that sources everything
     main_completion_lines = [
@@ -223,10 +317,15 @@ def main():
     print("✓ Split complete! Created:")
     print(f"  - {output_dir}/_core.fish ({len(sections['functions'])} lines)")
     print(f"  - {output_dir}/_global.fish ({len(sections['global'])} lines)")
-    print(
-        f"  - {len([s for s in sections['subcommands'].values() if s])} subcommand files"
-    )
+    print(f"  - {len(main_commands_written)} main command files")
+    print(f"  - {aliases_created} alias wrapper files")
     print(f"  - {main_completion_path} (main loader)")
+    
+    if alias_mappings:
+        print(f"\nAlias mappings created:")
+        for alias, main in sorted(alias_mappings.items()):
+            if alias in [s for s in sections["subcommands"].keys() if sections["subcommands"][s]]:
+                print(f"  {alias} -> {main}")
 
 
 if __name__ == "__main__":
