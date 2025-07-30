@@ -320,6 +320,7 @@ complete -c jj -n "__fish_jj_using_subcommand bookmark; and __fish_seen_subcomma
 complete -c jj -n "__fish_jj_using_subcommand bookmark; and __fish_seen_subcommand_from track" -l quiet -d 'Silence non-primary command output'
 complete -c jj -n "__fish_jj_using_subcommand bookmark; and __fish_seen_subcommand_from track" -l no-pager -d 'Disable the pager'
 complete -c jj -n "__fish_jj_using_subcommand bookmark; and __fish_seen_subcommand_from track" -s h -l help -d 'Print help (see more with \'--help\')'
+complete -c jj -n "__fish_jj_using_subcommand bookmark; and __fish_seen_subcommand_from track" -f -a "(__fish_jj_complete_remote_bookmarks)"
 complete -c jj -n "__fish_jj_using_subcommand bookmark; and __fish_seen_subcommand_from t" -s R -l repository -d 'Path to repository to operate on' -r -f -a "(__fish_complete_directories)"
 complete -c jj -n "__fish_jj_using_subcommand bookmark; and __fish_seen_subcommand_from t" -l at-operation -l at-op -d 'Operation to load the repo at' -r
 complete -c jj -n "__fish_jj_using_subcommand bookmark; and __fish_seen_subcommand_from t" -l color -d 'When to colorize output' -r -f -a "always\t''
@@ -335,6 +336,7 @@ complete -c jj -n "__fish_jj_using_subcommand bookmark; and __fish_seen_subcomma
 complete -c jj -n "__fish_jj_using_subcommand bookmark; and __fish_seen_subcommand_from t" -l quiet -d 'Silence non-primary command output'
 complete -c jj -n "__fish_jj_using_subcommand bookmark; and __fish_seen_subcommand_from t" -l no-pager -d 'Disable the pager'
 complete -c jj -n "__fish_jj_using_subcommand bookmark; and __fish_seen_subcommand_from t" -s h -l help -d 'Print help (see more with \'--help\')'
+complete -c jj -n "__fish_jj_using_subcommand bookmark; and __fish_seen_subcommand_from t" -f -a "(__fish_jj_complete_remote_bookmarks)"
 complete -c jj -n "__fish_jj_using_subcommand bookmark; and __fish_seen_subcommand_from untrack" -s R -l repository -d 'Path to repository to operate on' -r -f -a "(__fish_complete_directories)"
 complete -c jj -n "__fish_jj_using_subcommand bookmark; and __fish_seen_subcommand_from untrack" -l at-operation -l at-op -d 'Operation to load the repo at' -r
 complete -c jj -n "__fish_jj_using_subcommand bookmark; and __fish_seen_subcommand_from untrack" -l color -d 'When to colorize output' -r -f -a "always\t''
