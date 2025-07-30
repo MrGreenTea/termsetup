@@ -159,3 +159,6 @@ complete -c jj -n "__fish_jj_using_subcommand op; and __fish_seen_subcommand_fro
 complete -c jj -n "__fish_jj_using_subcommand op; and __fish_seen_subcommand_from undo" -l quiet -d 'Silence non-primary command output'
 complete -c jj -n "__fish_jj_using_subcommand op; and __fish_seen_subcommand_from undo" -l no-pager -d 'Disable the pager'
 complete -c jj -n "__fish_jj_using_subcommand op; and __fish_seen_subcommand_from undo" -s h -l help -d 'Print help (see more with \'--help\')'
+# Completion for operation IDs in restore and undo commands
+complete -c jj -n "__fish_jj_using_subcommand op; and __fish_seen_subcommand_from restore" --keep-order -f -a "(__fish_jj_complete_operation_ids)" -d 'Operation ID'
+complete -c jj -n "__fish_jj_using_subcommand op; and __fish_seen_subcommand_from undo" --keep-order -f -a "(__fish_jj_complete_operation_ids)" -d 'Operation ID'
