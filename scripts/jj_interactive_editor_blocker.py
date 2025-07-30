@@ -1,4 +1,13 @@
+#!/usr/bin/env -S uv run --quiet --python 3.12
+# /// script
+# dependencies = []
+# ///
+# ABOUTME: Blocks jj interactive commands that would open editors, suggests alternatives
+# ABOUTME: Can be used as importable module or as Claude Code PreToolUse hook
+
+import json
 import shlex
+import sys
 from dataclasses import dataclass
 from typing import Literal, Optional
 
@@ -187,3 +196,49 @@ def _check_resolve_command(args: list[str]) -> CommandCheckResult:
             decision="block",  
             reason="Use 'jj resolve --list' to list conflicts without opening editor"
         )
+
+
+def main():
+    """Main function for Claude Code PreToolUse hook."""
+    try:
+        # Read JSON data from stdin
+        input_data = json.load(sys.stdin)
+    except (json.JSONDecodeError, Exception):
+        # Silent failure on parsing errors
+        return 0
+    
+    # Fast circuit for non-Bash tools
+    tool_name = input_data.get("tool_name", "")
+    if tool_name != "Bash":
+        return 0
+    
+    # Extract command from tool input
+    tool_input = input_data.get("tool_input", {})
+    command = tool_input.get("command", "")
+    
+    # Fast circuit if command doesn't contain jj
+    if not command or "jj" not in command:
+        return 0
+    
+    # Check the jj command
+    result = check_jj_interactive_command(command)
+    
+    # Only output response if we need to block or ask
+    if result.decision != "allow":
+        # Map decision to permission decision
+        permission_decision = "deny" if result.decision == "block" else result.decision
+        
+        response = {
+            "hookSpecificOutput": {
+                "hookEventName": "PreToolUse",
+                "permissionDecision": permission_decision,
+                "permissionDecisionReason": result.reason
+            }
+        }
+        print(json.dumps(response))
+    
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
