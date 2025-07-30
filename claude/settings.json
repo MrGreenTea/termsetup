@@ -140,6 +140,10 @@
           {
             "type": "command",
             "command": "/var/home/jonas/Development/termsetup/scripts/bash_command_validator.py"
+          },
+          {
+            "type": "command",
+            "command": "/var/home/jonas/Development/termsetup/scripts/jj_interactive_editor_blocker.py"
           }
         ]
       }
