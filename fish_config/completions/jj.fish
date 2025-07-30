@@ -27,6 +27,8 @@ end
 function __fish_jj_complete_revisions
 	# Generate revision IDs for completion
 	jj log --no-graph --limit 50 -T 'change_id.short() ++ "\t" ++ if(description, description.first_line(), "(no description)") ++ "\n"' 2>/dev/null
+	# Also include bookmarks
+	jj bookmark list -T 'name ++ "\t[bookmark]\n"' 2>/dev/null
 end
 
 complete -c jj -n "__fish_jj_needs_command" -s R -l repository -d 'Path to repository to operate on' -r -f -a "(__fish_complete_directories)"

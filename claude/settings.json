@@ -50,6 +50,7 @@
       "Bash(sed:*)",
       "Bash(jj log:*)",
       "Bash(jj show:*)",
+      "Bash(jj bookmark list:*)",
       "Read(/tmp/*)",
       "Write(/tmp/*)",
       "WebFetch",
