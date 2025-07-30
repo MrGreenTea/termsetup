@@ -51,3 +51,8 @@ function __fish_jj_complete_remote_bookmarks
 	end
 end
 
+function __fish_jj_complete_operation_ids
+	# Generate operation IDs for completion
+	jj operation log --no-graph --limit 50 -T 'id.short() ++ "\t" ++ description ++ "\n"' 2>/dev/null
+end
+
