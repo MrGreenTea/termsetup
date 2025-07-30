@@ -1,16 +1,18 @@
 
-# Helper function to list all accessible repositories for completion
-function __fish_gh_complete_repos
-    # Get user repositories
-    gh repo list --json nameWithOwner,description --limit 100 2>/dev/null | \
-        jq -r '.[] | .nameWithOwner + "\t" + (if .description == "" then "(no description)" else .description end)' 2>/dev/null
-    
-    # Get organization repositories
-    for org in (gh api /user/orgs -q '.[].login' 2>/dev/null)
-        gh repo list $org --json nameWithOwner,description --limit 100 2>/dev/null | \
-            jq -r '.[] | .nameWithOwner + "\t" + (if .description == "" then "(no description)" else .description end)' 2>/dev/null
+# ABOUTME: Main gh completion file that sources all modular completion files
+# ABOUTME: Enhanced completion system with dynamic completions and context awareness
+
+# Load core functions
+source (dirname (status --current-filename))/gh/_core.fish
+
+# Load base Cobra completion integration
+source (dirname (status --current-filename))/gh/_base.fish
+
+# Load enhanced subcommand completions dynamically
+for file in (dirname (status --current-filename))/gh/*.fish
+    set -l basename (basename $file .fish)
+    # Skip core and base files (already loaded above)
+    if test "$basename" != "_core" -a "$basename" != "_base"
+        source $file
     end
 end
-
-# Custom completion for gh repo clone
-complete -c gh -n '__fish_seen_subcommand_from repo; and __fish_seen_subcommand_from clone' -f -a '(__fish_gh_complete_repos)'
