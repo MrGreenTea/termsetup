@@ -39,3 +39,15 @@ function __fish_jj_complete_bookmark_names
 	jj bookmark list -T 'name ++ "\n"' 2>/dev/null
 end
 
+function __fish_jj_complete_remote_bookmarks
+	# Generate remote bookmark names for completion in bookmark@remote format, excluding already tracked ones
+	set -l all_remotes (jj bookmark list --all-remotes -T 'if(remote, name ++ "@" ++ remote ++ "\n", "")' 2>/dev/null)
+	set -l tracked (jj bookmark list --tracked -T 'if(remote, name ++ "@" ++ remote ++ "\n", "")' 2>/dev/null)
+	
+	for bookmark in $all_remotes
+		if not contains $bookmark $tracked
+			echo $bookmark
+		end
+	end
+end
+
