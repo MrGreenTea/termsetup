@@ -113,6 +113,7 @@ complete -c jj -n "__fish_jj_using_subcommand abandon" -l debug -d 'Enable debug
 complete -c jj -n "__fish_jj_using_subcommand abandon" -l quiet -d 'Silence non-primary command output'
 complete -c jj -n "__fish_jj_using_subcommand abandon" -l no-pager -d 'Disable the pager'
 complete -c jj -n "__fish_jj_using_subcommand abandon" -s h -l help -d 'Print help (see more with \'--help\')'
+complete -c jj -n "__fish_jj_using_subcommand abandon" -f -a "(__fish_jj_complete_revisions)"
 complete -c jj -n "__fish_jj_using_subcommand absorb" -s f -l from -d 'Source revision to absorb from' -r
 complete -c jj -n "__fish_jj_using_subcommand absorb" -s t -l into -l to -d 'Destination revisions to absorb into' -r
 complete -c jj -n "__fish_jj_using_subcommand absorb" -s R -l repository -d 'Path to repository to operate on' -r -f -a "(__fish_complete_directories)"
@@ -1019,6 +1020,7 @@ complete -c jj -n "__fish_jj_using_subcommand describe" -l debug -d 'Enable debu
 complete -c jj -n "__fish_jj_using_subcommand describe" -l quiet -d 'Silence non-primary command output'
 complete -c jj -n "__fish_jj_using_subcommand describe" -l no-pager -d 'Disable the pager'
 complete -c jj -n "__fish_jj_using_subcommand describe" -s h -l help -d 'Print help (see more with \'--help\')'
+complete -c jj -n "__fish_jj_using_subcommand describe" -f -a "(__fish_jj_complete_revisions)"
 complete -c jj -n "__fish_jj_using_subcommand desc" -s r -r
 complete -c jj -n "__fish_jj_using_subcommand desc" -s m -l message -d 'The change description to use (don\'t open editor)' -r
 complete -c jj -n "__fish_jj_using_subcommand desc" -l author -d 'Set author to the provided string' -r
@@ -1125,6 +1127,7 @@ complete -c jj -n "__fish_jj_using_subcommand edit" -l debug -d 'Enable debug lo
 complete -c jj -n "__fish_jj_using_subcommand edit" -l quiet -d 'Silence non-primary command output'
 complete -c jj -n "__fish_jj_using_subcommand edit" -l no-pager -d 'Disable the pager'
 complete -c jj -n "__fish_jj_using_subcommand edit" -s h -l help -d 'Print help (see more with \'--help\')'
+complete -c jj -n "__fish_jj_using_subcommand edit" -f -a "(__fish_jj_complete_revisions)"
 complete -c jj -n "__fish_jj_using_subcommand evolog" -s r -l revisions -d 'Follow changes from these revisions' -r
 complete -c jj -n "__fish_jj_using_subcommand evolog" -s n -l limit -d 'Limit number of revisions to show' -r
 complete -c jj -n "__fish_jj_using_subcommand evolog" -s T -l template -d 'Render each revision using the given template' -r
@@ -2101,6 +2104,7 @@ complete -c jj -n "__fish_jj_using_subcommand show" -l debug -d 'Enable debug lo
 complete -c jj -n "__fish_jj_using_subcommand show" -l quiet -d 'Silence non-primary command output'
 complete -c jj -n "__fish_jj_using_subcommand show" -l no-pager -d 'Disable the pager'
 complete -c jj -n "__fish_jj_using_subcommand show" -s h -l help -d 'Print help (see more with \'--help\')'
+complete -c jj -n "__fish_jj_using_subcommand show" -f -a "(__fish_jj_complete_revisions)"
 complete -c jj -n "__fish_jj_using_subcommand sign" -s r -l revisions -d 'What revision(s) to sign' -r
 complete -c jj -n "__fish_jj_using_subcommand sign" -l key -d 'The key used for signing' -r
 complete -c jj -n "__fish_jj_using_subcommand sign" -s R -l repository -d 'Path to repository to operate on' -r -f -a "(__fish_complete_directories)"
