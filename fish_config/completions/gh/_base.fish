@@ -73,5 +73,6 @@ function __fish_gh_complete_command
     end
 end
 
-# Register the base completion - this acts as a fallback
-complete -c gh -f -a '(__fish_gh_complete_command)'
+# Register the base completion - this acts as a fallback for commands without custom completions
+# Only provide fallback completion when not using enhanced subcommands
+complete -c gh -f -a '(__fish_gh_complete_command)' -n 'not __fish_gh_using_subcommand repo pr issue'
