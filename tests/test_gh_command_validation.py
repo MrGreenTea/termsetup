@@ -7,18 +7,19 @@
 
 """
 Tests for GitHub CLI command validation.
-Tests the validate_gh_command function that determines if gh commands are safe or unsafe.
+Tests the classify_gh_command function that determines if gh commands are safe or unsafe.
 """
 
 import sys
 from pathlib import Path
+
 import pytest
 
 # Add scripts directory to path to import the validator
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
-
 # Import functions from the validator script
-from gh_command_validator import validate_gh_command, SafetyLevel
+
+from gh_command_validator import SafetyLevel, classify_gh_command  # noqa: E402
 
 
 class TestSafeCommands:
@@ -83,7 +84,7 @@ class TestSafeCommands:
     )
     def test_safe_commands_return_safe(self, command):
         """Test that all documented safe commands return SafetyLevel.SAFE."""
-        result = validate_gh_command(command)
+        result = classify_gh_command(command)
         assert result == SafetyLevel.SAFE, (
             f"Command '{command}' should be safe but was marked unsafe"
         )
@@ -109,7 +110,7 @@ class TestSafeCommands:
     )
     def test_safe_commands_with_arguments_return_safe(self, command):
         """Test that safe commands with additional arguments return SafetyLevel.SAFE."""
-        result = validate_gh_command(command)
+        result = classify_gh_command(command)
         assert result == SafetyLevel.SAFE, (
             f"Command '{command}' should be safe but was marked unsafe"
         )
@@ -177,7 +178,7 @@ class TestUnsafeCommands:
     )
     def test_unsafe_commands_return_unsafe(self, command):
         """Test that commands with modification/creation/deletion verbs return SafetyLevel.UNSAFE."""
-        result = validate_gh_command(command)
+        result = classify_gh_command(command)
         assert result == SafetyLevel.UNSAFE, (
             f"Command '{command}' should be unsafe but was marked safe"
         )
@@ -197,7 +198,7 @@ class TestUnsafeCommands:
     )
     def test_unsafe_commands_with_arguments_return_unsafe(self, command):
         """Test that unsafe commands with arguments return SafetyLevel.UNSAFE."""
-        result = validate_gh_command(command)
+        result = classify_gh_command(command)
         assert result == SafetyLevel.UNSAFE, (
             f"Command '{command}' should be unsafe but was marked safe"
         )
@@ -238,19 +239,19 @@ class TestEdgeCases:
     )
     def test_edge_cases(self, command, expected):
         """Test various edge cases and input validation scenarios."""
-        result = validate_gh_command(command)
-        assert result == expected, (
-            f"Command '{command}' should return {expected} but returned {result}"
-        )
+        result = classify_gh_command(command)
+        assert result == expected, f"Command '{command}' should return {
+            expected
+        } but returned {result}"
 
     def test_very_long_command(self):
         """Test validation of very long commands."""
         long_safe_command = "gh repo view " + "a" * 1000
-        result = validate_gh_command(long_safe_command)
+        result = classify_gh_command(long_safe_command)
         assert result == SafetyLevel.SAFE
 
         long_unsafe_command = "gh repo create " + "a" * 1000
-        result = validate_gh_command(long_unsafe_command)
+        result = classify_gh_command(long_unsafe_command)
         assert result == SafetyLevel.UNSAFE
 
     @pytest.mark.parametrize(
@@ -269,10 +270,24 @@ class TestEdgeCases:
     )
     def test_partial_and_similar_commands_are_unsafe(self, command):
         """Test that commands similar to but not exactly matching safe commands are unsafe."""
-        result = validate_gh_command(command)
+        result = classify_gh_command(command)
         assert result == SafetyLevel.UNSAFE, (
             f"Command '{command}' should be unsafe (not exact match)"
         )
+
+    @pytest.mark.parametrize(
+        "command",
+        [
+            "gh help",
+            "gh repo --help",
+            "gh issue create --help",
+            "gh issue delete --help",
+            "gh repo rename --help",
+        ],
+    )
+    def test_gh_help_is_safe(self, command):
+        result = classify_gh_command(command)
+        assert result == SafetyLevel.SAFE
 
 
 if __name__ == "__main__":
