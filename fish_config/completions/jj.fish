@@ -24,6 +24,11 @@ function __fish_jj_using_subcommand
 	contains -- $cmd[1] $argv
 end
 
+function __fish_jj_complete_revisions
+	# Generate revision IDs for completion
+	jj log --no-graph --limit 50 -T 'change_id.short() ++ "\t" ++ if(description, description.first_line(), "(no description)") ++ "\n"' 2>/dev/null
+end
+
 complete -c jj -n "__fish_jj_needs_command" -s R -l repository -d 'Path to repository to operate on' -r -f -a "(__fish_complete_directories)"
 complete -c jj -n "__fish_jj_needs_command" -l at-operation -l at-op -d 'Operation to load the repo at' -r
 complete -c jj -n "__fish_jj_needs_command" -l color -d 'When to colorize output' -r -f -a "always\t''
@@ -1583,6 +1588,7 @@ complete -c jj -n "__fish_jj_using_subcommand new" -l debug -d 'Enable debug log
 complete -c jj -n "__fish_jj_using_subcommand new" -l quiet -d 'Silence non-primary command output'
 complete -c jj -n "__fish_jj_using_subcommand new" -l no-pager -d 'Disable the pager'
 complete -c jj -n "__fish_jj_using_subcommand new" -s h -l help -d 'Print help (see more with \'--help\')'
+complete -c jj -n "__fish_jj_using_subcommand new" -f -a "(__fish_jj_complete_revisions)"
 complete -c jj -n "__fish_jj_using_subcommand next" -s R -l repository -d 'Path to repository to operate on' -r -f -a "(__fish_complete_directories)"
 complete -c jj -n "__fish_jj_using_subcommand next" -l at-operation -l at-op -d 'Operation to load the repo at' -r
 complete -c jj -n "__fish_jj_using_subcommand next" -l color -d 'When to colorize output' -r -f -a "always\t''
