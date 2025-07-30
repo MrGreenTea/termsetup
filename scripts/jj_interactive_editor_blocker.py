@@ -68,7 +68,12 @@ def check_jj_interactive_command(command: str) -> CommandCheckResult:
     }
     subcommand = command_aliases.get(subcommand, subcommand)
     
-    # Check for interactive flags first - these always block regardless of other flags
+    # Check for help flags first - help commands never open editors
+    all_args = jj_args  # All args after 'jj'
+    if "--help" in all_args or "-h" in all_args:
+        return CommandCheckResult(decision="allow", reason="safe")
+    
+    # Check for interactive flags - these always block regardless of other flags
     all_flags = jj_args[subcommand_index + 1:]  # All args after subcommand
     if "-i" in all_flags or "--interactive" in all_flags:
         return CommandCheckResult(
