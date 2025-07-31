@@ -132,7 +132,7 @@ class TestComplexEditorCommands:
         result = check_jj_interactive_command("jj squash")
         assert result == CommandCheckResult(
             decision="block",
-            reason="Use 'jj squash -m \"message\"' or 'jj squash -u' to avoid interactive editor",
+            reason="Use 'jj squash -m \"message\"' or 'jj squash --use-destination-message' to avoid interactive editor",
         )
 
     def test_jj_squash_with_short_message_flag_allows(self):
@@ -212,28 +212,28 @@ class TestAlwaysInteractiveCommands:
         result = check_jj_interactive_command("jj diffedit")
         assert result == CommandCheckResult(
             decision="block",
-            reason="Use 'jj restore' or 'jj squash -i' instead of diffedit",
+            reason="Use 'jj restore' or 'jj squash' instead of diffedit",
         )
 
     def test_jj_diffedit_with_revision_blocks(self):
         result = check_jj_interactive_command("jj diffedit -r @")
         assert result == CommandCheckResult(
             decision="block",
-            reason="Use 'jj restore' or 'jj squash -i' instead of diffedit",
+            reason="Use 'jj restore' or 'jj squash' instead of diffedit",
         )
 
     def test_jj_diffedit_with_from_to_blocks(self):
         result = check_jj_interactive_command("jj diffedit --from @ --to @-")
         assert result == CommandCheckResult(
             decision="block",
-            reason="Use 'jj restore' or 'jj squash -i' instead of diffedit",
+            reason="Use 'jj restore' or 'jj squash' instead of diffedit",
         )
 
     def test_jj_diffedit_with_tool_blocks(self):
         result = check_jj_interactive_command("jj diffedit --tool sometool")
         assert result == CommandCheckResult(
             decision="block",
-            reason="Use 'jj restore' or 'jj squash -i' instead of diffedit",
+            reason="Use 'jj restore' or 'jj squash' instead of diffedit",
         )
 
 
