@@ -14,10 +14,7 @@ def is_in_jujutsu_repo():
     """Check if current directory is inside a jujutsu repository"""
     try:
         result = subprocess.run(
-            ["jj", "workspace", "root"],
-            capture_output=True,
-            text=True,
-            timeout=2
+            ["jj", "workspace", "root"], capture_output=True, text=True, timeout=2
         )
         return result.returncode == 0
     except (subprocess.TimeoutExpired, FileNotFoundError):
@@ -31,7 +28,7 @@ def get_jj_suggestion(git_command):
         "git log": "jj log",
         "git show": "jj show",
         "git diff": "jj diff",
-        "git add": "jj commit (jujutsu automatically tracks changes)", 
+        "git add": "jj commit (jujutsu automatically tracks changes)",
         "git commit": "jj commit",
         "git push": "jj git push",
         "git pull": "jj git fetch",
@@ -40,12 +37,12 @@ def get_jj_suggestion(git_command):
         "git merge": "jj rebase",
         "git rebase": "jj rebase",
     }
-    
+
     # Check for exact matches first
     for git_cmd, jj_cmd in suggestions.items():
         if git_command.strip().startswith(git_cmd):
             return jj_cmd
-    
+
     # Default suggestion for any git command
     return "jj help (for jujutsu equivalent)"
 

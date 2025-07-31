@@ -30,12 +30,14 @@ VALIDATION_RULES = [
     ),
 ]
 
+
 def validate_command(command: str) -> list[str]:
     issues = []
     for pattern, message in VALIDATION_RULES:
         if re.search(pattern, command):
             issues.append(message)
     return issues
+
 
 try:
     input_data = json.load(sys.stdin)

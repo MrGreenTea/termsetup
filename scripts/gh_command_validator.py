@@ -89,4 +89,3 @@ def validate_gh_command(command_string: str) -> SafetyLevel:
                 return SafetyLevel.SAFE
 
     return SafetyLevel.UNSAFE
-

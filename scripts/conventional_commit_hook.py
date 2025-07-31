@@ -118,9 +118,7 @@ def is_jj_repository():
     """Check if current directory is in a jj (Jujutsu) repository."""
     try:
         result = subprocess.run(
-            ["jj", "workspace", "root"],
-            capture_output=True,
-            check=False
+            ["jj", "workspace", "root"], capture_output=True, check=False
         )
         return result.returncode == 0
     except FileNotFoundError:

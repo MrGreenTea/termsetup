@@ -14,10 +14,7 @@ def is_in_jujutsu_repo():
     """Check if current directory is inside a jujutsu repository"""
     try:
         result = subprocess.run(
-            ["jj", "workspace", "root"],
-            capture_output=True,
-            text=True,
-            timeout=2
+            ["jj", "workspace", "root"], capture_output=True, text=True, timeout=2
         )
         return result.returncode == 0
     except (subprocess.TimeoutExpired, FileNotFoundError):
@@ -37,11 +34,11 @@ def main():
         response = {
             "hookSpecificOutput": {
                 "hookEventName": "UserPromptSubmit",
-                "additionalContext": "You are in a jujutsu repository. ALWAYS use jj commands. NEVER use git commands."
+                "additionalContext": "You are in a jujutsu repository. ALWAYS use jj commands. NEVER use git commands.",
             }
         }
         print(json.dumps(response))
-    
+
     return 0
 
 
