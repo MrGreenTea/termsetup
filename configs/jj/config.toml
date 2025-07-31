@@ -31,3 +31,6 @@ key = "F19710F77B1A3CBC"
 
 [revset-aliases]
 "trunk()" = "main@origin"
+
+[revset]
+log = "working_copies():: | ancestors(remote_bookmarks().., 2) | trunk() | fork_point(@ | trunk())::"
