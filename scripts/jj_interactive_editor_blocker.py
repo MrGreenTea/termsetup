@@ -92,7 +92,7 @@ def check_jj_interactive_command(command: str) -> CommandCheckResult:
     if subcommand == "diffedit":
         return CommandCheckResult(
             decision="block",
-            reason="Use 'jj restore' or 'jj squash -i' instead of diffedit",
+            reason="Use 'jj restore' or 'jj squash' instead of diffedit",
         )
 
     # Commands that need message flags
