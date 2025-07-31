@@ -214,12 +214,30 @@ def write_section_to_file(lines: List[str], filepath: Path, header_comment: str)
             f.write(line + "\n")
 
 
-def write_alias_wrapper(alias: str, main_command: str, filepath: Path):
-    """Write a wrapper completion file for an alias using fish's --wraps."""
+def write_alias_completions(alias: str, main_command: str, main_command_lines: List[str], filepath: Path):
+    """Write duplicated completions for an alias by copying and transforming the main command's completions."""
     with open(filepath, "w") as f:
-        f.write(f"# ABOUTME: Alias wrapper for jj {alias} -> jj {main_command}\n")
-        f.write("# ABOUTME: Auto-generated from jj help output\n\n")
-        f.write(f"complete -c jj -n '__fish_jj_using_subcommand {alias}' --wraps 'jj {main_command}'\n")
+        f.write(f"# ABOUTME: Duplicated completions for jj {alias} (alias of jj {main_command})\n")
+        f.write("# ABOUTME: Auto-generated from jj help output and main command completions\n\n")
+        
+        # Transform each completion line from the main command
+        for line in main_command_lines:
+            # Replace references to the main command with the alias
+            # Pattern: __fish_jj_using_subcommand main_command
+            transformed_line = re.sub(
+                rf'__fish_jj_using_subcommand {re.escape(main_command)}\b',
+                f'__fish_jj_using_subcommand {alias}',
+                line
+            )
+            
+            # Also handle cases with semicolon (e.g., "bookmark; and __fish_seen_subcommand_from")
+            transformed_line = re.sub(
+                rf'__fish_jj_using_subcommand {re.escape(main_command)};',
+                f'__fish_jj_using_subcommand {alias};',
+                transformed_line
+            )
+            
+            f.write(transformed_line + "\n")
 
 
 def main():
@@ -272,13 +290,23 @@ def main():
         # Check if this is an alias
         if subcommand in alias_mappings:
             main_command = alias_mappings[subcommand]
-            print(f"  Creating alias wrapper {filename} -> {main_command}")
-            write_alias_wrapper(
-                subcommand,
-                main_command,
-                output_dir / filename
-            )
-            aliases_created += 1
+            
+            # Look up the main command's completion lines
+            if main_command in sections["subcommands"] and sections["subcommands"][main_command]:
+                print(f"  Duplicating completions {filename} <- {main_command} ({len(sections['subcommands'][main_command])} lines)")
+                write_alias_completions(
+                    subcommand,
+                    main_command,
+                    sections["subcommands"][main_command],
+                    output_dir / filename
+                )
+                aliases_created += 1
+            else:
+                print(f"  WARNING: No completions found for main command '{main_command}' (alias '{subcommand}')")
+                # Still create a basic file with a comment explaining the issue
+                with open(output_dir / filename, "w") as f:
+                    f.write(f"# ABOUTME: Alias {subcommand} -> {main_command} but no completions found for main command\n")
+                    f.write("# ABOUTME: This may happen if the main command has no specific completions\n")
         else:
             print(f"  Writing main command {filename} ({len(lines)} lines)")
             write_section_to_file(
