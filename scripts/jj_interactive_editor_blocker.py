@@ -188,7 +188,7 @@ def _check_squash_command(args: list[str]) -> CommandCheckResult:
     else:
         return CommandCheckResult(
             decision="block",
-            reason="Use 'jj squash -m \"message\"' or 'jj squash -u' to avoid interactive editor",
+            reason="Use 'jj squash -m \"message\"' or 'jj squash --use-destination-message' to avoid interactive editor",
         )
 
 
