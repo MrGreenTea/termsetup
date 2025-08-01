@@ -9,6 +9,13 @@ import json
 import subprocess
 import sys
 
+JUJUTSU_CONTEXT = """You are in a jujutsu repository. ALWAYS use jj commands. NEVER use git commands.
+
+When using the gh CLI in jujutsu repositories:
+- Always provide the `--repo` flag to specify the repository since gh cannot auto-detect from jj repos
+- Use `--head` flag to specify which commit you want to reference
+- Example: `gh pr create --repo owner/repo --head jb/my-new-feature`"""
+
 
 def is_in_jujutsu_repo():
     """Check if current directory is inside a jujutsu repository"""
@@ -34,7 +41,7 @@ def main():
         response = {
             "hookSpecificOutput": {
                 "hookEventName": "UserPromptSubmit",
-                "additionalContext": "You are in a jujutsu repository. ALWAYS use jj commands. NEVER use git commands.",
+                "additionalContext": JUJUTSU_CONTEXT,
             }
         }
         print(json.dumps(response))
