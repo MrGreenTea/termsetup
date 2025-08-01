@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
     "EDITOR": "false",
     "VISUAL": "false",
@@ -144,6 +145,10 @@
           {
             "type": "command",
             "command": "/var/home/jonas/Development/termsetup/scripts/jj_interactive_editor_blocker.py"
+          },
+          {
+            "type": "command",
+            "command": "/var/home/jonas/Development/termsetup/scripts/block_command_hook.py \"jj branch\" \"jj bookmark\""
           }
         ]
       }
@@ -172,7 +177,6 @@
     ]
   },
   "feedbackSurveyState": {
-    "lastShownTime": 1754029935485
-  },
-  "$schema": "https://json.schemastore.org/claude-code-settings.json"
+    "lastShownTime": 1754034989519
+  }
 }
