@@ -19,11 +19,12 @@ When using the gh CLI in jujutsu repositories:
 </gh-usage>
 
 <commit-workflow>
-When you make changes, use `jj describe --message "description"` to describe your work.
+When you make changes, use `jj commit --message "description"` to describe your work.
 Write clear, concise commit descriptions that explain what you accomplished.
+Use `jj diff` before writing your message.
 Use conventional commit style: type(scope): description
 - Common types: feat, fix, docs, style, refactor, test, chore
-- Example: `jj describe --message "feat(jujutsu): add commit status check to detector"`
+- Example: `jj commit --message "feat(jujutsu): add commit status check to detector"`
 </commit-workflow>
 """
 
