@@ -128,7 +128,7 @@
           },
           {
             "type": "command",
-            "command": "/var/home/jonas/Development/termsetup/scripts/block_command_hook.py docker-compose \"podman compose\""
+            "command": "/var/home/jonas/Development/termsetup/scripts/block_command_hook.py docker-compose 'podman compose'"
           },
           {
             "type": "command",
@@ -148,7 +148,11 @@
           },
           {
             "type": "command",
-            "command": "/var/home/jonas/Development/termsetup/scripts/block_command_hook.py \"jj branch\" \"jj bookmark\""
+            "command": "/var/home/jonas/Development/termsetup/scripts/block_command_hook.py 'jj branch' 'jj bookmark'"
+          },
+          {
+            "type": "command",
+            "command": "/var/home/jonas/Development/termsetup/scripts/block_command_hook.py 'jj add' 'jj commit directly'"
           }
         ]
       }
