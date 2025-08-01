@@ -155,6 +155,26 @@
             "command": "/var/home/jonas/Development/termsetup/scripts/block_command_hook.py 'jj add' 'jj commit directly'"
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/var/home/jonas/Development/termsetup/scripts/create_fresh_jj_change.py"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/var/home/jonas/Development/termsetup/scripts/jj_description_prompter.py"
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
@@ -181,6 +201,6 @@
     ]
   },
   "feedbackSurveyState": {
-    "lastShownTime": 1754034989519
+    "lastShownTime": 1754057899848
   }
 }
