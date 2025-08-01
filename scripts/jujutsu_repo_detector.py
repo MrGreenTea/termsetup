@@ -91,6 +91,19 @@ def get_jujutsu_info():
         ("jj-status", "jj status", ["jj", "status"]),
         ("jj-remotes", "jj git remote list", ["jj", "git", "remote", "list"]),
         ("jj-bookmarks", "jj bookmark list", ["jj", "bookmark", "list"]),
+        (
+            "jj-recent-commits",
+            "jj log --limit 5",
+            [
+                "jj",
+                "log",
+                "-T",
+                'if(current_working_copy, "<working-copy>\\n<change-id>\\n" ++ change_id.shortest(8) ++ "\\n</change-id>\\n<description>\\n" ++ description.first_line() ++ "\\n</description>\\n</working-copy>\\n", "<commit>\\n<change-id>\\n" ++ change_id.shortest(8) ++ "\\n</change-id>\\n<description>\\n" ++ description.first_line() ++ "\\n</description>\\n</commit>\\n")',
+                "--limit",
+                "5",
+                "--no-graph",
+            ],
+        ),
     ]
 
     info_sections = []
