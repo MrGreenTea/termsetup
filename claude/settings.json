@@ -88,8 +88,7 @@
       "Bash(podman compose config:*)",
       "Read(/tmp/*)",
       "Write(/tmp/*)",
-      "WebFetch",
-      "Fetch"
+      "WebFetch"
     ],
     "deny": []
   },
@@ -201,6 +200,6 @@
     ]
   },
   "feedbackSurveyState": {
-    "lastShownTime": 1754057899848
+    "lastShownTime": 2000000000000
   }
 }
