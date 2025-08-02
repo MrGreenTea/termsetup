@@ -10,63 +10,46 @@ import subprocess
 import sys
 
 
-def is_in_jujutsu_repo():
+def is_in_jujutsu_repo() -> bool:
     """Check if current directory is inside a jujutsu repository"""
     try:
-        result = subprocess.run(
-            ["jj", "workspace", "root"], capture_output=True, text=True, timeout=2
-        )
-        return result.returncode == 0
+        subprocess.check_call(["jj", "workspace", "root"], timeout=2)
     except (subprocess.TimeoutExpired, FileNotFoundError):
         return False
+    else:
+        return True
 
 
-def check_has_description():
+def check_has_description() -> bool:
     """Check if current change has a description"""
-    try:
-        result = subprocess.run(
-            [
-                "jj",
-                "log",
-                "-r",
-                "@",
-                "-T",
-                "description",
-            ],
-            capture_output=True,
-            text=True,
-            timeout=2,
-        )
-        if result.returncode == 0:
-            description = result.stdout.strip()
-            return len(description) > 0
-        return False
-    except (subprocess.TimeoutExpired, FileNotFoundError):
-        return False
+    output = subprocess.check_output(
+        [
+            "jj",
+            "log",
+            "-r",
+            "@",
+            "-T",
+            "description",
+        ],
+        text=True,
+        timeout=2,
+    )
+    description = output.strip()
+    return bool(description)
 
 
-def check_has_changes():
+def check_has_changes() -> bool:
     """Check if current change has any modifications"""
-    try:
-        result = subprocess.run(
-            [
-                "jj",
-                "log",
-                "-r",
-                "@",
-                "-T",
-                'if(empty, "empty", "non-empty")',
-            ],
-            capture_output=True,
-            text=True,
-            timeout=2,
-        )
-        if result.returncode == 0:
-            output = result.stdout.strip()
-            return output == "non-empty"
-        return False
-    except (subprocess.TimeoutExpired, FileNotFoundError):
-        return False
+    output = subprocess.check_output(
+        [
+            "jj",
+            "diff",
+            "--name-only",
+        ],
+        text=True,
+        timeout=2,
+    )
+    return bool(output.strip())
 
 
 def main():
@@ -77,42 +60,31 @@ def main():
         return 1
 
     # Get the hook event name from input
-    hook_event_name = input_data.get("hook_event_name", "PostToolUse")
+    hook_event_name = input_data.get("hook_event_name")
 
-    # Only run if we're in a jujutsu repository
+    # Nothing to do
+    if hook_event_name != "PostToolUse":
+        print("Expected PostToolUse hook event, got", hook_event_name)
+        return 1
+
     if not is_in_jujutsu_repo():
-        response = {
-            "hookSpecificOutput": {
-                "hookEventName": hook_event_name,
-            }
-        }
-        print(json.dumps(response))
         return 0
 
     # Only prompt if the current change has modifications and no description
     if check_has_changes() and not check_has_description():
         # Prompt Claude to add a description
         reminder_message = """
-Please add a description to your current change using:
-`jj commit --message "your description here"`
+Add a description to your current change ith:
+`jj commit --message "description"`
 
-This helps track what changes were made and why."""
+To track changes and why they were made."""
 
         response = {
-            "hookSpecificOutput": {
-                "hookEventName": hook_event_name,
-                "additionalContext": f"<system-reminder>{reminder_message}</system-reminder>"
-            }
+            "decision": "block",
+            "reason": f"<system-reminder>{reminder_message}</system-reminder>",
         }
-    else:
-        # Change is empty or already has a description - no prompt needed
-        response = {
-            "hookSpecificOutput": {
-                "hookEventName": hook_event_name,
-            }
-        }
+        print(json.dumps(response))
 
-    print(json.dumps(response))
     return 0
 
 
