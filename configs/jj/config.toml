@@ -9,6 +9,7 @@ email = "jonas@bulik.dev"
 [ui]
 pager = "delta"
 default-command = "status"
+diff-formatter = ["difft", "--color=always", "$left", "$right"]
 
 [merge-tools.nvim]
 program = "nvim"
@@ -23,6 +24,11 @@ merge-args = [
   "$output",
   "$right",
 ]
+
+[merge-tools.diffconflicts]
+program = "nvim"
+merge-args = ["-c", "JJDiffConflicts", "$output"]
+merge-tool-edits-conflict-markers = true
 
 [signing]
 behavior = "keep"        # Options: keep, sign, drop (keep existing signatures, don't auto-sign)
