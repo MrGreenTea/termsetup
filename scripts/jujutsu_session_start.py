@@ -46,6 +46,19 @@ def get_jujutsu_info():
         ("jj-remotes", "jj git remote list", ["jj", "git", "remote", "list"]),
         ("jj-bookmarks", "jj bookmark list", ["jj", "bookmark", "list"]),
         (
+            "jj-current-bookmarks",
+            "jj log -r '(trunk()..@ | @::) & bookmarks()' -T 'bookmarks ++ \"\\n\"' --no-graph",
+            [
+                "jj",
+                "log",
+                "-r",
+                "(trunk()..@ | @::) & bookmarks()",
+                "-T",
+                'bookmarks ++ "\\n"',
+                "--no-graph",
+            ],
+        ),
+        (
             "jj-recent-commits",
             "jj log --limit 5",
             [
