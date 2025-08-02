@@ -44,7 +44,17 @@ def get_jujutsu_info():
     """Get comprehensive jujutsu repository information"""
     commands = [
         ("jj-remotes", "jj git remote list", ["jj", "git", "remote", "list"]),
-        ("jj-bookmarks", "jj bookmark list", ["jj", "bookmark", "list"]),
+        (
+            "jj-bookmarks",
+            "jj bookmark list",
+            [
+                "jj",
+                "bookmark",
+                "list",
+                "--template",
+                r'"<bookmark>\n<bookmark_name>" ++ name ++ "</bookmark_name>\n" ++ if(remote, "<bookmark_remote>" ++ remote ++ "</bookmark_remote>\n", "<bookmark_remote></bookmark_remote>\n") ++ "<bookmark_target>" ++ normal_target.commit_id().short() ++ "</bookmark_target>\n</bookmark>\n"',
+            ],
+        ),
         (
             "jj-current-bookmarks",
             "jj log -r '(trunk()..@ | @::) & bookmarks()' -T 'bookmarks ++ \"\\n\"' --no-graph",
