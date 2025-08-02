@@ -9,12 +9,26 @@ import json
 import subprocess
 import sys
 
+REMINDER_MESSAGE = """
+Add a description to your current change with:
+`jj commit --message "description"`
+
+To track changes and why they were made."""
+
 
 def is_in_jujutsu_repo() -> bool:
     """Check if current directory is inside a jujutsu repository"""
     try:
-        subprocess.check_call(["jj", "workspace", "root"], timeout=2)
-    except (subprocess.TimeoutExpired, FileNotFoundError):
+        subprocess.check_output(
+            ["jj", "workspace", "root"],
+            timeout=2,
+            stderr=subprocess.DEVNULL,
+        )
+    except (
+        subprocess.TimeoutExpired,
+        FileNotFoundError,
+        subprocess.CalledProcessError,
+    ):
         return False
     else:
         return True
@@ -30,6 +44,7 @@ def check_has_description() -> bool:
             "@",
             "-T",
             "description",
+            "--no-graph",
         ],
         text=True,
         timeout=2,
@@ -73,15 +88,10 @@ def main():
     # Only prompt if the current change has modifications and no description
     if check_has_changes() and not check_has_description():
         # Prompt Claude to add a description
-        reminder_message = """
-Add a description to your current change ith:
-`jj commit --message "description"`
-
-To track changes and why they were made."""
 
         response = {
             "decision": "block",
-            "reason": f"<system-reminder>{reminder_message}</system-reminder>",
+            "reason": REMINDER_MESSAGE,
         }
         print(json.dumps(response))
 
