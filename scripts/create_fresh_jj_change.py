@@ -70,7 +70,7 @@ def main():
             "hookSpecificOutput": {
                 "hookEventName": "PreToolUse",
                 "permissionDecision": "deny",
-                "permissionDecisionReason": f"Invalid JSON input: {e}"
+                "permissionDecisionReason": f"Invalid JSON input: {e}",
             }
         }
         print(json.dumps(response))
@@ -82,7 +82,7 @@ def main():
             "hookSpecificOutput": {
                 "hookEventName": "PreToolUse",
                 "permissionDecision": "allow",
-                "permissionDecisionReason": "Not in jujutsu repository"
+                "permissionDecisionReason": "Not in jujutsu repository",
             }
         }
         print(json.dumps(response))
@@ -96,7 +96,7 @@ def main():
                 "hookSpecificOutput": {
                     "hookEventName": "PreToolUse",
                     "permissionDecision": "allow",
-                    "permissionDecisionReason": "Created fresh jj change for file modifications"
+                    "permissionDecisionReason": "Created fresh jj change for file modifications",
                 }
             }
         else:
@@ -104,7 +104,7 @@ def main():
                 "hookSpecificOutput": {
                     "hookEventName": "PreToolUse",
                     "permissionDecision": "deny",
-                    "permissionDecisionReason": f"Failed to create fresh jj change: {error_msg}"
+                    "permissionDecisionReason": f"Failed to create fresh jj change: {error_msg}",
                 }
             }
     else:
@@ -113,7 +113,7 @@ def main():
             "hookSpecificOutput": {
                 "hookEventName": "PreToolUse",
                 "permissionDecision": "allow",
-                "permissionDecisionReason": "Current jj change is suitable for modifications"
+                "permissionDecisionReason": "Current jj change is suitable for modifications",
             }
         }
 
