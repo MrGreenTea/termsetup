@@ -172,7 +172,9 @@ def _check_split_command(args: list[str]) -> CommandCheckResult:
         filesets_str = " ".join(filesets)
         return CommandCheckResult(
             decision="block",
-            reason=f"Use 'jj split {filesets_str} -m \"message\"' to avoid interactive editor",
+            reason=f"Use 'jj split {
+                filesets_str
+            } -m \"message\"' to avoid interactive editor",
         )
 
     return CommandCheckResult(decision="allow", reason="safe")
