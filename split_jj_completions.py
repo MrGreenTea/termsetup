@@ -28,10 +28,10 @@ def get_subcommands_from_help() -> Tuple[Set[str], Dict[str, str]]:
 
     subcommands = set()
     alias_mappings = {}
-    
+
     # Parse the Commands section
     in_commands_section = False
-    
+
     for line in help_output.splitlines():
         if line.strip() == "Commands:":
             in_commands_section = True
@@ -40,34 +40,39 @@ def get_subcommands_from_help() -> Tuple[Set[str], Dict[str, str]]:
             # Empty line might end the commands section, but let's be cautious
             continue
         elif in_commands_section and line.strip().startswith("Options:"):
-            # Definitely end of commands section 
+            # Definitely end of commands section
             break
-        elif in_commands_section and line.startswith("  ") and not line.startswith("   "):
+        elif (
+            in_commands_section and line.startswith("  ") and not line.startswith("   ")
+        ):
             # Command line: "  command    Description [aliases: alias1, alias2]"
             # Strip leading spaces for easier parsing
             stripped_line = line.strip()
             # First try to match with aliases
-            alias_match = re.match(r'^([a-zA-Z][a-zA-Z0-9-]*)\s+.*?\[(?:default )?alias(?:es)?: ([^\]]+)\]', stripped_line)
+            alias_match = re.match(
+                r"^([a-zA-Z][a-zA-Z0-9-]*)\s+.*?\[(?:default )?alias(?:es)?: ([^\]]+)\]",
+                stripped_line,
+            )
             if alias_match:
                 main_command = alias_match.group(1)
                 subcommands.add(main_command)
-                
+
                 # Extract aliases
                 aliases_str = alias_match.group(2)
                 if aliases_str:
                     # Split by comma and clean up
-                    aliases = [alias.strip() for alias in aliases_str.split(',')]
+                    aliases = [alias.strip() for alias in aliases_str.split(",")]
                     for alias in aliases:
                         alias_mappings[alias] = main_command
                         subcommands.add(alias)
                 continue
-                
-            # Otherwise match regular commands without aliases    
-            match = re.match(r'^([a-zA-Z][a-zA-Z0-9-]*)\s+', stripped_line)
+
+            # Otherwise match regular commands without aliases
+            match = re.match(r"^([a-zA-Z][a-zA-Z0-9-]*)\s+", stripped_line)
             if match:
                 main_command = match.group(1)
                 subcommands.add(main_command)
-    
+
     return subcommands, alias_mappings
 
 
@@ -78,7 +83,7 @@ def get_completion_input() -> List[str]:
         file_path = Path(sys.argv[1])
         print(f"Reading completion data from {file_path}...")
         try:
-            with open(file_path, 'r') as f:
+            with open(file_path, "r") as f:
                 return f.read().splitlines()
         except IOError as e:
             print(f"Error reading file {file_path}: {e}")
@@ -214,29 +219,35 @@ def write_section_to_file(lines: List[str], filepath: Path, header_comment: str)
             f.write(line + "\n")
 
 
-def write_alias_completions(alias: str, main_command: str, main_command_lines: List[str], filepath: Path):
+def write_alias_completions(
+    alias: str, main_command: str, main_command_lines: List[str], filepath: Path
+):
     """Write duplicated completions for an alias by copying and transforming the main command's completions."""
     with open(filepath, "w") as f:
-        f.write(f"# ABOUTME: Duplicated completions for jj {alias} (alias of jj {main_command})\n")
-        f.write("# ABOUTME: Auto-generated from jj help output and main command completions\n\n")
-        
+        f.write(
+            f"# ABOUTME: Duplicated completions for jj {alias} (alias of jj {main_command})\n"
+        )
+        f.write(
+            "# ABOUTME: Auto-generated from jj help output and main command completions\n\n"
+        )
+
         # Transform each completion line from the main command
         for line in main_command_lines:
             # Replace references to the main command with the alias
             # Pattern: __fish_jj_using_subcommand main_command
             transformed_line = re.sub(
-                rf'__fish_jj_using_subcommand {re.escape(main_command)}\b',
-                f'__fish_jj_using_subcommand {alias}',
-                line
+                rf"__fish_jj_using_subcommand {re.escape(main_command)}\b",
+                f"__fish_jj_using_subcommand {alias}",
+                line,
             )
-            
+
             # Also handle cases with semicolon (e.g., "bookmark; and __fish_seen_subcommand_from")
             transformed_line = re.sub(
-                rf'__fish_jj_using_subcommand {re.escape(main_command)};',
-                f'__fish_jj_using_subcommand {alias};',
-                transformed_line
+                rf"__fish_jj_using_subcommand {re.escape(main_command)};",
+                f"__fish_jj_using_subcommand {alias};",
+                transformed_line,
             )
-            
+
             f.write(transformed_line + "\n")
 
 
@@ -246,8 +257,10 @@ def main():
     print("Discovering subcommands from jj help...")
     all_subcommands, alias_mappings = get_subcommands_from_help()
     print(f"Found {len(all_subcommands)} total subcommands")
-    print(f"Found {len(alias_mappings)} aliases: {dict(list(alias_mappings.items())[:5])}{'...' if len(alias_mappings) > 5 else ''}")
-    
+    print(
+        f"Found {len(alias_mappings)} aliases: {dict(list(alias_mappings.items())[:5])}{'...' if len(alias_mappings) > 5 else ''}"
+    )
+
     # Get completion input
     lines = get_completion_input()
     print(f"Got {len(lines)} lines of completion data")
@@ -280,33 +293,44 @@ def main():
     print(f"Processing {len(sections['subcommands'])} subcommands...")
     main_commands_written = set()
     aliases_created = 0
-    
+
     for subcommand, lines in sections["subcommands"].items():
         if not lines:  # Skip empty subcommands
             continue
-            
+
         filename = f"{subcommand}.fish"
-        
+
         # Check if this is an alias
         if subcommand in alias_mappings:
             main_command = alias_mappings[subcommand]
-            
+
             # Look up the main command's completion lines
-            if main_command in sections["subcommands"] and sections["subcommands"][main_command]:
-                print(f"  Duplicating completions {filename} <- {main_command} ({len(sections['subcommands'][main_command])} lines)")
+            if (
+                main_command in sections["subcommands"]
+                and sections["subcommands"][main_command]
+            ):
+                print(
+                    f"  Duplicating completions {filename} <- {main_command} ({len(sections['subcommands'][main_command])} lines)"
+                )
                 write_alias_completions(
                     subcommand,
                     main_command,
                     sections["subcommands"][main_command],
-                    output_dir / filename
+                    output_dir / filename,
                 )
                 aliases_created += 1
             else:
-                print(f"  WARNING: No completions found for main command '{main_command}' (alias '{subcommand}')")
+                print(
+                    f"  WARNING: No completions found for main command '{main_command}' (alias '{subcommand}')"
+                )
                 # Still create a basic file with a comment explaining the issue
                 with open(output_dir / filename, "w") as f:
-                    f.write(f"# ABOUTME: Alias {subcommand} -> {main_command} but no completions found for main command\n")
-                    f.write("# ABOUTME: This may happen if the main command has no specific completions\n")
+                    f.write(
+                        f"# ABOUTME: Alias {subcommand} -> {main_command} but no completions found for main command\n"
+                    )
+                    f.write(
+                        "# ABOUTME: This may happen if the main command has no specific completions\n"
+                    )
         else:
             print(f"  Writing main command {filename} ({len(lines)} lines)")
             write_section_to_file(
@@ -348,11 +372,13 @@ def main():
     print(f"  - {len(main_commands_written)} main command files")
     print(f"  - {aliases_created} alias wrapper files")
     print(f"  - {main_completion_path} (main loader)")
-    
+
     if alias_mappings:
         print(f"\nAlias mappings created:")
         for alias, main in sorted(alias_mappings.items()):
-            if alias in [s for s in sections["subcommands"].keys() if sections["subcommands"][s]]:
+            if alias in [
+                s for s in sections["subcommands"].keys() if sections["subcommands"][s]
+            ]:
                 print(f"  {alias} -> {main}")
 
 
