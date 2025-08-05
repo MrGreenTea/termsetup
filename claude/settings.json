@@ -197,6 +197,17 @@
           }
         ]
       }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/var/home/jonas/Development/termsetup/scripts/jujutsu_session_start.py"
+          }
+        ]
+      }
     ]
   },
   "feedbackSurveyState": {
