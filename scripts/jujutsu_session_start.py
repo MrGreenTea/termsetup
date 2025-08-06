@@ -43,6 +43,7 @@ def is_in_jujutsu_repo():
 def get_jujutsu_info():
     """Get comprehensive jujutsu repository information"""
     commands = [
+        ("jj-workspace-root", "jj workspace root", ["jj", "workspace", "root"]),
         ("jj-remotes", "jj git remote list", ["jj", "git", "remote", "list"]),
         (
             "jj-bookmarks",
