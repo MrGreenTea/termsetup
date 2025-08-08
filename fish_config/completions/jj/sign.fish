@@ -1,7 +1,7 @@
 # ABOUTME: Completions for jj sign subcommand
 # ABOUTME: Auto-generated from jj util completion fish
 
-complete -c jj -n "__fish_jj_using_subcommand sign" -s r -l revisions -d 'What revision(s) to sign' -r
+complete -c jj -n "__fish_jj_using_subcommand sign" -s r -l revisions -d 'What revision(s) to sign' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
 complete -c jj -n "__fish_jj_using_subcommand sign" -l key -d 'The key used for signing' -r
 complete -c jj -n "__fish_jj_using_subcommand sign" -s R -l repository -d 'Path to repository to operate on' -r -f -a "(__fish_complete_directories)"
 complete -c jj -n "__fish_jj_using_subcommand sign" -l at-operation -l at-op -d 'Operation to load the repo at' -r
