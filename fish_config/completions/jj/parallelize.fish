@@ -16,3 +16,4 @@ complete -c jj -n "__fish_jj_using_subcommand parallelize" -l debug -d 'Enable d
 complete -c jj -n "__fish_jj_using_subcommand parallelize" -l quiet -d 'Silence non-primary command output'
 complete -c jj -n "__fish_jj_using_subcommand parallelize" -l no-pager -d 'Disable the pager'
 complete -c jj -n "__fish_jj_using_subcommand parallelize" -s h -l help -d 'Print help (see more with \'--help\')'
+complete -c jj -n "__fish_jj_using_subcommand parallelize" --keep-order -f -a "(__fish_jj_complete_revisions)"
