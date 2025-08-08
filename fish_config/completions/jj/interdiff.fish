@@ -1,8 +1,8 @@
 # ABOUTME: Completions for jj interdiff subcommand
 # ABOUTME: Auto-generated from jj util completion fish
 
-complete -c jj -n "__fish_jj_using_subcommand interdiff" -s f -l from -d 'Show changes from this revision' -r
-complete -c jj -n "__fish_jj_using_subcommand interdiff" -s t -l to -d 'Show changes to this revision' -r
+complete -c jj -n "__fish_jj_using_subcommand interdiff" -s f -l from -d 'Show changes from this revision' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
+complete -c jj -n "__fish_jj_using_subcommand interdiff" -s t -l to -d 'Show changes to this revision' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
 complete -c jj -n "__fish_jj_using_subcommand interdiff" -l tool -d 'Generate diff by external command' -r
 complete -c jj -n "__fish_jj_using_subcommand interdiff" -l context -d 'Number of lines of context to show' -r
 complete -c jj -n "__fish_jj_using_subcommand interdiff" -s R -l repository -d 'Path to repository to operate on' -r -f -a "(__fish_complete_directories)"
@@ -28,3 +28,4 @@ complete -c jj -n "__fish_jj_using_subcommand interdiff" -l debug -d 'Enable deb
 complete -c jj -n "__fish_jj_using_subcommand interdiff" -l quiet -d 'Silence non-primary command output'
 complete -c jj -n "__fish_jj_using_subcommand interdiff" -l no-pager -d 'Disable the pager'
 complete -c jj -n "__fish_jj_using_subcommand interdiff" -s h -l help -d 'Print help (see more with \'--help\')'
+complete -c jj -n "__fish_jj_using_subcommand interdiff" --keep-order -f -a "(__fish_jj_complete_revisions)"
