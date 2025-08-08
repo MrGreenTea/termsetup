@@ -1,7 +1,7 @@
 # ABOUTME: Completions for jj unsign subcommand
 # ABOUTME: Auto-generated from jj util completion fish
 
-complete -c jj -n "__fish_jj_using_subcommand unsign" -s r -l revisions -d 'What revision(s) to unsign' -r
+complete -c jj -n "__fish_jj_using_subcommand unsign" -s r -l revisions -d 'What revision(s) to unsign' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
 complete -c jj -n "__fish_jj_using_subcommand unsign" -s R -l repository -d 'Path to repository to operate on' -r -f -a "(__fish_complete_directories)"
 complete -c jj -n "__fish_jj_using_subcommand unsign" -l at-operation -l at-op -d 'Operation to load the repo at' -r
 complete -c jj -n "__fish_jj_using_subcommand unsign" -l color -d 'When to colorize output' -r -f -a "always\t''
