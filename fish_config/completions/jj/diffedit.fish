@@ -1,9 +1,9 @@
 # ABOUTME: Completions for jj diffedit subcommand
 # ABOUTME: Auto-generated from jj util completion fish
 
-complete -c jj -n "__fish_jj_using_subcommand diffedit" -s r -l revision -d 'The revision to touch up' -r
-complete -c jj -n "__fish_jj_using_subcommand diffedit" -s f -l from -d 'Show changes from this revision' -r
-complete -c jj -n "__fish_jj_using_subcommand diffedit" -s t -l to -d 'Edit changes in this revision' -r
+complete -c jj -n "__fish_jj_using_subcommand diffedit" -s r -l revision -d 'The revision to touch up' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
+complete -c jj -n "__fish_jj_using_subcommand diffedit" -s f -l from -d 'Show changes from this revision' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
+complete -c jj -n "__fish_jj_using_subcommand diffedit" -s t -l to -d 'Edit changes in this revision' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
 complete -c jj -n "__fish_jj_using_subcommand diffedit" -l tool -d 'Specify diff editor to be used' -r
 complete -c jj -n "__fish_jj_using_subcommand diffedit" -s R -l repository -d 'Path to repository to operate on' -r -f -a "(__fish_complete_directories)"
 complete -c jj -n "__fish_jj_using_subcommand diffedit" -l at-operation -l at-op -d 'Operation to load the repo at' -r
