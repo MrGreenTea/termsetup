@@ -1,9 +1,9 @@
 # ABOUTME: Completions for jj restore subcommand
 # ABOUTME: Auto-generated from jj util completion fish
 
-complete -c jj -n "__fish_jj_using_subcommand restore" -s f -l from -d 'Revision to restore from (source)' -r
-complete -c jj -n "__fish_jj_using_subcommand restore" -s t -l into -l to -d 'Revision to restore into (destination)' -r
-complete -c jj -n "__fish_jj_using_subcommand restore" -s c -l changes-in -d 'Undo the changes in a revision as compared to the merge of its parents' -r
+complete -c jj -n "__fish_jj_using_subcommand restore" -s f -l from -d 'Revision to restore from (source)' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
+complete -c jj -n "__fish_jj_using_subcommand restore" -s t -l into -l to -d 'Revision to restore into (destination)' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
+complete -c jj -n "__fish_jj_using_subcommand restore" -s c -l changes-in -d 'Undo the changes in a revision as compared to the merge of its parents' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
 complete -c jj -n "__fish_jj_using_subcommand restore" -s r -l revision -d 'Prints an error. DO NOT USE' -r
 complete -c jj -n "__fish_jj_using_subcommand restore" -l tool -d 'Specify diff editor to be used (implies --interactive)' -r
 complete -c jj -n "__fish_jj_using_subcommand restore" -s R -l repository -d 'Path to repository to operate on' -r -f -a "(__fish_complete_directories)"
