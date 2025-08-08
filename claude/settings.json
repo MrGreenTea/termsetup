@@ -90,7 +90,7 @@
       "Write(/tmp/*)",
       "WebFetch"
     ],
-    "deny": []
+    "deny": ["Bash(rm -f:*)"]
   },
   "hooks": {
     "Notification": [
