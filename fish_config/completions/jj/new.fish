@@ -2,8 +2,8 @@
 # ABOUTME: Auto-generated from jj util completion fish
 
 complete -c jj -n "__fish_jj_using_subcommand new" -s m -l message -d 'The change description to use' -r
-complete -c jj -n "__fish_jj_using_subcommand new" -s A -l insert-after -l after -d 'Insert the new change after the given commit(s)' -r
-complete -c jj -n "__fish_jj_using_subcommand new" -s B -l insert-before -l before -d 'Insert the new change before the given commit(s)' -r
+complete -c jj -n "__fish_jj_using_subcommand new" -s A -l insert-after -l after -d 'Insert the new change after the given commit(s)' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
+complete -c jj -n "__fish_jj_using_subcommand new" -s B -l insert-before -l before -d 'Insert the new change before the given commit(s)' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
 complete -c jj -n "__fish_jj_using_subcommand new" -s R -l repository -d 'Path to repository to operate on' -r -f -a "(__fish_complete_directories)"
 complete -c jj -n "__fish_jj_using_subcommand new" -l at-operation -l at-op -d 'Operation to load the repo at' -r
 complete -c jj -n "__fish_jj_using_subcommand new" -l color -d 'When to colorize output' -r -f -a "always\t''
