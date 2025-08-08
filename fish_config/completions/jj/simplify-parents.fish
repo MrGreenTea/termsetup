@@ -1,8 +1,8 @@
 # ABOUTME: Completions for jj simplify-parents subcommand
 # ABOUTME: Auto-generated from jj util completion fish
 
-complete -c jj -n "__fish_jj_using_subcommand simplify-parents" -s s -l source -d 'Simplify specified revision(s) together with their trees of descendants (can be repeated)' -r
-complete -c jj -n "__fish_jj_using_subcommand simplify-parents" -s r -l revisions -d 'Simplify specified revision(s) (can be repeated)' -r
+complete -c jj -n "__fish_jj_using_subcommand simplify-parents" -s s -l source -d 'Simplify specified revision(s) together with their trees of descendants (can be repeated)' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
+complete -c jj -n "__fish_jj_using_subcommand simplify-parents" -s r -l revisions -d 'Simplify specified revision(s) (can be repeated)' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
 complete -c jj -n "__fish_jj_using_subcommand simplify-parents" -s R -l repository -d 'Path to repository to operate on' -r -f -a "(__fish_complete_directories)"
 complete -c jj -n "__fish_jj_using_subcommand simplify-parents" -l at-operation -l at-op -d 'Operation to load the repo at' -r
 complete -c jj -n "__fish_jj_using_subcommand simplify-parents" -l color -d 'When to colorize output' -r -f -a "always\t''
