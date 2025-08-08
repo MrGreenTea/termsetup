@@ -1,9 +1,9 @@
 # ABOUTME: Completions for jj squash subcommand
 # ABOUTME: Auto-generated from jj util completion fish
 
-complete -c jj -n "__fish_jj_using_subcommand squash" -s r -l revision -d 'Revision to squash into its parent (default: @)' -r
-complete -c jj -n "__fish_jj_using_subcommand squash" -s f -l from -d 'Revision(s) to squash from (default: @)' -r
-complete -c jj -n "__fish_jj_using_subcommand squash" -s t -l into -l to -d 'Revision to squash into (default: @)' -r
+complete -c jj -n "__fish_jj_using_subcommand squash" -s r -l revision -d 'Revision to squash into its parent (default: @)' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
+complete -c jj -n "__fish_jj_using_subcommand squash" -s f -l from -d 'Revision(s) to squash from (default: @)' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
+complete -c jj -n "__fish_jj_using_subcommand squash" -s t -l into -l to -d 'Revision to squash into (default: @)' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
 complete -c jj -n "__fish_jj_using_subcommand squash" -s m -l message -d 'The description to use for squashed revision (don\'t open editor)' -r
 complete -c jj -n "__fish_jj_using_subcommand squash" -l tool -d 'Specify diff editor to be used (implies --interactive)' -r
 complete -c jj -n "__fish_jj_using_subcommand squash" -s R -l repository -d 'Path to repository to operate on' -r -f -a "(__fish_complete_directories)"
