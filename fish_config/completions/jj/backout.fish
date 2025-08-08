@@ -1,8 +1,8 @@
 # ABOUTME: Completions for jj backout subcommand
 # ABOUTME: Auto-generated from jj util completion fish
 
-complete -c jj -n "__fish_jj_using_subcommand backout" -s r -l revisions -d 'The revision(s) to apply the reverse of' -r
-complete -c jj -n "__fish_jj_using_subcommand backout" -s d -l destination -d 'The revision to apply the reverse changes on top of' -r
+complete -c jj -n "__fish_jj_using_subcommand backout" -s r -l revisions -d 'The revision(s) to apply the reverse of' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
+complete -c jj -n "__fish_jj_using_subcommand backout" -s d -l destination -d 'The revision to apply the reverse changes on top of' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
 complete -c jj -n "__fish_jj_using_subcommand backout" -s R -l repository -d 'Path to repository to operate on' -r -f -a "(__fish_complete_directories)"
 complete -c jj -n "__fish_jj_using_subcommand backout" -l at-operation -l at-op -d 'Operation to load the repo at' -r
 complete -c jj -n "__fish_jj_using_subcommand backout" -l color -d 'When to colorize output' -r -f -a "always\t''
