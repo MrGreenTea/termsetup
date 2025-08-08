@@ -1,12 +1,12 @@
 # ABOUTME: Completions for jj rebase subcommand
 # ABOUTME: Auto-generated from jj util completion fish
 
-complete -c jj -n "__fish_jj_using_subcommand rebase" -s b -l branch -d 'Rebase the whole branch relative to destination\'s ancestors (can be repeated)' -r
-complete -c jj -n "__fish_jj_using_subcommand rebase" -s s -l source -d 'Rebase specified revision(s) together with their trees of descendants (can be repeated)' -r
-complete -c jj -n "__fish_jj_using_subcommand rebase" -s r -l revisions -d 'Rebase the given revisions, rebasing descendants onto this revision\'s parent(s)' -r
-complete -c jj -n "__fish_jj_using_subcommand rebase" -s d -l destination -d 'The revision(s) to rebase onto (can be repeated to create a merge commit)' -r
-complete -c jj -n "__fish_jj_using_subcommand rebase" -s A -l insert-after -l after -d 'The revision(s) to insert after (can be repeated to create a merge commit)' -r
-complete -c jj -n "__fish_jj_using_subcommand rebase" -s B -l insert-before -l before -d 'The revision(s) to insert before (can be repeated to create a merge commit)' -r
+complete -c jj -n "__fish_jj_using_subcommand rebase" -s b -l branch -d 'Rebase the whole branch relative to destination\'s ancestors (can be repeated)' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
+complete -c jj -n "__fish_jj_using_subcommand rebase" -s s -l source -d 'Rebase specified revision(s) together with their trees of descendants (can be repeated)' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
+complete -c jj -n "__fish_jj_using_subcommand rebase" -s r -l revisions -d 'Rebase the given revisions, rebasing descendants onto this revision\'s parent(s)' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
+complete -c jj -n "__fish_jj_using_subcommand rebase" -s d -l destination -d 'The revision(s) to rebase onto (can be repeated to create a merge commit)' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
+complete -c jj -n "__fish_jj_using_subcommand rebase" -s A -l insert-after -l after -d 'The revision(s) to insert after (can be repeated to create a merge commit)' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
+complete -c jj -n "__fish_jj_using_subcommand rebase" -s B -l insert-before -l before -d 'The revision(s) to insert before (can be repeated to create a merge commit)' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
 complete -c jj -n "__fish_jj_using_subcommand rebase" -s R -l repository -d 'Path to repository to operate on' -r -f -a "(__fish_complete_directories)"
 complete -c jj -n "__fish_jj_using_subcommand rebase" -l at-operation -l at-op -d 'Operation to load the repo at' -r
 complete -c jj -n "__fish_jj_using_subcommand rebase" -l color -d 'When to colorize output' -r -f -a "always\t''
