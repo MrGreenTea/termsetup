@@ -56,3 +56,20 @@ function __fish_jj_complete_operation_ids
 	jj operation log --no-graph --limit 50 -T 'id.short() ++ "\t" ++ description ++ "\n"' 2>/dev/null
 end
 
+function __fish_jj_complete_changed_files_in_revset
+	# Complete files that have changes in the revset specified by -r/--revisions option
+	# Extract revset from -r/--revisions option, default to @
+	set -l tokens (commandline -opc)[3..-1]  # Skip 'jj diff'
+	set -l revset "@"
+	
+	# Use argparse to extract revisions option
+	if argparse --ignore-unknown 'r/revisions=' -- $tokens 2>/dev/null
+		if set -q _flag_revisions
+			set revset $_flag_revisions
+		end
+	end
+	
+	# Get changed files from the revset
+	jj diff --name-only -r $revset 2>/dev/null
+end
+

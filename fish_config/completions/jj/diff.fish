@@ -30,3 +30,5 @@ complete -c jj -n "__fish_jj_using_subcommand diff" -l debug -d 'Enable debug lo
 complete -c jj -n "__fish_jj_using_subcommand diff" -l quiet -d 'Silence non-primary command output'
 complete -c jj -n "__fish_jj_using_subcommand diff" -l no-pager -d 'Disable the pager'
 complete -c jj -n "__fish_jj_using_subcommand diff" -s h -l help -d 'Print help (see more with \'--help\')'
+# Complete fileset arguments - files that have changes in the specified revset
+complete -c jj -n "__fish_jj_using_subcommand diff" --keep-order -f -a "(__fish_jj_complete_changed_files_in_revset)"
