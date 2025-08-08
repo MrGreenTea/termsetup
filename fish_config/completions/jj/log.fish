@@ -1,7 +1,7 @@
 # ABOUTME: Completions for jj log subcommand
 # ABOUTME: Auto-generated from jj util completion fish
 
-complete -c jj -n "__fish_jj_using_subcommand log" -s r -l revisions -d 'Which revisions to show' -r
+complete -c jj -n "__fish_jj_using_subcommand log" -s r -l revisions -d 'Which revisions to show' -r --keep-order -f -a "(__fish_jj_complete_revisions)"
 complete -c jj -n "__fish_jj_using_subcommand log" -s n -l limit -d 'Limit number of revisions to show' -r
 complete -c jj -n "__fish_jj_using_subcommand log" -s T -l template -d 'Render each revision using the given template' -r
 complete -c jj -n "__fish_jj_using_subcommand log" -l tool -d 'Generate diff by external command' -r
