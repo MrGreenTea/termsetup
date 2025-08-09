@@ -155,6 +155,25 @@ local function get_git_status(repo_path)
 	return result
 end
 
+-- Find jujutsu repository by walking up the directory tree
+local function find_jj_repo(start_path)
+	local path = start_path
+	while path and path ~= "/" do
+		local jj_dir = path .. "/.jj"
+		-- Check if .jj directory exists
+		local test_file = io.open(jj_dir .. "/repo/store/type", "r")
+		if test_file then
+			test_file:close()
+			wezterm.log_info("DEBUG: Found jj repo at: " .. path)
+			return path
+		end
+		-- Go up one directory
+		path = path:match("(.+)/[^/]*$")
+	end
+	wezterm.log_info("DEBUG: No jj repo found from: " .. start_path)
+	return nil
+end
+
 -- Find git repository by walking up the directory tree
 local function find_git_repo(start_path)
 	local path = start_path
