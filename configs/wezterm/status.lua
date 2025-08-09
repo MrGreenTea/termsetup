@@ -155,6 +155,80 @@ local function get_git_status(repo_path)
 	return result
 end
 
+-- Get current jujutsu revision information (change ID and bookmarks)
+local function get_jj_current_info(repo_path)
+	wezterm.log_info("DEBUG: get_jj_current_info called with repo_path: " .. tostring(repo_path))
+
+	local success, result = pcall(function()
+		-- Get change ID and bookmarks for current revision
+		local cmd = "jj -R '"
+			.. repo_path
+			.. "' log -r @ --no-graph --ignore-working-copy -T '{change_id|short} {bookmarks}' 2>/dev/null"
+		wezterm.log_info("DEBUG: Executing command: " .. cmd)
+
+		local handle = io.popen(cmd)
+		if not handle then
+			wezterm.log_error("DEBUG: io.popen failed - handle is nil")
+			return nil
+		end
+
+		local output = handle:read("*all")
+		wezterm.log_info("DEBUG: Raw jj log output: '" .. tostring(output) .. "'")
+
+		local exit_code = handle:close()
+		wezterm.log_info("DEBUG: Command exit_code: " .. tostring(exit_code))
+
+		-- Parse the output - format is "change_id bookmark1 bookmark2 ..."
+		local change_id, bookmarks_str = output:match("^(%S+)%s*(.*)%s*$")
+		
+		local info = {
+			change_id = change_id or "unknown",
+			bookmarks = {},
+		}
+
+		-- Parse bookmarks if present
+		if bookmarks_str and bookmarks_str ~= "" then
+			for bookmark in bookmarks_str:gmatch("%S+") do
+				table.insert(info.bookmarks, bookmark)
+				wezterm.log_info("DEBUG: Found bookmark: " .. bookmark)
+			end
+		end
+
+		-- Get commit description (first line only)
+		local desc_cmd = "jj -R '"
+			.. repo_path
+			.. "' log -r @ --no-graph --ignore-working-copy -T '{description|first_line}' 2>/dev/null"
+		local desc_handle = io.popen(desc_cmd)
+		if desc_handle then
+			local desc_output = desc_handle:read("*all")
+			desc_handle:close()
+			-- Clean up the description
+			desc_output = desc_output:gsub("^%s+", ""):gsub("%s+$", ""):gsub("\n", "")
+			if desc_output ~= "" and desc_output ~= "(no description set)" then
+				info.description = desc_output
+				wezterm.log_info("DEBUG: Found description: " .. desc_output)
+			end
+		end
+
+		wezterm.log_info(
+			"DEBUG: Final jj info - Change ID: "
+				.. info.change_id
+				.. ", Bookmarks count: "
+				.. #info.bookmarks
+				.. ", Description: "
+				.. tostring(info.description)
+		)
+		return info
+	end)
+
+	if not success then
+		wezterm.log_error("DEBUG: get_jj_current_info pcall failed with error: " .. tostring(result))
+		return nil
+	end
+
+	return result
+end
+
 -- Get jujutsu status information
 local function get_jj_status(repo_path)
 	wezterm.log_info("DEBUG: get_jj_status called with repo_path: " .. tostring(repo_path))
