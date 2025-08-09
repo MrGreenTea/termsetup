@@ -59,6 +59,7 @@
       "Bash(jj config get:*)",
       "Bash(jj config list:*)",
       "Bash(jj config path:*)",
+      "Bash(jj commit:*)",
       "Bash(jj diff:*)",
       "Bash(jj evolog:*)",
       "Bash(jj file annotate:*)",
