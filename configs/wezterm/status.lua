@@ -310,6 +310,65 @@ local function find_jj_repo(start_path)
 	return nil
 end
 
+-- Enhanced jujutsu repository information
+function module.get_jj_info(cwd)
+	wezterm.log_info("DEBUG: get_jj_info called")
+
+	if not cwd or not cwd.file_path then
+		wezterm.log_info("DEBUG: No cwd or file_path, returning nil")
+		return nil
+	end
+
+	-- Find the actual jujutsu repository
+	local repo_path = find_jj_repo(cwd.file_path)
+	if not repo_path then
+		wezterm.log_info("DEBUG: No jj repository found")
+		return nil
+	end
+
+	local cache_key = "jj_" .. repo_path
+	local current_time = os.time() * 1000 -- Convert to milliseconds
+
+	wezterm.log_info("DEBUG: jj repo_path: " .. repo_path .. ", current_time: " .. current_time)
+
+	-- Check cache first (reuse git_cache for simplicity)
+	if git_cache[cache_key] and (current_time - git_cache[cache_key].timestamp) < cache_duration then
+		return git_cache[cache_key].data
+	end
+
+	wezterm.log_info("DEBUG: Calling get_jj_current_info...")
+	local current_info = get_jj_current_info(repo_path)
+	wezterm.log_info("DEBUG: get_jj_current_info returned: " .. tostring(current_info))
+
+	wezterm.log_info("DEBUG: Calling get_jj_status...")
+	local status = get_jj_status(repo_path)
+	wezterm.log_info("DEBUG: get_jj_status returned: " .. tostring(status))
+
+	if not current_info then
+		wezterm.log_info("DEBUG: Could not get jj current info")
+		return nil
+	end
+
+	local jj_info = {
+		change_id = current_info.change_id,
+		bookmarks = current_info.bookmarks or {},
+		description = current_info.description,
+		status = status,
+		type = "jujutsu", -- To distinguish from git
+	}
+	wezterm.log_info(
+		"DEBUG: Created jj_info object with change_id: " .. jj_info.change_id .. 
+		", bookmarks count: " .. #jj_info.bookmarks .. 
+		", status: " .. tostring(jj_info.status)
+	)
+
+	-- Cache the result
+	git_cache[cache_key] = { data = jj_info, timestamp = current_time }
+	wezterm.log_info("DEBUG: Cached jj_info")
+
+	return jj_info
+end
+
 -- Find git repository by walking up the directory tree
 local function find_git_repo(start_path)
 	local path = start_path
