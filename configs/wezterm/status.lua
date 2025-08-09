@@ -155,6 +155,68 @@ local function get_git_status(repo_path)
 	return result
 end
 
+-- Get jujutsu status information
+local function get_jj_status(repo_path)
+	wezterm.log_info("DEBUG: get_jj_status called with repo_path: " .. tostring(repo_path))
+
+	local success, result = pcall(function()
+		-- Use jj diff --summary to get file change statistics
+		local cmd = "jj -R '" .. repo_path .. "' diff --summary --ignore-working-copy 2>/dev/null"
+		wezterm.log_info("DEBUG: Executing command: " .. cmd)
+
+		local handle = io.popen(cmd)
+		if not handle then
+			wezterm.log_error("DEBUG: io.popen failed - handle is nil")
+			return nil
+		end
+
+		local output = handle:read("*all")
+		wezterm.log_info("DEBUG: Raw jj diff output: '" .. tostring(output) .. "'")
+
+		local exit_code = handle:close()
+		wezterm.log_info("DEBUG: Command exit_code: " .. tostring(exit_code))
+
+		local status = {
+			modified = 0,
+			added = 0,
+			deleted = 0,
+			-- jujutsu doesn't track untracked files the same way
+		}
+
+		-- Parse the summary output
+		-- Format is like: "M file.txt", "A newfile.txt", "D deleted.txt"
+		for line in output:gmatch("[^\r\n]+") do
+			wezterm.log_info("DEBUG: Processing jj diff line: '" .. line .. "'")
+
+			local action = line:match("^([MAD])%s")
+			if action == "M" then
+				status.modified = status.modified + 1
+			elseif action == "A" then
+				status.added = status.added + 1
+			elseif action == "D" then
+				status.deleted = status.deleted + 1
+			end
+		end
+
+		wezterm.log_info(
+			"DEBUG: Final jj status - Modified: "
+				.. status.modified
+				.. ", Added: "
+				.. status.added
+				.. ", Deleted: "
+				.. status.deleted
+		)
+		return status
+	end)
+
+	if not success then
+		wezterm.log_error("DEBUG: get_jj_status pcall failed with error: " .. tostring(result))
+		return nil
+	end
+
+	return result
+end
+
 -- Find jujutsu repository by walking up the directory tree
 local function find_jj_repo(start_path)
 	local path = start_path
