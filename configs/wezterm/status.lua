@@ -496,25 +496,38 @@ function module.format_status_bar(window, pane)
 	wezterm.log_info("DEBUG: Final cwd: " .. tostring(cwd and cwd.file_path or "nil"))
 
 	local stats = utils.get_system_stats()
-	local git_info = nil
+	local vcs_info = nil
 
 	if cwd and cwd.file_path then
-		wezterm.log_info("DEBUG: Calling get_git_info...")
-		git_info = module.get_git_info(cwd)
-		wezterm.log_info("DEBUG: get_git_info returned git_info: " .. tostring(git_info))
-		if git_info then
-			wezterm.log_info("DEBUG: git_info.branch: " .. tostring(git_info.branch))
-			wezterm.log_info("DEBUG: git_info.status: " .. tostring(git_info.status))
-			if git_info.status then
+		-- Check for jujutsu repository first
+		wezterm.log_info("DEBUG: Calling get_jj_info...")
+		vcs_info = module.get_jj_info(cwd)
+		
+		-- If no jujutsu repo found, try git
+		if not vcs_info then
+			wezterm.log_info("DEBUG: No jj repo found, calling get_git_info...")
+			vcs_info = module.get_git_info(cwd)
+		end
+		
+		wezterm.log_info("DEBUG: VCS info returned: " .. tostring(vcs_info))
+		if vcs_info then
+			if vcs_info.type == "jujutsu" then
+				wezterm.log_info("DEBUG: jj_info.change_id: " .. tostring(vcs_info.change_id))
+				wezterm.log_info("DEBUG: jj_info.bookmarks count: " .. #vcs_info.bookmarks)
+			else
+				wezterm.log_info("DEBUG: git_info.branch: " .. tostring(vcs_info.branch))
+			end
+			wezterm.log_info("DEBUG: vcs_info.status: " .. tostring(vcs_info.status))
+			if vcs_info.status then
 				wezterm.log_info(
 					"DEBUG: status details - modified: "
-						.. tostring(git_info.status.modified)
+						.. tostring(vcs_info.status.modified)
 						.. ", added: "
-						.. tostring(git_info.status.added)
+						.. tostring(vcs_info.status.added)
 						.. ", deleted: "
-						.. tostring(git_info.status.deleted)
+						.. tostring(vcs_info.status.deleted)
 						.. ", untracked: "
-						.. tostring(git_info.status.untracked)
+						.. tostring(vcs_info.status.untracked or 0)
 				)
 			end
 		end
