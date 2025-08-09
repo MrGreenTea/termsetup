@@ -562,55 +562,70 @@ function module.format_status_bar(window, pane)
 		)
 	end
 
-	-- Git branch and status display
-	wezterm.log_info("DEBUG: Git display section - git_info: " .. tostring(git_info))
-	if git_info and git_info.branch then
-		wezterm.log_info("DEBUG: Git info available, branch: " .. git_info.branch)
-		local git_text = " " .. git_info.branch
+	-- VCS (Git/Jujutsu) branch/change info and status display
+	wezterm.log_info("DEBUG: VCS display section - vcs_info: " .. tostring(vcs_info))
+	if vcs_info then
+		local vcs_text = ""
+		
+		if vcs_info.type == "jujutsu" then
+			wezterm.log_info("DEBUG: Jujutsu info available, change_id: " .. vcs_info.change_id)
+			vcs_text = " jj:" .. vcs_info.change_id
+			
+			-- Add bookmarks if available
+			if vcs_info.bookmarks and #vcs_info.bookmarks > 0 then
+				vcs_text = vcs_text .. " [" .. table.concat(vcs_info.bookmarks, ",") .. "]"
+				wezterm.log_info("DEBUG: Added bookmarks: " .. table.concat(vcs_info.bookmarks, ","))
+			end
+		else
+			-- Git repository
+			wezterm.log_info("DEBUG: Git info available, branch: " .. tostring(vcs_info.branch))
+			vcs_text = " " .. (vcs_info.branch or "unknown")
+		end
 
 		-- Add status indicators if available
-		if git_info.status then
-			wezterm.log_info("DEBUG: Git status available")
+		if vcs_info.status then
+			wezterm.log_info("DEBUG: VCS status available")
 			local status_indicators = {}
-			if git_info.status.added > 0 then
-				table.insert(status_indicators, "+" .. git_info.status.added)
-				wezterm.log_info("DEBUG: Added indicator: +" .. git_info.status.added)
+			if vcs_info.status.added > 0 then
+				table.insert(status_indicators, "+" .. vcs_info.status.added)
+				wezterm.log_info("DEBUG: Added indicator: +" .. vcs_info.status.added)
 			end
-			if git_info.status.modified > 0 then
-				table.insert(status_indicators, "~" .. git_info.status.modified)
-				wezterm.log_info("DEBUG: Modified indicator: ~" .. git_info.status.modified)
+			if vcs_info.status.modified > 0 then
+				table.insert(status_indicators, "~" .. vcs_info.status.modified)
+				wezterm.log_info("DEBUG: Modified indicator: ~" .. vcs_info.status.modified)
 			end
-			if git_info.status.deleted > 0 then
-				table.insert(status_indicators, "-" .. git_info.status.deleted)
-				wezterm.log_info("DEBUG: Deleted indicator: -" .. git_info.status.deleted)
+			if vcs_info.status.deleted > 0 then
+				table.insert(status_indicators, "-" .. vcs_info.status.deleted)
+				wezterm.log_info("DEBUG: Deleted indicator: -" .. vcs_info.status.deleted)
 			end
-			if git_info.status.untracked > 0 then
-				table.insert(status_indicators, "?" .. git_info.status.untracked)
-				wezterm.log_info("DEBUG: Untracked indicator: ?" .. git_info.status.untracked)
+			-- Only show untracked for git (jujutsu doesn't have untracked concept)
+			if vcs_info.status.untracked and vcs_info.status.untracked > 0 then
+				table.insert(status_indicators, "?" .. vcs_info.status.untracked)
+				wezterm.log_info("DEBUG: Untracked indicator: ?" .. vcs_info.status.untracked)
 			end
 
 			wezterm.log_info("DEBUG: Status indicators count: " .. #status_indicators)
 			if #status_indicators > 0 then
-				git_text = git_text .. " " .. table.concat(status_indicators, " ")
-				wezterm.log_info("DEBUG: Added status indicators to git_text")
+				vcs_text = vcs_text .. " " .. table.concat(status_indicators, " ")
+				wezterm.log_info("DEBUG: Added status indicators to vcs_text")
 			end
 		else
-			wezterm.log_info("DEBUG: No git status available")
+			wezterm.log_info("DEBUG: No VCS status available")
 		end
 
-		git_text = git_text .. " "
-		wezterm.log_info("DEBUG: Final git_text: '" .. git_text .. "'")
+		vcs_text = vcs_text .. " "
+		wezterm.log_info("DEBUG: Final vcs_text: '" .. vcs_text .. "'")
 
 		table.insert(
 			elements,
 			wezterm.format({
 				{ Foreground = { Color = "#a6adc8" } },
-				{ Text = git_text },
+				{ Text = vcs_text },
 			})
 		)
-		wezterm.log_info("DEBUG: Added git element to status bar")
+		wezterm.log_info("DEBUG: Added VCS element to status bar")
 	else
-		wezterm.log_info("DEBUG: No git info or branch available")
+		wezterm.log_info("DEBUG: No VCS info available")
 	end
 
 	-- System stats
