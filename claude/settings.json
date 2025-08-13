@@ -89,9 +89,12 @@
       "Bash(podman compose config:*)",
       "Read(/tmp/*)",
       "Write(/tmp/*)",
-      "WebFetch"
+      "WebFetch",
+      "WebSearch"
     ],
-    "deny": ["Bash(rm -f:*)"]
+    "deny": [
+      "Bash(rm -f:*)"
+    ]
   },
   "hooks": {
     "Notification": [
