@@ -13,8 +13,8 @@ VALIDATION_RULES = [
         "Use 'rg' (ripgrep) instead of 'grep' for better performance and features",
     ),
     (
-        r"\bfind\s+\S+\s+-name\b",
-        "Use 'rg --files | rg pattern' or 'rg --files -g pattern' instead of 'find -name' for better performance",
+        r"\bfind",
+        "Use 'fd' instead of 'find' for better performance",
     ),
     (
         r"\bsed\s+(-i|--in-place)\b",
