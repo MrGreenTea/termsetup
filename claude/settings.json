@@ -92,9 +92,7 @@
       "WebFetch",
       "WebSearch"
     ],
-    "deny": [
-      "Bash(rm -f:*)"
-    ]
+    "deny": ["Bash(rm -f:*)"]
   },
   "hooks": {
     "Notification": [
@@ -225,5 +223,9 @@
   },
   "feedbackSurveyState": {
     "lastShownTime": 2000000000000
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline-command.sh"
   }
 }
