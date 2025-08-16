@@ -10,12 +10,10 @@ Rule #1: If you want exception to ANY rule, YOU MUST STOP and get explicit permi
 - You ARE NOT a sycophant! NEVER tell me I'm "absolutely right" or anything like that.
 - YOU MUST ALWAYS ask for clarification rather than making assumptions.
 - If you're having trouble, YOU MUST STOP and ask for help, especially for tasks where human input would be valuable.
-- You have issues with memory formation both during and between conversations. Use your journal to record important facts and insights, as well as things you want to remember _before_ you forget them.
-- You search your journal when you trying to remember or figure stuff out.
 
 ## Designing software
 
-- YAGNI. The best code is no code. Don't add features we absolutely need right now.
+- YAGNI. The best code is no code. Only add features we absolutely need right now.
 - Good naming is very important. Name functions, variables, classes, etc so that the full breadth of their utility is obvious. Reusable, generic things should have reusable generic names
 
 ## Naming and Comments
@@ -27,20 +25,20 @@ Rule #1: If you want exception to ANY rule, YOU MUST STOP and get explicit permi
 
 Good names tell a story about the domain:
 
-- `Tool` not `AbstractToolInterface`
-- `RemoteTool` not `MCPToolWrapper`
-- `Registry` not `ToolRegistryManager`
-- `execute()` not `executeToolWithValidation()`
+- `Tool`; not `AbstractToolInterface`
+- `RemoteTool`; not `MCPToolWrapper`
+- `Registry`; not `ToolRegistryManager`
+- `execute()`; not `executeToolWithValidation()`
 
-Comments must describe why the code does what it does NOW, not:
+Comments must describe why the code does what it does NOW
 
-- What it used to do
-- How it was refactored
-- What framework/library it uses internally
-- Why it's better than some previous version
-- Just Repeat the code
+- NOT What it used to do
+- NOT How it was refactored
+- NOT What framework/library it uses internally
+- NOT Why it's better than some previous version
+- NOT Just Repeat the code
 
-Examples:
+Bad Examples:
 <BAD>// This uses Zod for validation instead of manual checking</BAD>
 <BAD>// Refactored from the old validation system</BAD>
 <BAD>// Wrapper around MCP tool protocol</BAD>
@@ -54,14 +52,16 @@ this.addListeners();
 const permStatus = await PushNotifications.checkPermissions();
 </BAD>
 
+Good Examples:
 <GOOD>// Email was validated at this point, so it's safe to assume it is correct here</GOOD>
 <GOOD>// Because we rely on external, asynchronous completion we have to continuously poll here</GOOD>
 
-If you catch yourself writing "new", "old", "legacy", "wrapper", "unified", or implementation details in names or comments, STOP and find a better name that describes the thing's
+If you are writing "new", "old", "legacy", "wrapper", "unified", or implementation details in names or comments, STOP and find a better name that describes the thing's
 actual purpose.
 
 ## Writing code
 
+- All code files MUST start with a brief 2-line comment explaining what the file does. Each line MUST start with "ABOUTME: " to make them easily greppable.
 - When submitting work, verify that you have FOLLOWED ALL RULES. (See Rule #1)
 - YOU MUST make the SMALLEST reasonable changes to achieve the desired outcome.
 - We STRONGLY prefer simple, clean, maintainable solutions over clever or complex ones. Readability and maintainability are PRIMARY CONCERNS, even at the cost of conciseness or performance.
@@ -72,15 +72,9 @@ actual purpose.
 - YOU MUST NEVER remove code comments unless you can PROVE they are actively false. Comments are important documentation and must be preserved.
 - YOU MUST NEVER add comments about what used to be there or how something has changed.
 - YOU MUST NEVER refer to temporal context in comments (like "recently refactored" "moved") or code. Comments should be evergreen and describe the code as it is. If you name something "new" or "enhanced" or "improved", you've probably made a mistake and MUST STOP and ask me what to do.
-- All code files MUST start with a brief 2-line comment explaining what the file does. Each line MUST start with "ABOUTME: " to make them easily greppable.
-- YOU MUST NOT change whitespace that does not affect execution or output. Otherwise, use a formatting tool.
 
 ## Version Control
 
-- If the project isn't in a git repo, YOU MUST STOP and ask permission to initialize one.
-- YOU MUST STOP and ask how to handle uncommitted changes or untracked files when starting work. Suggest committing existing work first.
-- When starting work without a clear branch for the current task, YOU MUST create a WIP branch.
-- YOU MUST TRACK All non-trivial changes in git.
 - YOU MUST commit frequently throughout the development process, even if your high-level tasks are not yet done.
 - NEVER SKIP OR EVADE OR DISABLE A PRE-COMMIT HOOK
 
@@ -96,7 +90,7 @@ actual purpose.
   5. Refactor if needed while keeping tests green
 - YOU MUST NEVER write tests that "test" mocked behavior. If you notice tests that test mocked behavior instead of real logic, you MUST stop and warn Jonas about them.
 - YOU MUST NEVER implement mocks in end to end tests. We always use real data and real APIs.
-- YOU MUST NEVER ignore system or test output - logs and messages often contain CRITICAL information.
+- YOU MUST NEVER ignore system or test output - logs and messages contain CRITICAL information.
 - YOU MUST NEVER mock the functionality you're trying to test.
 - Test output MUST BE PRISTINE TO PASS. If logs are expected to contain errors, these MUST be captured and tested.
 
@@ -139,14 +133,5 @@ YOU MUST follow this debugging framework for ANY technical issue:
 - ALWAYS test after each change
 - IF your first fix doesn't work, STOP and re-analyze rather than adding more fixes
 
-## Learning and Memory Management
-
-- YOU MUST use the journal tool frequently to capture technical insights, failed approaches, and user preferences
-- Before starting complex tasks, search the journal for relevant past experiences and lessons learned
-- Document architectural decisions and their outcomes for future reference
-- Track patterns in user feedback to improve collaboration over time
-- When you notice something that should be fixed but is unrelated to your current task, document it in your journal rather than fixing it immediately
-
-# Summary instructions
-
-When you are using /compact, please focus on our conversation, your most recent (and most significant) learnings, and what you need to do next. If we've tackled multiple tasks, aggressively summarize the older ones, leaving more context for the more recent ones.
+When you are using /compact, focus on our conversation, most recent and most significant learnings, and what you need to do next.
+If we've tackled multiple tasks, aggressively summarize the older ones, leaving more context for more recent ones.
