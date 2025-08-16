@@ -12,18 +12,31 @@ set project_dir (echo "$input" | jq -r '.workspace.project_dir // ""')
 set output_style (echo "$input" | jq -r '.output_style.name // "default"')
 
 # Get directory name for display
-if test "$current_dir" = "$HOME"
+if test -z "$current_dir"
 	set dir_display "~"
-else if test -n "$current_dir"
-	set dir_display (basename "$current_dir")
+else if test "$current_dir" = "$HOME"
+	set dir_display "~"
 else
-	set dir_display "~"
+	set dir_display (basename "$current_dir")
 end
 
 # Function to get jujutsu information
 function get_jj_info
-	starship-jj starship prompt
-	return 0
+	set -l dir $argv[1]
+	if test -z "$dir"
+		return 1
+	end
+	
+	# Check if this is a jujutsu repo
+	if test -d "$dir/.jj"
+		set -l output (starship-jj starship prompt 2>/dev/null)
+		if test -n "$output"
+			# Strip ANSI color codes
+			echo "$output" | sed 's/\x1b\[[0-9;]*m//g' | string trim
+			return 0
+		end
+	end
+	return 1
 end
 
 # Function to get git information (fallback)
@@ -75,12 +88,15 @@ end
 set -a components "$dir_display"
 
 # VCS info (prioritize jujutsu over git)
-set vcs_info ""
 if test -n "$current_dir"
-	if set vcs_info (get_jj_info "$current_dir")
+	set -l vcs_info (get_jj_info "$current_dir" 2>/dev/null)
+	if test -n "$vcs_info"
 		set -a components "jj:$vcs_info"
-	else if set vcs_info (get_git_info "$current_dir")
-		set -a components "git:$vcs_info"
+	else
+		set vcs_info (get_git_info "$current_dir" 2>/dev/null)
+		if test -n "$vcs_info"
+			set -a components "git:$vcs_info"
+		end
 	end
 end
 
