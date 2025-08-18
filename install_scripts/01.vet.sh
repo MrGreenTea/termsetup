@@ -5,28 +5,20 @@
 # SPDX-License-Identifier: MIT
 #
 set -eu
-
+INSTALL_DIR="$HOME/.local/bin"
 GH_REPO="vet-run/vet"
-INSTALL_DIR_DEFAULT="/usr/local/bin"
 SCRIPT_NAME="vet"
 
 log_err() { echo "$*" >&2; }
 log_info() { echo "==> $*"; }
 
 find_downloader() {
-    if command -v curl >/dev/null 2>&1; then
-        echo "curl -fsSL"
-    elif command -v wget >/dev/null 2>&1; then
-        echo "wget -qO-"
-    else
-        log_err "ERROR: This installer requires either 'curl' or 'wget'."
-        exit 1
-    fi
+    echo 
 }
 
 main() {
-    downloader=$(find_downloader)
-    install_dir=${INSTALL_DIR:-$INSTALL_DIR_DEFAULT}
+    downloader="curl -fsSL"
+    install_dir=$INSTALL_DIR
     tag=${VET_VERSION:-"latest"}
 
     if [ "$tag" = "latest" ]; then

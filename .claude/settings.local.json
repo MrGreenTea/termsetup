@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(just test-lua:*)",
+      "Bash(fish -c:*)",
+      "mcp__private-journal__process_thoughts",
+      "Bash(fzf:*)",
+      "Bash(wezterm start:*)",
+      "Bash(WEZTERM_LOG=debug wezterm start --workspace termsetup --always-new-process -- sleep 3)",
+      "Bash(jj config:*)",
+      "Bash(jj help:*)",
+      "Bash(jj log:*)",
+      "Bash(jj bookmark:*)",
+      "Bash(jj diff:*)"
+    ],
+    "deny": []
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "memory"
+  ],
+  "outputStyle": "Pragmatic Engineer"
+}

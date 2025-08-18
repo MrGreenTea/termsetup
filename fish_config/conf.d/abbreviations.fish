@@ -12,5 +12,7 @@ abbr --add cat bat
 abbr --add gcm "git switch main"
 abbr --add gbb "git bb"
 
-abbr --add docker-compose "podman compose"
-abbr --add docker "podman"
+abbr --add fly flyctl
+
+# abbr --add docker-compose "podman compose"
+# abbr --add docker "podman"

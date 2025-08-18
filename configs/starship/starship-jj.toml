@@ -3,6 +3,7 @@ module_separator = " "
 [bookmarks]
 search_depth = 100
 exclude = []
+disabled = true
 
 [[module]]
 type = "Symbol"
@@ -14,12 +15,14 @@ type = "Bookmarks"
 separator = " "
 color = "Magenta"
 behind_symbol = "⇡"
+disabled = true
 
 [[module]]
 type = "Commit"
 max_length = 6
 color = "White"
 empty_text = "(empty)"
+disabled = true
 
 [[module]]
 type = "State"
