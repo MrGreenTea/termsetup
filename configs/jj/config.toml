@@ -40,3 +40,8 @@ key = "F19710F77B1A3CBC"
 
 [revset]
 log = "working_copies():: | ancestors(remote_bookmarks().., 2) | trunk() | fork_point(@ | trunk())::"
+
+[[--scope]]
+--when.repositories = ["~/Development/Elever/"]
+[--scope.user]
+email = "jb@altusforge.com"
