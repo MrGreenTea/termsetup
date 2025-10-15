@@ -131,7 +131,9 @@ def main():
             "hookSpecificOutput": {
                 "hookEventName": hook_event_name,
                 "additionalContext": full_context,
-            }
+            },
+            "suppressOutput": True,
+            "systemMessage": "You are in a jujutsu repository. Full context provided.",
         }
         print(json.dumps(response))
 
