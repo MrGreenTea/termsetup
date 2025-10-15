@@ -227,6 +227,7 @@
     "type": "command",
     "command": "~/.claude/statusline-command.sh"
   },
+  "alwaysThinkingEnabled": false,
   "feedbackSurveyState": {
     "lastShownTime": 2000000000000
   }
