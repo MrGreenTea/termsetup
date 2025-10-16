@@ -88,13 +88,12 @@
       "Bash(podman compose logs:*)",
       "Bash(podman compose config:*)",
       "Read(/tmp/*)",
+      "Read(~/.config/superpowers/skills/*)",
       "Write(/tmp/*)",
       "WebFetch",
       "WebSearch"
     ],
-    "deny": [
-      "Bash(rm -f:*)"
-    ]
+    "deny": ["Bash(rm -f:*)"]
   },
   "hooks": {
     "Notification": [
@@ -226,6 +225,9 @@
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "superpowers@superpowers-marketplace": true
   },
   "alwaysThinkingEnabled": false,
   "feedbackSurveyState": {
