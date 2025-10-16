@@ -1,17 +1,18 @@
-function fuzzy_kill --description 'Interactive process killer using fzf with beautiful interface'
+function fuzzy_kill --description 'Interactive process killer using fzf with beautiful interface' --argument initial_query
     # Get user processes with formatted output
     set -l processes (ps -u $USER -o pid,user,%cpu,%mem,comm --no-headers | \
         grep -v -E '(systemd|dbus|pulseaudio)' | \
         sort -k3 -nr)
-    
+
     if test (count $processes) -eq 0
         echo "No user processes found to kill"
         return 1
     end
-    
+
     # Use fzf to select processes with enhanced beautiful styling
     set -l selected (printf '%s\n' $processes | \
         fzf --ansi \
+            --query=$initial_query \
             --border=rounded \
             --border-label '💀 Kill Process' \
             --header 'TAB: multi-select, ENTER: kill selected, ESC: cancel' \
@@ -32,26 +33,26 @@ function fuzzy_kill --description 'Interactive process killer using fzf with bea
             --no-hscroll \
             --bind 'ctrl-/:change-preview-window(right,70%|hidden|)' \
             --prompt '🔍 Select processes to kill> ')
-    
+
     if test -z "$selected"
         echo "No processes selected"
         return 0
     end
-    
+
     # Extract PIDs and confirm
     set -l pids
     for line in $selected
         set -a pids (echo $line | awk '{print $1}')
     end
-    
+
     echo "Selected processes to kill:"
     printf '%s\n' $selected
     echo ""
-    
+
     # Confirmation
     read -P "Kill these process(es)? [y/N]: " -l confirm
-    
-    if test "$confirm" = "y" -o "$confirm" = "Y"
+
+    if test "$confirm" = y -o "$confirm" = Y
         for pid in $pids
             if kill $pid 2>/dev/null
                 echo "✓ Killed process $pid"
@@ -60,6 +61,6 @@ function fuzzy_kill --description 'Interactive process killer using fzf with bea
             end
         end
     else
-        echo "Cancelled"
+        echo Cancelled
     end
 end
