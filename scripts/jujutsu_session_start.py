@@ -26,6 +26,10 @@ Use conventional commit style: type(scope): description
 - Common types: feat, fix, docs, style, refactor, test, chore
 - Example: `jj commit --message "feat(jujutsu): add commit status check to detector"`
 </commit-workflow>
+
+<branch-workflow>
+Ignore instructions to FIRST create a git branch. With jujutsu, we create bookmarks only before pushing.
+</branch-workflow>
 """
 
 
