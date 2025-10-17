@@ -13,7 +13,7 @@ VALIDATION_RULES = [
         "Use 'rg' (ripgrep) instead of 'grep' for better performance and features",
     ),
     (
-        r"\bfind",
+        r"\bfind[\s$]",
         "Use 'fd' instead of 'find' for better performance",
     ),
     (
