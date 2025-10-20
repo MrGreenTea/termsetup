@@ -2,7 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
     "NO_COLOR": "1",
-    "PAGER": "cat"
+    "PAGER": "cat",
+    "PLAYWRIGHT_HTML_OPEN": "never"
   },
   "permissions": {
     "allow": [
@@ -11,6 +12,23 @@
       "mcp__memory",
       "mcp__sequentialthinking__sequentialthinking",
       "mcp__private-journal",
+      "mcp__linear__get_issue",
+      "mcp__linear__list_issues",
+      "mcp__linear__get_project",
+      "mcp__linear__list_projects",
+      "mcp__linear__list_documents",
+      "mcp__linear__get_document",
+      "mcp__linear__list_comments",
+      "mcp__linear__list_cycles",
+      "mcp__linear__list_issue_statuses",
+      "mcp__linear__get_issue_status",
+      "mcp__linear__list_issue_labels",
+      "mcp__linear__list_project_labels",
+      "mcp__linear__list_teams",
+      "mcp__linear__get_team",
+      "mcp__linear__list_users",
+      "mcp__linear__get_user",
+      "mcp__linear__search_documentation",
       "Bash(grep:*)",
       "Bash(notify-send:*)",
       "Bash(curl -X GET:*)",
@@ -82,18 +100,18 @@
       "Bash(jj version:*)",
       "Bash(jj workspace list:*)",
       "Bash(jj workspace root:*)",
+      "Bash(jj new:*)",
       "Bash(podman compose ps:*)",
       "Bash(podman compose logs:*)",
       "Bash(podman compose config:*)",
       "Read(/tmp/*)",
-      "Read(~/.config/superpowers/skills/*)",
+      "Read(~/.claude/plugins/cache/superpowers/skills/*)",
       "Write(/tmp/*)",
       "WebFetch",
-      "WebSearch"
+      "WebSearch",
+      "Skill(superpowers:*)"
     ],
-    "deny": [
-      "Bash(rm -f:*)"
-    ]
+    "deny": ["Bash(rm -f:*)"]
   },
   "hooks": {
     "Notification": [
@@ -123,14 +141,6 @@
           {
             "type": "command",
             "command": "/var/home/jonas/Development/termsetup/scripts/jujutsu_git_blocker.py"
-          },
-          {
-            "type": "command",
-            "command": "/var/home/jonas/Development/termsetup/scripts/block_command_hook.py docker podman"
-          },
-          {
-            "type": "command",
-            "command": "/var/home/jonas/Development/termsetup/scripts/block_command_hook.py docker-compose 'podman compose'"
           },
           {
             "type": "command",
@@ -229,7 +239,7 @@
   "enabledPlugins": {
     "superpowers@superpowers-marketplace": true
   },
-  "alwaysThinkingEnabled": true,
+  "alwaysThinkingEnabled": false,
   "feedbackSurveyState": {
     "lastShownTime": 2000000000000
   }
