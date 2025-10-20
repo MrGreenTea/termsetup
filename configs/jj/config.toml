@@ -35,6 +35,21 @@ behavior = "keep"        # Options: keep, sign, drop (keep existing signatures, 
 backend = "gpg"
 key = "F19710F77B1A3CBC"
 
+[aliases]
+tug = ["util", "exec", "--", "sh", "-c", """
+if [ "x$1" = "x" ]; then
+  jj bookmark move --from "closest_bookmark(@)" --to "closest_pushable(@)"
+else
+  jj bookmark move --to "closest_pushable(@)" "$@"
+fi
+""", ""]
+
+
+[revset-aliases]
+"trunk()" = "main@origin"
+"closest_pushable(to)" = 'heads(::to & mutable() & ~description(exact:"") & (~empty() | merges()))'
+"closest_bookmark(to)" = "heads(::to & bookmarks())"
+
 [template-aliases]
 log_compact = """
           if(root,
@@ -62,8 +77,6 @@ log_compact = """
             )
 """
 
-[revset-aliases]
-"trunk()" = "main@origin"
 
 [revset]
 log = "working_copies():: | ancestors(remote_bookmarks().., 2) | trunk() | fork_point(@ | trunk())::"
