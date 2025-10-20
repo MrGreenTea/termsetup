@@ -1,7 +1,6 @@
 [user]
 	email = jonas@bulik.dev
-	name = Jonas Bulik
-	signingKey = F19710F77B1A3CBC
+	name = Jonas
 [pull]
 	rebase = true
 
