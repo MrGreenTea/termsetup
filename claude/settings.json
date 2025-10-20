@@ -91,7 +91,9 @@
       "WebFetch",
       "WebSearch"
     ],
-    "deny": ["Bash(rm -f:*)"]
+    "deny": [
+      "Bash(rm -f:*)"
+    ]
   },
   "hooks": {
     "Notification": [
