@@ -47,6 +47,7 @@
       "Bash(jq:*)",
       "Bash(fd:*)",
       "Bash(tail:*)",
+      "Bash(tree:*)",
       "Bash(wc:*)",
       "Bash(echo:*)",
       "Bash(printf:*)",
@@ -114,17 +115,6 @@
     "deny": ["Bash(rm -f:*)"]
   },
   "hooks": {
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/var/home/jonas/Development/termsetup/scripts/notification_hook.py --ntfy-topic mrgreen_claude_code_notifications"
-          }
-        ]
-      }
-    ],
     "PreToolUse": [
       {
         "matcher": "Edit",
