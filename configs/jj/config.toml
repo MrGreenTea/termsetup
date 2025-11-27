@@ -27,13 +27,17 @@ merge-args = [
 
 [merge-tools.diffconflicts]
 program = "nvim"
-merge-args = ["-c", "JJDiffConflicts", "$output"]
+merge-args = [
+  "-c",
+  "let g:jj_diffconflicts_marker_length=$marker_length",
+  "-c",
+  "JJDiffConflicts!",
+  "$output",
+  "$base",
+  "$left",
+  "$right",
+]
 merge-tool-edits-conflict-markers = true
-
-[signing]
-behavior = "keep"  # Options: keep, sign, drop (keep existing signatures, don't auto-sign)
-backend = "gpg"
-key = "F19710F77B1A3CBC"
 
 [aliases]
 tug = [
