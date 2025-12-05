@@ -112,7 +112,9 @@
       "WebSearch",
       "Skill(superpowers:*)"
     ],
-    "deny": ["Bash(rm -f:*)"]
+    "deny": [
+      "Bash(rm -f:*)"
+    ]
   },
   "hooks": {
     "PreToolUse": [
@@ -229,7 +231,7 @@
   "enabledPlugins": {
     "superpowers@superpowers-marketplace": true
   },
-  "alwaysThinkingEnabled": false,
+  "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 2000000000000
   }
