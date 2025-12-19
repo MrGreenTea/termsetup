@@ -14,7 +14,10 @@
       "Bash(jj help:*)",
       "Bash(jj log:*)",
       "Bash(jj bookmark:*)",
-      "Bash(jj diff:*)"
+      "Bash(jj diff:*)",
+      "Bash(journalctl:*)",
+      "Bash(systemctl status:*)",
+      "Bash(bootctl status:*)"
     ],
     "deny": []
   },
