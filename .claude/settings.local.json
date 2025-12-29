@@ -18,7 +18,8 @@
       "Bash(journalctl:*)",
       "Bash(systemctl status:*)",
       "Bash(bootctl status:*)",
-      "Bash(atuin init:*)"
+      "Bash(atuin init:*)",
+      "Bash(elcap --help:*)"
     ],
     "deny": []
   },
