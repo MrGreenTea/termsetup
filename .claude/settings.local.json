@@ -17,7 +17,8 @@
       "Bash(jj diff:*)",
       "Bash(journalctl:*)",
       "Bash(systemctl status:*)",
-      "Bash(bootctl status:*)"
+      "Bash(bootctl status:*)",
+      "Bash(atuin init:*)"
     ],
     "deny": []
   },
