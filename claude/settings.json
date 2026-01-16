@@ -29,6 +29,7 @@
       "mcp__linear__list_users",
       "mcp__linear__get_user",
       "mcp__linear__search_documentation",
+      "mcp__svelte__*",
       "Bash(grep:*)",
       "Bash(notify-send:*)",
       "Bash(curl -X GET:*)",
@@ -229,7 +230,8 @@
     "command": "~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
-    "superpowers@superpowers-marketplace": true
+    "superpowers@superpowers-marketplace": true,
+    "rust-analyzer-lsp@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
