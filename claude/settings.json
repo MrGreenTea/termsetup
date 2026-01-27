@@ -113,9 +113,7 @@
       "WebSearch",
       "Skill(superpowers:*)"
     ],
-    "deny": [
-      "Bash(rm -f:*)"
-    ]
+    "deny": ["Bash(rm -f:*)"]
   },
   "hooks": {
     "PreToolUse": [
