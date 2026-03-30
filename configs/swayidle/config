@@ -1,0 +1,13 @@
+# Swayidle configuration
+# See https://github.com/swaywm/swayidle
+
+# Lock screen after 10 minutes of inactivity
+timeout 600 'swaylock'
+
+# Turn off screen after 15 minutes (lock + DPMS off)
+timeout 900 'niri msg action power-off-monitors'
+
+# Resume on activity (handled automatically by niri)
+
+# Lock before sleep
+before-sleep 'swaylock'

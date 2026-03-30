@@ -1,0 +1,38 @@
+# Swaylock configuration
+# See https://github.com/swaywm/swaylock
+
+# Background - blurred and dimmed version of niri wallpaper
+image=/var/home/jonas/.config/swaylock/lock-background.png
+
+# Colors - Catppuccin Mocha theme
+color=1e1e2e
+inside-color=1e1e2e
+ring-color=ffb7c5
+key-hl-color=ffb7c5
+bs-hl-color=f38ba8
+separator-color=45475a
+
+# State-specific ring colors (all pink)
+ring-clear-color=ffb7c5
+ring-ver-color=ffb7c5
+ring-wrong-color=ffb7c5
+inside-clear-color=1e1e2e
+inside-ver-color=1e1e2e
+inside-wrong-color=1e1e2e
+
+# Text colors
+text-color=cdd6f4
+text-clear-color=cdd6f4
+text-ver-color=a6e3a1
+text-caps-lock-color=f9e2af
+text-wrong-color=ffb7c5
+
+# Behavior
+show-keyboard-layout
+hide-keyboard-layout
+indicator-caps-lock
+
+# Appearance
+line-uses-inside
+indicator-radius=100
+indicator-thickness=10
