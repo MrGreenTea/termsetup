@@ -1,0 +1,74 @@
+# Mako notification daemon configuration
+# See https://github.com/emersion/mako
+
+# General settings
+sort=-time
+layer=overlay
+max-history=50
+max-visible=5
+output=eDP-1
+
+# Default notification style
+default-timeout=5000
+ignore-timeout=false
+
+# Colors - Catppuccin Mocha theme
+background-color=#1e1e2e
+text-color=#cdd6f4
+border-color=#89b4fa
+border-radius=8
+border-width=2
+
+# Progress bar colors
+progress-color=source #89b4fa
+
+# Padding and margins
+padding=12
+margin=12
+
+# Font
+font=JetBrainsMono Nerd Font 12
+
+# Icons
+icons=true
+max-icon-size=64
+icon-path=/usr/share/icons/Papirus-Dark:/usr/share/icons/Adwaita
+
+# Text formatting
+format=<b>%s</b>\n%b
+
+# Urgency levels
+[urgency=low]
+background-color=#1e1e2e
+text-color=#6c7086
+border-color=#313244
+default-timeout=3000
+
+[urgency=normal]
+background-color=#1e1e2e
+text-color=#cdd6f4
+border-color=#89b4fa
+default-timeout=5000
+
+[urgency=high]
+background-color=#1e1e2e
+text-color=#f38ba8
+border-color=#f38ba8
+default-timeout=10000
+
+# Application-specific rules
+[app-name="Slack"]
+border-color=#f5c2e7
+default-timeout=10000
+
+[app-name="Spotify"]
+border-color=#a6e3a1
+default-timeout=5000
+
+[app-name="Firefox" app-name="firefox"]
+border-color=#fab387
+category=web
+
+# Hidden notifications (for media keys)
+[hidden]
+format=

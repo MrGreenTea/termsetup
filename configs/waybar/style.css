@@ -1,0 +1,169 @@
+/* Waybar styling - Catppuccin Mocha inspired theme */
+/* Based on https://github.com/catppuccin/waybar */
+
+* {
+  font-family: "JetBrainsMono Nerd Font, Symbols Nerd Font, sans-serif";
+  font-size: 14px;
+  font-weight: 500;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Main window */
+window#waybar {
+  background: rgba(30, 30, 46, 0.9);
+  color: #cdd6f4;
+  border-bottom: 2px solid rgba(49, 50, 68, 0.9);
+}
+
+window#waybar.hidden {
+  opacity: 0.2;
+}
+
+/* Workspaces */
+#workspaces button {
+  padding: 0 8px;
+  background: transparent;
+  color: #cdd6f4;
+  border-bottom: 2px solid transparent;
+}
+
+#workspaces button:hover {
+  background: rgba(49, 50, 68, 0.9);
+  border-bottom: 2px solid #f5c2e7;
+}
+
+#workspaces button.focused {
+  background: rgba(49, 50, 68, 0.9);
+  border-bottom: 2px solid #89b4fa;
+}
+
+#workspaces button.urgent {
+  border-bottom: 2px solid #f38ba8;
+}
+
+/* Window title */
+#window {
+  margin-left: 8px;
+  color: #cdd6f4;
+}
+
+/* Modules */
+#clock,
+#battery,
+#cpu,
+#memory,
+#temperature,
+#network,
+#pulseaudio,
+#custom-media,
+#tray {
+  padding: 0 10px;
+  border-radius: 0;
+}
+
+/* Clock */
+#clock {
+  background: rgba(49, 50, 68, 0.9);
+  color: #cdd6f4;
+  padding: 0 15px;
+}
+
+/* Battery */
+#battery {
+  color: #a6e3a1;
+}
+
+#battery.charging {
+  color: #a6e3a1;
+}
+
+#battery.warning:not(.charging) {
+  color: #f9e2af;
+}
+
+#battery.critical:not(.charging) {
+  color: #f38ba8;
+  animation: blink 1s linear infinite;
+}
+
+@keyframes blink {
+  to {
+    color: #f38ba8;
+    background: rgba(243, 139, 168, 0.3);
+  }
+}
+
+/* CPU */
+#cpu {
+  color: #89b4fa;
+}
+
+/* Memory */
+#memory {
+  color: #f5c2e7;
+}
+
+/* Temperature */
+#temperature {
+  color: #fab387;
+}
+
+#temperature.critical {
+  color: #f38ba8;
+}
+
+/* Network */
+#network {
+  color: #89b4fa;
+}
+
+#network.disconnected {
+  color: #6c7086;
+}
+
+/* PulseAudio */
+#pulseaudio {
+  color: #89dceb;
+}
+
+#pulseaudio.muted {
+  color: #6c7086;
+}
+
+/* Media */
+#custom-media {
+  color: #f5c2e7;
+  min-width: 100px;
+}
+
+/* Tray */
+#tray {
+  background: rgba(49, 50, 68, 0.9);
+  margin-right: 8px;
+}
+
+#tray > .passive {
+  border-bottom: 2px solid #6c7086;
+}
+
+#tray > .active {
+  border-bottom: 2px solid #89b4fa;
+}
+
+#tray > .needs-attention {
+  border-bottom: 2px solid #f38ba8;
+}
+
+/* Tooltip styling */
+tooltip {
+  background: rgba(30, 30, 46, 0.95);
+  border: 2px solid rgba(49, 50, 68, 0.9);
+  border-radius: 4px;
+}
+
+tooltip label {
+  color: #cdd6f4;
+  padding: 4px;
+}
