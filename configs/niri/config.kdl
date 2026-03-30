@@ -151,6 +151,12 @@ binds {
   Mod+Shift+Alt+Up { move-column-to-monitor-up; }
   Mod+Shift+Alt+Down { move-column-to-monitor-down; }
 
+  // Snap floating window to screen quarters
+  Mod+Ctrl+H { spawn "bash" "/var/home/jonas/.config/niri/snap-quarter.sh" "top-left"; }
+  Mod+Ctrl+L { spawn "bash" "/var/home/jonas/.config/niri/snap-quarter.sh" "top-right"; }
+  Mod+Ctrl+J { spawn "bash" "/var/home/jonas/.config/niri/snap-quarter.sh" "bottom-left"; }
+  Mod+Ctrl+K { spawn "bash" "/var/home/jonas/.config/niri/snap-quarter.sh" "bottom-right"; }
+
   // Column width
   Mod+R { switch-preset-column-width; }
   Mod+Shift+R { expand-column-to-available-width; }
@@ -191,6 +197,11 @@ binds {
 }
 
 // Window rules for specific applications
+window-rule {
+    match app-id="zen"
+    column-width { proportion 1.0; }
+}
+
 window-rule {
     match app-id="zen" title=".*Picture-in-Picture.*"
     open-floating true
