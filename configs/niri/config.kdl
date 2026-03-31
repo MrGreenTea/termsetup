@@ -151,11 +151,11 @@ binds {
   Mod+Shift+Alt+Up { move-column-to-monitor-up; }
   Mod+Shift+Alt+Down { move-column-to-monitor-down; }
 
-  // Snap floating window to screen quarters
-  Mod+Ctrl+H { spawn "bash" "/var/home/jonas/.config/niri/snap-quarter.sh" "top-left"; }
-  Mod+Ctrl+L { spawn "bash" "/var/home/jonas/.config/niri/snap-quarter.sh" "top-right"; }
-  Mod+Ctrl+J { spawn "bash" "/var/home/jonas/.config/niri/snap-quarter.sh" "bottom-left"; }
-  Mod+Ctrl+K { spawn "bash" "/var/home/jonas/.config/niri/snap-quarter.sh" "bottom-right"; }
+  // Snap floating window to screen quarters (numpad keys)
+  Mod+KP_Home hotkey-overlay-title="Snap to top-left quarter" { spawn "bash" "/var/home/jonas/.config/niri/snap-quarter.sh" "top-left"; }
+  Mod+KP_Prior hotkey-overlay-title="Snap to top-right quarter" { spawn "bash" "/var/home/jonas/.config/niri/snap-quarter.sh" "top-right"; }
+  Mod+KP_End hotkey-overlay-title="Snap to bottom-left quarter" { spawn "bash" "/var/home/jonas/.config/niri/snap-quarter.sh" "bottom-left"; }
+  Mod+KP_Next hotkey-overlay-title="Snap to bottom-right quarter" { spawn "bash" "/var/home/jonas/.config/niri/snap-quarter.sh" "bottom-right"; }
 
   // Column width
   Mod+R { switch-preset-column-width; }
@@ -199,7 +199,7 @@ binds {
 // Window rules for specific applications
 window-rule {
     match app-id="zen"
-    column-width { proportion 1.0; }
+    default-column-width { proportion 1.0; }
 }
 
 window-rule {
@@ -225,4 +225,9 @@ window-rule {
 window-rule {
     match app-id="blueman"
     open-floating true
+}
+
+window-rule {
+  match app-id="com.vixalien.sticky"
+  open-floating true
 }
