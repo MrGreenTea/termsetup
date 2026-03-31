@@ -4,8 +4,8 @@
 # Lock screen after 10 minutes of inactivity
 timeout 600 'swaylock'
 
-# Turn off screen after 15 minutes (already locked at 10 min)
-timeout 900 'niri msg action power-off-monitors'
+# Turn of screen after 5 minutes of inactivity
+timeout 300 'niri msg action power-off-monitors'
 
 # Resume on activity (handled automatically by niri)
 
