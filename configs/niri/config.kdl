@@ -208,7 +208,7 @@ window-rule {
 }
 
 window-rule {
-    match app-id="zen" title="Extension.*"
+    match app-id="zen" title=".*Extension:.*"
     open-floating true
 }
 
