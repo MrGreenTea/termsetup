@@ -17,7 +17,7 @@ background-color=#1e1e2e
 text-color=#cdd6f4
 border-color=#89b4fa
 border-radius=8
-border-width=2
+border-size=2
 
 # Progress bar colors
 progress-color=source #89b4fa
@@ -57,17 +57,8 @@ border-color=#f38ba8
 default-timeout=10000
 
 # Application-specific rules
-[app-name="Slack"]
-border-color=#f5c2e7
-default-timeout=10000
-
-[app-name="Spotify"]
-border-color=#a6e3a1
-default-timeout=5000
-
-[app-name="Firefox" app-name="firefox"]
+[app-name="Zen" app-name="zen"]
 border-color=#fab387
-category=web
 
 # Hidden notifications (for media keys)
 [hidden]
