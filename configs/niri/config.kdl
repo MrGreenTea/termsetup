@@ -11,8 +11,9 @@
 input {
     keyboard {
         xkb {
-            // layout "us"
-            // options "ctrl:nocaps"
+            layout "de"
+            variant "us"
+            options "compose:caps,lv3:ralt_switch"
         }
     }
 
@@ -46,7 +47,7 @@ input {
 
 // Spawn applications at startup
 spawn-at-startup "waybar"
-spawn-at-startup "mako"
+spawn-at-startup "dunst"
 spawn-at-startup "swaybg" "-i" "/var/home/jonas/.config/niri/wallpaper.png"
 spawn-at-startup "swayidle" "-w"
 
@@ -182,6 +183,10 @@ binds {
   Print { screenshot-screen; }
   Shift+Print { screenshot-window; }
   Alt+Print { screenshot; }
+
+  // Notifications
+  Mod+N hotkey-overlay-title="React to last notification" { spawn "dunstctl" "context"; }
+  Mod+Shift+N hotkey-overlay-title="Show last notification again" { spawn "dunstctl" "history-pop"; }
 
   // Power menu (simple lock)
   Mod+Shift+semicolon { spawn "swaylock"; }
