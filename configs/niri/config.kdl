@@ -165,13 +165,13 @@ binds {
   Mod+Shift+F { maximize-column; }
   Mod+M { set-column-width "50%"; }
 
-  // Volume and brightness (keyboard keys)
-  XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.05+"; }
-  XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.05-"; }
-  XF86AudioMute allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
-  XF86AudioMicMute allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
-  XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "set" "+5%"; }
-  XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "set" "5%-"; }
+  // Volume and brightness (keyboard keys) - with dunst notifications
+  XF86AudioRaiseVolume allow-when-locked=true { spawn "bash" "/var/home/jonas/.config/niri/progress-notify.sh" "volume-up"; }
+  XF86AudioLowerVolume allow-when-locked=true { spawn "bash" "/var/home/jonas/.config/niri/progress-notify.sh" "volume-down"; }
+  XF86AudioMute allow-when-locked=true { spawn "bash" "/var/home/jonas/.config/niri/progress-notify.sh" "volume-mute"; }
+  XF86AudioMicMute allow-when-locked=true { spawn "bash" "/var/home/jonas/.config/niri/progress-notify.sh" "mic-mute"; }
+  XF86MonBrightnessUp allow-when-locked=true { spawn "bash" "/var/home/jonas/.config/niri/progress-notify.sh" "brightness-up"; }
+  XF86MonBrightnessDown allow-when-locked=true { spawn "bash" "/var/home/jonas/.config/niri/progress-notify.sh" "brightness-down"; }
 
   // Media controls
   XF86AudioPlay { spawn "playerctl" "play-pause"; }
@@ -213,8 +213,9 @@ window-rule {
 }
 
 window-rule {
-    match app-id="zen" title=".*Extension:.*"
+    match app-id="zen" title=".*Extension.*"
     open-floating true
+    default-column-width { proportion 0.33; }
 }
 
 window-rule {
