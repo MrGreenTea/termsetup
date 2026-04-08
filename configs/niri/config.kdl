@@ -50,6 +50,7 @@ spawn-at-startup "waybar"
 spawn-at-startup "dunst"
 spawn-at-startup "swaybg" "-i" "/var/home/jonas/.config/niri/wallpaper.png"
 spawn-at-startup "swayidle" "-w"
+spawn-at-startup "google-chrome"
 
 // Prefered applications
 prefer-no-csd
@@ -201,7 +202,17 @@ binds {
   Mod+Tab { toggle-overview; }
 }
 
+// Workspace definitions
+workspace "work" {
+    open-on-output "eDP-1"
+}
+
 // Window rules for specific applications
+window-rule {
+    match app-id="google-chrome"
+    open-on-workspace "work"
+}
+
 window-rule {
     match app-id="zen"
     default-column-width { proportion 1.0; }
