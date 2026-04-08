@@ -37,9 +37,6 @@ merge-args = [
 ]
 merge-tool-edits-conflict-markers = true
 
-[aliases]
-tug = ["bookmark", "advance"]
-
 [revset-aliases]
 "trunk()" = "main@origin"
 "closest_pushable(to)" = 'heads(::to & mutable() & ~description(exact:"") & (~empty() | merges()))'
