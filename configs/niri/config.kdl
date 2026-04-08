@@ -202,6 +202,15 @@ binds {
   Mod+Tab { toggle-overview; }
 }
 
+// Recent windows switcher - override defaults to remove Alt+grave binds
+// (needed for helix editor)
+recent-windows {
+    binds {
+        Alt+Tab       { next-window; }
+        Alt+Shift+Tab { previous-window; }
+    }
+}
+
 // Workspace definitions
 workspace "work" {
     open-on-output "eDP-1"
