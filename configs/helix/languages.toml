@@ -60,7 +60,14 @@ auto-format = true
 [[language]]
 language-servers = ["ty", "ruff"]
 name = "python"
-formatter = { command = "uvx", args = ["ruff", "format", "--quiet", "-"] }
+formatter = { command = "uvx", args = [
+  "ruff",
+  "format",
+  "--quiet",
+  "--stdin-filename",
+  "%{buffer_name}",
+  "-",
+] }
 auto-format = true
 
 # ── JSON / CSS ──────────────────────────────────────────────────────
