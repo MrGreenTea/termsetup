@@ -34,7 +34,13 @@ diagnostic = { underline = { style = "curl" } }
 "ui.text.focus" = { fg = "active", modifiers = ["bold"] }
 
 "ui.cursor" = { bg = "active", fg = "bg" }
+"ui.cursor.xxxxxx" = { bg = "active", fg = "bg" }
+"ui.cursor.insert" = { bg = "string", fg = "bg" }
+"ui.cursor.select" = { bg = "definition", fg = "bg" }
 "ui.cursor.primary" = { bg = "active", fg = "bg" }
+"ui.cursor.primary.normal" = { bg = "active", fg = "bg" }
+"ui.cursor.primary.insert" = { bg = "string", fg = "bg" }
+"ui.cursor.primary.select" = { bg = "definition", fg = "bg" }
 "ui.cursor.match" = { bg = "highlight" }
 "ui.cursorline" = { bg = "cursorline" }
 "ui.cursorcolumn" = { bg = "cursorline" }
@@ -49,6 +55,9 @@ diagnostic = { underline = { style = "curl" } }
 
 "ui.statusline" = { fg = "fg", bg = "panel" }
 "ui.statusline.inactive" = { fg = "punctuation", bg = "panel" }
+"ui.statusline.normal" = { fg = "bg", bg = "active" }
+"ui.statusline.insert" = { fg = "bg", bg = "string" }
+"ui.statusline.select" = { fg = "bg", bg = "definition" }
 
 # Bufferline - make active buffer clearly visible (like onelight-fixed-bufferline)
 "ui.bufferline.active" = { fg = "fg", bg = "bg", modifiers = ["bold"] }
