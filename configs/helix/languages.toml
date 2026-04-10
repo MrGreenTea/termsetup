@@ -22,7 +22,13 @@ args = ["svelte-language-server", "--stdio"]
 [[language]]
 name = "typescript"
 language-servers = ["typescript-language-server", "efm"]
-formatter = { command = "bunx", args = ["prettier", "--parser", "typescript"] }
+formatter = { command = "bunx", args = [
+  "prettier",
+  "--parser",
+  "typescript",
+  "--stdin-filepath",
+  "%{buffer_name}",
+] }
 auto-format = true
 
 # ── JavaScript ──────────────────────────────────────────────────────
@@ -30,7 +36,13 @@ auto-format = true
 [[language]]
 name = "javascript"
 language-servers = ["typescript-language-server", "efm"]
-formatter = { command = "bunx", args = ["prettier", "--parser", "babel"] }
+formatter = { command = "bunx", args = [
+  "prettier",
+  "--parser",
+  "babel",
+  "--stdin-filepath",
+  "%{buffer_name}",
+] }
 auto-format = true
 
 # ── JSX / TSX ───────────────────────────────────────────────────────
@@ -38,13 +50,25 @@ auto-format = true
 [[language]]
 name = "jsx"
 language-servers = ["typescript-language-server", "efm"]
-formatter = { command = "bunx", args = ["prettier", "--parser", "babel"] }
+formatter = { command = "bunx", args = [
+  "prettier",
+  "--parser",
+  "babel",
+  "--stdin-filepath",
+  "%{buffer_name}",
+] }
 auto-format = true
 
 [[language]]
 name = "tsx"
 language-servers = ["typescript-language-server", "efm"]
-formatter = { command = "bunx", args = ["prettier", "--parser", "typescript"] }
+formatter = { command = "bunx", args = [
+  "prettier",
+  "--parser",
+  "typescript",
+  "--stdin-filepath",
+  "%{buffer_name}",
+] }
 auto-format = true
 
 # ── Svelte ──────────────────────────────────────────────────────────
@@ -52,7 +76,15 @@ auto-format = true
 [[language]]
 name = "svelte"
 language-servers = ["svelteserver", "efm"]
-formatter = { command = "bunx", args = ["prettier", "--parser", "svelte"] }
+formatter = { command = "bunx", args = [
+  "prettier",
+  "--plugin",
+  "prettier-plugin-svelte",
+  "--parser",
+  "svelte",
+  "--stdin-filepath",
+  "%{buffer_name}",
+] }
 auto-format = true
 
 # ── Python ──────────────────────────────────────────────────────────
@@ -74,10 +106,22 @@ auto-format = true
 
 [[language]]
 name = "json"
-formatter = { command = "bunx", args = ["prettier", "--parser", "json"] }
+formatter = { command = "bunx", args = [
+  "prettier",
+  "--parser",
+  "json",
+  "--stdin-filepath",
+  "%{buffer_name}",
+] }
 auto-format = true
 
 [[language]]
 name = "css"
-formatter = { command = "bunx", args = ["prettier", "--parser", "css"] }
+formatter = { command = "bunx", args = [
+  "prettier",
+  "--parser",
+  "css",
+  "--stdin-filepath",
+  "%{buffer_name}",
+] }
 auto-format = true
