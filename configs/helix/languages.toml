@@ -31,7 +31,6 @@ args = ["svelte-language-server", "--stdio"]
 
 [[language]]
 name = "typescript"
-language-servers = ["typescript-language-server", "efm"]
 formatter = { command = "bunx", args = [
   "prettier",
   "--parser",
@@ -45,7 +44,6 @@ auto-format = true
 
 [[language]]
 name = "javascript"
-language-servers = ["typescript-language-server", "efm"]
 formatter = { command = "bunx", args = [
   "prettier",
   "--parser",
@@ -59,7 +57,6 @@ auto-format = true
 
 [[language]]
 name = "jsx"
-language-servers = ["typescript-language-server", "efm"]
 formatter = { command = "bunx", args = [
   "prettier",
   "--parser",
@@ -71,7 +68,6 @@ auto-format = true
 
 [[language]]
 name = "tsx"
-language-servers = ["typescript-language-server", "efm"]
 formatter = { command = "bunx", args = [
   "prettier",
   "--parser",
@@ -85,7 +81,6 @@ auto-format = true
 
 [[language]]
 name = "svelte"
-language-servers = ["svelteserver", "efm"]
 formatter = { command = "bunx", args = [
   "prettier",
   "--plugin",
