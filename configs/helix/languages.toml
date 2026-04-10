@@ -2,6 +2,14 @@
 
 # ── Dockerfile ─────────────────────────────────────────────────────
 
+[language-server.tinymist]
+command = "tinymist"
+config = { preview.background.enabled = true, preview.background.args = [
+  "--data-plane-host=127.0.0.1:23635",
+  "--invert-colors=never",
+  "--open"
+] }
+
 [language-server.docker-language-server]
 command = "docker-language-server"
 args = ["start", "--stdio"]
@@ -21,6 +29,10 @@ args = ["typescript-language-server", "--stdio"]
 [language-server.svelteserver]
 command = "bunx"
 args = ["svelte-language-server", "--stdio"]
+
+[language-server.vuels]
+command = "bunx"
+args = ["@vue/language-server", "--stdio"]
 
 # ── TypeScript ──────────────────────────────────────────────────────
 
