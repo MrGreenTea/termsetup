@@ -1,0 +1,59 @@
+# ── Language servers ────────────────────────────────────────────────
+
+[language-server.typescript-language-server]
+command = "bunx"
+args = ["typescript-language-server", "--stdio"]
+
+[language-server.svelteserver]
+command = "bunx"
+args = ["svelte-language-server", "--stdio"]
+
+# ── TypeScript ──────────────────────────────────────────────────────
+
+[[language]]
+name = "typescript"
+language-servers = ["typescript-language-server", "efm"]
+formatter = { command = "prettier", args = ["--parser", "typescript"] }
+auto-format = true
+
+# ── JavaScript ──────────────────────────────────────────────────────
+
+[[language]]
+name = "javascript"
+language-servers = ["typescript-language-server", "efm"]
+formatter = { command = "prettier", args = ["--parser", "babel"] }
+auto-format = true
+
+# ── JSX / TSX ───────────────────────────────────────────────────────
+
+[[language]]
+name = "jsx"
+language-servers = ["typescript-language-server", "efm"]
+formatter = { command = "prettier", args = ["--parser", "babel"] }
+auto-format = true
+
+[[language]]
+name = "tsx"
+language-servers = ["typescript-language-server", "efm"]
+formatter = { command = "prettier", args = ["--parser", "typescript"] }
+auto-format = true
+
+# ── Svelte ──────────────────────────────────────────────────────────
+
+[[language]]
+name = "svelte"
+language-servers = ["svelteserver", "efm"]
+formatter = { command = "prettier", args = ["--parser", "svelte"] }
+auto-format = true
+
+# ── JSON / CSS ──────────────────────────────────────────────────────
+
+[[language]]
+name = "json"
+formatter = { command = "prettier", args = ["--parser", "json"] }
+auto-format = true
+
+[[language]]
+name = "css"
+formatter = { command = "prettier", args = ["--parser", "css"] }
+auto-format = true
