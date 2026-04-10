@@ -5,7 +5,7 @@ fish_config=$HOME/.config/fish
 folders=(completions conf.d functions)
 for dir in "${folders[@]}"; do
     fish_target_dir="$fish_config/$dir"
-    source_dir="$DIR"/fish_config/"$dir"
+    source_dir="$DIR"/configs/fish/"$dir"
     echo "Linking $source_dir to $fish_target_dir"
     if [ -e "$fish_target_dir" ]; then
         echo "Deleting existing $fish_target_dir"
