@@ -1,5 +1,13 @@
 # ── Language servers ────────────────────────────────────────────────
 
+[language-server.ty]
+command = "uvx"
+args = ["ty", "server"]
+
+[language-server.ruff]
+command = "uvx"
+args = ["ruff", "server"]
+
 [language-server.typescript-language-server]
 command = "bunx"
 args = ["typescript-language-server", "--stdio"]
