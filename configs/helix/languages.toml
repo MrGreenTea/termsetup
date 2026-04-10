@@ -1,3 +1,13 @@
+# ── Dockerfile ─────────────────────────────────────────────────────
+
+[language-server.docker-language-server]
+command = "docker-language-server"
+args = ["start", "--stdio"]
+
+[[language]]
+name = "dockerfile"
+language-servers = ["docker-language-server"]
+
 # ── Language servers ────────────────────────────────────────────────
 
 [language-server.ty]
