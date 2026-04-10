@@ -1,4 +1,10 @@
-# ── Language servers ────────────────────────────────────────────────
+#:schema /var/home/jonas/Development/helix-config-schema/helix-languages-schema.json
+
+# ── Dockerfile ─────────────────────────────────────────────────────
+
+[language-server.docker-language-server]
+command = "docker-language-server"
+args = ["start", "--stdio"]
 
 [language-server.ty]
 command = "uvx"
@@ -17,6 +23,12 @@ command = "bunx"
 args = ["svelte-language-server", "--stdio"]
 
 # ── TypeScript ──────────────────────────────────────────────────────
+
+[[language]]
+name = "dockerfile"
+language-servers = ["docker-language-server"]
+
+# ── Language servers ────────────────────────────────────────────────
 
 [[language]]
 name = "typescript"
