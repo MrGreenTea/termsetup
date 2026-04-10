@@ -1,0 +1,50 @@
+# efm-langserver config – wraps eslint for Helix diagnostics
+# https://github.com/mattn/efm-langserver
+
+version: 2
+
+languages:
+  typescript:
+    lint-command: "eslint --format unix --stdin --stdin-filename ${INPUT}"
+    lint-stdin: true
+    lint-formats:
+      - "%f:%l:%c: %m"
+    root-markers:
+      - .eslintrc.js
+      - .eslintrc.cjs
+      - .eslintrc.yaml
+      - .eslintrc.yml
+      - .eslintrc.json
+      - eslint.config.js
+      - eslint.config.mjs
+      - eslint.config.ts
+
+  javascript:
+    lint-command: "eslint --format unix --stdin --stdin-filename ${INPUT}"
+    lint-stdin: true
+    lint-formats:
+      - "%f:%l:%c: %m"
+    root-markers:
+      - .eslintrc.js
+      - .eslintrc.cjs
+      - .eslintrc.yaml
+      - .eslintrc.yml
+      - .eslintrc.json
+      - eslint.config.js
+      - eslint.config.mjs
+      - eslint.config.ts
+
+  svelte:
+    lint-command: "eslint --format unix --stdin --stdin-filename ${INPUT}"
+    lint-stdin: true
+    lint-formats:
+      - "%f:%l:%c: %m"
+    root-markers:
+      - .eslintrc.js
+      - .eslintrc.cjs
+      - .eslintrc.yaml
+      - .eslintrc.yml
+      - .eslintrc.json
+      - eslint.config.js
+      - eslint.config.mjs
+      - eslint.config.ts
