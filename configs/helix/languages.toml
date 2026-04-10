@@ -57,8 +57,9 @@ auto-format = true
 # ── Python ──────────────────────────────────────────────────────────
 
 [[language]]
+language-servers = ["ty", "ruff"]
 name = "python"
-formatter = { command = "uvx", args = ["ruff", "format"] }
+formatter = { command = "uvx", args = ["ruff", "format", "--quiet", "-"] }
 auto-format = true
 
 # ── JSON / CSS ──────────────────────────────────────────────────────
