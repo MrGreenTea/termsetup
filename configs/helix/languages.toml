@@ -55,6 +55,13 @@ language-servers = ["svelteserver", "efm"]
 formatter = { command = "bunx", args = ["prettier", "--parser", "svelte"] }
 auto-format = true
 
+# ── Python ──────────────────────────────────────────────────────────
+
+[[language]]
+name = "python"
+formatter = { command = "uvx", args = ["ruff", "format"] }
+auto-format = true
+
 # ── JSON / CSS ──────────────────────────────────────────────────────
 
 [[language]]
