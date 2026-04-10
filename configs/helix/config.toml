@@ -2,3 +2,5 @@ theme = "alabaster-dark"
 
 [editor]
 color-modes = true
+line-number = "relative"
+mouse = false
