@@ -60,11 +60,14 @@ patterns = ["glob:'**/*.toml'"]
 
 [fix.tools.prettier]
 enabled = false
-command = ["npx", "prettier", "--stdin-filepath", "$path"]
+command = ["bunx", "prettier", "--stdin-filepath", "$path"]
 patterns = [
   "glob:'**/*.ts'",
+  "glob:'**/*.tsx'",
   "glob:'**/*.js'",
+  "glob:'**/*.jsx'",
   "glob:'**/*.cjs'",
+  "glob:'**/*.mjs'",
   "glob:'**/*.json'",
   "glob:'**/*.svelte'",
   "glob:'**/*.astro'",
