@@ -1,3 +1,5 @@
+#:schema /var/home/jonas/Development/helix-config-schema/helix-config-schema.json
+
 theme = "alabaster-dark"
 
 [editor]
