@@ -120,6 +120,18 @@ formatter = { command = "uvx", args = [
 ] }
 auto-format = true
 
+# ── TOML ───────────────────────────────────────────────────────────
+
+[[language]]
+name = "toml"
+formatter = { command = "tombi", args = [
+  "format",
+  "--stdin-filename",
+  "%{buffer_name}",
+  "-",
+] }
+auto-format = true
+
 # ── JSON / CSS ──────────────────────────────────────────────────────
 
 [[language]]
