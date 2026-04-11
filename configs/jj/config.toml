@@ -42,11 +42,9 @@ merge-tool-edits-conflict-markers = true
 "closest_pushable(to)" = 'heads(::to & mutable() & ~description(exact:"") & (~empty() | merges()))'
 "closest_bookmark(to)" = "heads(::to & bookmarks())"
 
-[revset]
-log = "working_copies():: | ancestors(remote_bookmarks().., 2) | trunk() | fork_point(@ | trunk())::"
-
 [revsets]
 bookmark-advance-to = "closest_pushable(@)"
+log = "working_copies():: | ancestors(remote_bookmarks().., 2) | trunk() | fork_point(@ | trunk())::"
 
 [fix.tools.ruff]
 enabled = false
@@ -55,7 +53,7 @@ patterns = ["glob:'**/*.py'"]
 
 [fix.tools.tombi]
 enabled = false
-command = ["tombi", "format", "--stdin-filename", "$path", "-"]
+command = ["tombi", "format", "--quiet", "--stdin-filename", "$path", "-"]
 patterns = ["glob:'**/*.toml'"]
 
 [fix.tools.prettier]
