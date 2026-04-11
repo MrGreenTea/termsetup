@@ -48,6 +48,30 @@ log = "working_copies():: | ancestors(remote_bookmarks().., 2) | trunk() | fork_
 [revsets]
 bookmark-advance-to = "closest_pushable(@)"
 
+[fix.tools.ruff]
+enabled = false
+command = ["uvx", "ruff", "format", "--stdin-filename", "$path"]
+patterns = ["glob:'**/*.py'"]
+
+[fix.tools.tombi]
+enabled = false
+command = ["tombi", "format", "--stdin-filename", "$path", "-"]
+patterns = ["glob:'**/*.toml'"]
+
+[fix.tools.prettier]
+enabled = false
+command = ["npx", "prettier", "--stdin-filepath", "$path"]
+patterns = [
+  "glob:'**/*.ts'",
+  "glob:'**/*.js'",
+  "glob:'**/*.cjs'",
+  "glob:'**/*.json'",
+  "glob:'**/*.svelte'",
+  "glob:'**/*.astro'",
+  "glob:'**/*.md'",
+  "glob:'**/*.mdx'",
+]
+
 [[--scope]]
 --when.repositories = ["~/Development/Elever/"]
 
