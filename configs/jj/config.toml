@@ -56,6 +56,21 @@ enabled = false
 command = ["tombi", "format", "--quiet", "--stdin-filename", "$path", "-"]
 patterns = ["glob:'**/*.toml'"]
 
+[fix.tools.biome]
+enabled = false
+command = ["bunx", "@biomejs/biome", "format", "--stdin-file-path", "$path"]
+patterns = [
+  "glob:'**/*.ts'",
+  "glob:'**/*.tsx'",
+  "glob:'**/*.js'",
+  "glob:'**/*.jsx'",
+  "glob:'**/*.cjs'",
+  "glob:'**/*.mjs'",
+  "glob:'**/*.json'",
+  "glob:'**/*.jsonc'",
+  "glob:'**/*.css'",
+]
+
 [fix.tools.prettier]
 enabled = false
 command = ["bunx", "prettier", "--stdin-filepath", "$path"]
