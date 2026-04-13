@@ -193,6 +193,7 @@ binds {
   Mod+Shift+semicolon { spawn "swaylock"; }
 
   // Switch focus between floating and tiling
+  Mod+Shift+Tab { toggle-window-floating; }
   Mod+Shift+Space { switch-focus-between-floating-and-tiling; }
 
   // Hotkey overview
