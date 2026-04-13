@@ -1,13 +1,14 @@
 # Swayidle configuration
 # See https://github.com/swaywm/swayidle
 
-# Lock screen after 10 minutes of inactivity
-timeout 600 'swaylock'
-
-# Turn of screen after 5 minutes of inactivity
+# Turn off displays after 5 minutes
 timeout 300 'niri msg action power-off-monitors'
 
-# Resume on activity (handled automatically by niri)
+# Lock screen after 10 minutes
+timeout 600 'swaylock'
+
+# Standby (suspend) after 30 minutes
+timeout 1800 'systemctl suspend-then-hibernate'
 
 # Lock before sleep
 before-sleep 'swaylock'
