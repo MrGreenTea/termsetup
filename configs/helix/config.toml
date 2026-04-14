@@ -6,3 +6,4 @@ theme = "alabaster-dark"
 color-modes = true
 line-number = "relative"
 mouse = false
+bufferline = "always"
