@@ -34,6 +34,23 @@ args = ["svelte-language-server", "--stdio"]
 command = "bunx"
 args = ["@vue/language-server", "--stdio"]
 
+[language-server.mdpls]
+command = "mdpls"
+
+# ── Markdown ────────────────────────────────────────────────────
+
+[[language]]
+language-servers = ["marksman", "mdpls"]
+name = "markdown"
+formatter = { command = "bunx", args = [
+  "prettier",
+  "--parser",
+  "markdown",
+  "--stdin-filepath",
+  "%{buffer_name}",
+] }
+auto-format = true
+
 # ── TypeScript ──────────────────────────────────────────────────────
 
 [[language]]
