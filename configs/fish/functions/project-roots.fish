@@ -1,8 +1,5 @@
-function project-roots --description "List project root directories under an optional directory"
-    set -l search_dir $PWD
-    if test (count $argv) -gt 0
-        set search_dir $argv[1]
-    end
+function project-roots -d "List project root directories under an optional directory" -a search_dir
+    set -q search_dir[1]
 
     set -l exact_markers \
         package.json \
