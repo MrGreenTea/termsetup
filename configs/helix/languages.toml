@@ -24,7 +24,7 @@ args = ["ruff", "server"]
 
 [language-server.typescript-language-server]
 command = "bunx"
-args = ["typescript-language-server", "--stdio"]
+args = ["@vtsls/language-server", "--stdio"]
 
 [language-server.svelteserver]
 command = "bunx"
