@@ -18,14 +18,9 @@ function project-roots --description "List project root directories under the cu
         Justfile
     set -l glob_markers '*.csproj' '*.sln'
     set -l roots
+    set -l marker_glob (string join ',' $exact_markers $glob_markers)
 
-    for marker in $exact_markers
-        set -a roots (fd $fd_excludes  --type f --glob "$marker" | path dirname)
-    end
-
-    for marker in $glob_markers
-        set -a roots (fd $fd_excludes  --type f --glob "$marker" | path dirname)
-    end
+    set -a roots (fd $fd_excludes --type f --glob "{$marker_glob}" | path dirname)
 
     set -a roots (fd $fd_excludes --hidden --type d --glob '.git' | path dirname)
 
