@@ -198,9 +198,10 @@ binds {
 
   // Hotkey overview
   Mod+Shift+slash { show-hotkey-overlay; }
+  Mod+O { toggle-overview; }
 
-  // Toggle overview
-  Mod+Tab { toggle-overview; }
+  // Window switcher
+  Mod+Tab hotkey-overlay-title="Window switcher: fuzzel" { spawn "python3" "/var/home/jonas/.config/niri/window-switcher.py"; }
 }
 
 // Recent windows switcher - override defaults to remove Alt+grave binds
