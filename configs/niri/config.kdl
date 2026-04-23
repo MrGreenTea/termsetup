@@ -73,11 +73,6 @@ environment {
 layout {
   gaps 8
   center-focused-column "never"
-  preset-column-widths {
-    proportion 0.33
-    proportion 0.5
-    proportion 0.66
-  }
   default-column-width { proportion 0.5; }
   struts {
     left 0
