@@ -14,5 +14,7 @@ abbr --add gbb "git bb"
 
 abbr --add fly flyctl
 abbr --add npx bunx
+abbr --add watch hwatch
+abbr --add tree 'eza --tree'
 # abbr --add docker-compose "podman compose"
 # abbr --add docker "podman"
