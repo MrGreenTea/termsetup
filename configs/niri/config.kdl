@@ -89,7 +89,7 @@ layout {
 binds {
   // Mod key: Super (Windows key)
   Mod+T { spawn "ghostty"; }
-  Mod+D { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
+  Mod+D { spawn "qs" "-c" "noctalia-shell" "ipc" "--any-display" "call" "launcher" "toggle"; }
   Mod+Shift+E { quit; }
 
   // Window management
