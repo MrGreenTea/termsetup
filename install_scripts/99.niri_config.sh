@@ -10,6 +10,8 @@ mkdir -p "$HOME/.config/niri"
 # Symlink niri config
 ln -sf "$DIR/configs/niri/config.kdl" "$HOME/.config/niri/config.kdl"
 ln -sf "$DIR/configs/niri/window-switcher.py" "$HOME/.config/niri/window-switcher.py"
+ln -sf "$DIR/configs/niri/noctalia-ipc.sh" "$HOME/.config/niri/noctalia-ipc.sh"
+chmod +x "$DIR/configs/niri/noctalia-ipc.sh"
 
 # Create waybar config directory and symlinks
 mkdir -p "$HOME/.config/waybar"
