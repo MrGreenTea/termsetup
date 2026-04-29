@@ -16,7 +16,6 @@ rpm-ostree install --apply-live --idempotent \
   ImageMagick \
   ddcutil \
   wlsunset \
-  power-profiles-daemon \
   evolution-data-server \
   xdg-desktop-portal \
   xwayland-satellite
