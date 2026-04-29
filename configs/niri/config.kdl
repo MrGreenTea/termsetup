@@ -75,7 +75,6 @@ environment {
 // Gaps and borders
 layout {
   gaps 8
-  background-color "transparent"
   center-focused-column "never"
   default-column-width { proportion 0.5; }
   struts {
@@ -90,8 +89,7 @@ layout {
 binds {
   // Mod key: Super (Windows key)
   Mod+T { spawn "ghostty"; }
-  Mod+D { spawn "/var/home/jonas/.config/niri/noctalia-ipc.sh" "launcher" "toggle"; }
-  Mod+Shift+D { spawn "fuzzel"; }
+  Mod+D { spawn "fuzzel"; }
   Mod+Shift+E { quit; }
 
   // Window management
@@ -166,18 +164,18 @@ binds {
   Mod+Shift+F { maximize-column; }
   Mod+M { set-column-width "50%"; }
 
-  // Volume and brightness (keyboard keys) - with Noctalia OSD
-  XF86AudioRaiseVolume allow-when-locked=true { spawn "/var/home/jonas/.config/niri/noctalia-ipc.sh" "volume" "increase"; }
-  XF86AudioLowerVolume allow-when-locked=true { spawn "/var/home/jonas/.config/niri/noctalia-ipc.sh" "volume" "decrease"; }
-  XF86AudioMute allow-when-locked=true { spawn "/var/home/jonas/.config/niri/noctalia-ipc.sh" "volume" "muteOutput"; }
-  XF86AudioMicMute allow-when-locked=true { spawn "/var/home/jonas/.config/niri/noctalia-ipc.sh" "volume" "muteInput"; }
-  XF86MonBrightnessUp allow-when-locked=true { spawn "/var/home/jonas/.config/niri/noctalia-ipc.sh" "brightness" "increase"; }
-  XF86MonBrightnessDown allow-when-locked=true { spawn "/var/home/jonas/.config/niri/noctalia-ipc.sh" "brightness" "decrease"; }
+  // Volume and brightness
+  XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+" "-l" "1.0"; }
+  XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
+  XF86AudioMute allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
+  XF86AudioMicMute allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
+  XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "set" "+5%"; }
+  XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "set" "5%-"; }
 
   // Media controls
-  XF86AudioPlay { spawn "/var/home/jonas/.config/niri/noctalia-ipc.sh" "media" "playPause"; }
-  XF86AudioNext { spawn "/var/home/jonas/.config/niri/noctalia-ipc.sh" "media" "next"; }
-  XF86AudioPrev { spawn "/var/home/jonas/.config/niri/noctalia-ipc.sh" "media" "previous"; }
+  XF86AudioPlay { spawn "playerctl" "play-pause"; }
+  XF86AudioNext { spawn "playerctl" "next"; }
+  XF86AudioPrev { spawn "playerctl" "previous"; }
   XF86AudioStop { spawn "playerctl" "stop"; }
 
   // Screenshots
@@ -185,17 +183,8 @@ binds {
   Shift+Print { screenshot-window; }
   Alt+Print { screenshot; }
 
-  // Notifications
-  Mod+N hotkey-overlay-title="Toggle notification history" { spawn "/var/home/jonas/.config/niri/noctalia-ipc.sh" "notifications" "toggleHistory"; }
-  Mod+Shift+N hotkey-overlay-title="Dismiss notifications" { spawn "/var/home/jonas/.config/niri/noctalia-ipc.sh" "notifications" "dismissAll"; }
-
-  // Noctalia shell panels
-  Mod+C hotkey-overlay-title="Toggle control center" { spawn "/var/home/jonas/.config/niri/noctalia-ipc.sh" "controlCenter" "toggle"; }
-  Mod+Shift+Comma hotkey-overlay-title="Toggle Noctalia settings" { spawn "/var/home/jonas/.config/niri/noctalia-ipc.sh" "settings" "toggle"; }
-
-  // Power menu and lock screen
-  Mod+Shift+semicolon { spawn "/var/home/jonas/.config/niri/noctalia-ipc.sh" "lockScreen" "lock"; }
-  Mod+Escape hotkey-overlay-title="Toggle session menu" { spawn "/var/home/jonas/.config/niri/noctalia-ipc.sh" "sessionMenu" "toggle"; }
+  // Power menu (simple lock)
+  Mod+Shift+semicolon { spawn "swaylock"; }
 
   // Switch focus between floating and tiling
   Mod+Shift+Tab { toggle-window-floating; }
@@ -206,7 +195,7 @@ binds {
   Mod+O { toggle-overview; }
 
   // Window switcher
-  Mod+Tab hotkey-overlay-title="Window switcher: Noctalia" { spawn "/var/home/jonas/.config/niri/noctalia-ipc.sh" "launcher" "windows"; }
+  Mod+Tab hotkey-overlay-title="Window switcher: fuzzel" { spawn "python3" "/var/home/jonas/.config/niri/window-switcher.py"; }
 }
 
 // Recent windows switcher - override defaults to remove Alt+grave binds
@@ -218,22 +207,10 @@ recent-windows {
     }
 }
 
-// Noctalia wallpaper layers: keep the normal wallpaper on Niri's backdrop.
+// Noctalia overview wallpaper.
 layer-rule {
-  match namespace="^noctalia-wallpaper.*"
+  match namespace="^noctalia-overview*"
   place-within-backdrop true
-}
-
-// Noctalia overview wallpaper, if enabled in Noctalia's wallpaper settings.
-layer-rule {
-  match namespace="^noctalia-overview.*"
-  place-within-backdrop true
-}
-
-overview {
-  workspace-shadow {
-    off
-  }
 }
 
 // Rounded window corners for the Noctalia look.
